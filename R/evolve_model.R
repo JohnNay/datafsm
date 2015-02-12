@@ -1,30 +1,35 @@
 #' Uses a Genetic Algorithm to Estimate a Finite-state Machine
 #'
-#' \code{evolve_model} uses a genetic algorithm to estimate a finite-state machine model.
+#' \code{evolve_model} uses a genetic algorithm to estimate a finite-state
+#' machine model.
 #'
-#' This is the main function of the \strong{fsm} package. It takes data on predictors
-#' and data on the outcome and then uses a stochastic meta-heuristic optimization
-#' routine to estimate the parameter. Generalized simulated annealing could work.
-#' The current version uses the \strong{GA} package's genetic algorithm
-#' because GAs perform well in rugged search spaces to solve integer
-#' optimization problems and are a natural complement to our binary string
-#' representation of FSMs.
+#' This is the main function of the \strong{fsm} package. It takes data on
+#' predictors and data on the outcome and then uses a stochastic meta-heuristic
+#' optimization routine to estimate the parameter. Generalized simulated
+#' annealing could work. The current version uses the \strong{GA} package's
+#' genetic algorithm because GAs perform well in rugged search spaces to solve
+#' integer optimization problems and are a natural complement to our binary
+#' string representation of FSMs.
 #'
 #' @param data Numeric matrix that has first col period and rest of cols are
-#' predictors.
+#'   predictors.
 #' @param outcome Numeric vector same length as the number of rows as data.
 #' @param actions Numeric vector with the number of actions.
 #' @param states Numeric vector with the number of states.
 #' @param seed Numeric vector length one.
 #' @param fitness_func Function that takes data, action vector, and state matrix
-#' as input and returns numeric vector of same length as the \code{outcome}. This
-#' is then used inside \code{evolve_model} to compute a fitness score by comparing
-#' it to the provided \code{outcome}.
+#'   as input and returns numeric vector of same length as the \code{outcome}.
+#'   This is then used inside \code{evolve_model} to compute a fitness score by
+#'   comparing it to the provided \code{outcome}.
+#'
+#' @param cols Numeric vector that that denotes what action each column of
+#'   \code{state_mat} corresponds to.
 #'
 #' @return Returns an S4 object of class ga_fsm. See \linkS4class{ga_fsm} for
-#' the details of the slots (objects) that this type of object will have and for
-#' information on the methods that can be used to summarize the calling and
-#' execution of \code{evolve_model()}, including \code{\link{summary.ga_fsm}}.
+#'   the details of the slots (objects) that this type of object will have and
+#'   for information on the methods that can be used to summarize the calling
+#'   and execution of \code{evolve_model()}, including
+#'   \code{\link{summary.ga_fsm}}.
 #'
 #' @examples
 #' \dontrun{

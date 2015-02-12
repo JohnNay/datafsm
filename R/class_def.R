@@ -17,20 +17,21 @@ check_ga_fsm <- function(object) {
 setClassUnion("numericOrchar", members = c("numeric", "character"))
 
 #' An S4 class to return the results of using a GA to estimate a FSM with
-#'  evolve_model()
+#' evolve_model()
 #'
 #' @slot call Language from the call of the function evolve_model().
 #' @slot actions Numeric vector with the number of actions.
 #' @slot states Numeric vector with the number of states.
 #' @slot GA S4 object created by ga() from the GA package.
 #' @slot state_mat Numeric matrix with rows as states and columns as predictors.
-#' @slot action_vec Numeric vector indicating what action to take for each state.
+#' @slot action_vec Numeric vector indicating what action to take for each
+#'   state.
 #' @slot predictive Numeric vector of length one with test data accuracy if test
-#' data was supplied; otherwise, a characte vector with a message that the user
-#' should provide test data for better estimate of performance.
+#'   data was supplied; otherwise, a characte vector with a message that the
+#'   user should provide test data for better estimate of performance.
 #' @slot degeneracy List with message and sparse matrix.
 #' @slot varImp Numeric vector same length as number of columns of state matrix
-#' with relative importance scores for each predictor.
+#'   with relative importance scores for each predictor.
 
 setClass("ga_fsm",
          slots = c(call = "language",

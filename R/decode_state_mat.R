@@ -1,3 +1,16 @@
+#' Decodes State Matrix
+#'
+#' \code{decode_state_mat} decodes action vector.
+#'
+#' add here
+#'
+#' @param string Numeric vector.
+#' @param actions Numeric vector with the number of actions.
+#' @param states Numeric vector with the number of states.
+#' @param inputs Numeric vector length one.
+#'
+#' @return Returns numeric matrix.
+
 decode_state_mat <- function(string, states, inputs, actions){
         poss.state.values <- 1:states
         b1 <- GA::decimal2binary(max(poss.state.values))

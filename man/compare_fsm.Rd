@@ -15,18 +15,18 @@ compare_fsm(users, gas, comparison = "manhattan")
 }
 \value{
 Numeric vector of length one for the distance between the two
-supplied FSMs, calculated according to the comparison argument.
+  supplied FSMs, calculated according to the comparison argument.
 }
 \description{
 \code{compare_fsm} uses a specified distance measure to compare FSMs.
 }
 \details{
 Compares a user-defined FSM to a decoded estimated FSM. If you have have FSMs
-that may have values in the matrices that arent all simple integers, you can use
-the distance metric that is most appropriate. "euclidean" does
+that may have values in the matrices that arent all simple integers, you can
+use the distance metric that is most appropriate. "euclidean" does
 sqrt(sum((x_i - y_i)^2)) - the L2 norm. "manhattan" takes abs diff between
 them - the L1 norm. "binary" treats non-zero elements as ‘on’ and zero
-elements as ‘off’ and distance is the proportion of bits in which only one
-is on amongst those in which at least one is on.
+elements as ‘off’ and distance is the proportion of bits in which only one is
+on amongst those in which at least one is on.
 }
 

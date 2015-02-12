@@ -1,3 +1,15 @@
+#' Decodes Action Vector
+#'
+#' \code{decode_action_vec} decodes action vector.
+#'
+#' add here
+#'
+#' @param string Numeric vector.
+#' @param actions Numeric vector with the number of actions.
+#' @param states Numeric vector with the number of states.
+#' @param inputs Numeric vector length one.
+#'
+#' @return Returns numeric vector.
 
 decode_action_vec <- function(string, states, inputs, actions){
         # "states" is the number of rows;  "inputs" is the number of columns

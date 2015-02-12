@@ -2,8 +2,8 @@
 # boltzmann selection ##########################################################
 ################################################################################
 
-# see \citep{sivanandam_introduction_2007} for more on this selection mechanism
-# applied in the context of genetic algs.
+# see \citep{sivanandam_introduction_2007} and GA package vignette for more
+# on this selection mechanism applied in the context of genetic algs.
 
 BoltzmannSelection <- function(object, alpha = 0.2, eps = gaControl("eps"), ...){
         f <- object@fitness
@@ -25,6 +25,6 @@ BoltzmannSelection <- function(object, alpha = 0.2, eps = gaControl("eps"), ...)
 }
 
 
-# set the "selection" arg of the "ga" function to  
+# set the "selection" arg of the "ga" function to
 # "function(...) BoltzmannSelection(..., alpha = 0.0001)"
 

@@ -2,28 +2,30 @@
 #'
 #' \code{var_imp} calculates the importance of the covariates of the model.
 #'
-#' Takes the state matrix and action vector from an already evolved
-#' model and the fitness function and data used to evolve the model (or this could
-#' be test data), flips the values of each of the elements in the state matrix
-#' and measures the change in fitness (prediction of data) relative to the original
-#' model. Then these changes are summed across columns to provide the
-#' importance of each of the columns of the state matrix.
+#' Takes the state matrix and action vector from an already evolved model and
+#' the fitness function and data used to evolve the model (or this could be test
+#' data), flips the values of each of the elements in the state matrix and
+#' measures the change in fitness (prediction of data) relative to the original
+#' model. Then these changes are summed across columns to provide the importance
+#' of each of the columns of the state matrix.
 #'
-#' @param state_mat Numeric matrix with rows as states and columns as predictors.
-#' @param action_vec Numeric vector indicating what action to take for each state.
-#' @param fitness_func Function that takes \code{data}, \code{action_vec}, and \code{state_mat}
-#' as input and returns numeric vector of same length as the \code{outcome}. This
-#' is then used inside \code{var_imp} to compute a fitness score by comparing
-#' it to the provided \code{outcome}.
+#' @param state_mat Numeric matrix with rows as states and columns as
+#'   predictors.
+#' @param action_vec Numeric vector indicating what action to take for each
+#'   state.
+#' @param fitness_func Function that takes \code{data}, \code{action_vec}, and
+#'   \code{state_mat} as input and returns numeric vector of same length as the
+#'   \code{outcome}. This is then used inside \code{var_imp} to compute a
+#'   fitness score by comparing it to the provided \code{outcome}.
 #' @param data Numeric matrix that has first col period and rest of cols are
-#' predictors.
+#'   predictors.
 #' @param outcome Numeric vector same length as the number of rows as data.
 #'
-#' @return Numeric vector the same length as the number of columns of the provided
-#' state matrix (the number of predictors in the model) with relative importance
-#' scores for each predictor.
+#' @return Numeric vector the same length as the number of columns of the
+#'   provided state matrix (the number of predictors in the model) with relative
+#'   importance scores for each predictor.
 #'
-#'   @export
+#' @export
 
 var_imp <- function(state_mat, action_vec, fitness_func, data, outcome, cols=NULL){
 
