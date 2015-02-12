@@ -1,0 +1,62 @@
+#' Game Theory Decision-Making.
+#'
+#' A dataset containing experimental results of laboratory games with human
+#' subjects playing many variations on Iterated Prisoner's Dilemma games with
+#' real financial incentives (Bereby-Meyer and Roth 2006, Duffy and Ochs 2009,
+#' Kunreuther, Silvasi, Bradlow, and Small 2009, Dal Bo and Frechette 2011,
+#' Fudenberg, Rand, and Dreber 2012).
+#'
+#' @format A matrix with 135388 rows and 3 variables for period of play, my
+#'   previous decision, and the other agent's previous decision.
+#'
+#' @source Bereby-Meyer, Y., and A. E. Roth. 2006. ``The speed of learning in
+#'   noisy games: partial reinforcement and the sustainability of cooperation''.
+#'   American Economic Review 96 (4): 1029–1042.
+#'
+#'   Dal Bo, P., and G. R. Frechette. 2011. ``The Evolution of Cooperation in
+#'   Infinitely Repeated Games: Experimental Evidence''. American Economic
+#'   Review 101 (1): 411–429.
+#'
+#'   Duffy, J., and J. Ochs. 2009. ``Cooperative behavior and the frequency of
+#'   social interaction''. Games and Economic Behavior 66 (2): 785–812.
+#'
+#'   Fudenberg, D., D. G. Rand, and A. Dreber. 2012. ``Slow to Anger and Fast to
+#'   Forgive: Cooperation in an Uncertain World”'' American Economic Review 102
+#'   (2): 720–749.
+#'
+#'   Kunreuther, H., G. Silvasi, E. T. Bradlow, and D. Small. 2009. ``Bayesian
+#'   analysis of deterministic and stochastic prisoners dilemma games''.
+#'   Judgment and Decision Making 4 (5): 363–384.
+#'
+"data"
+
+#' Game Theory Decision-Making Outcomes.
+#'
+#' A dataset containing experimental results of laboratory games with human
+#' subjects playing many variations on Iterated Prisoner's Dilemma games with
+#' real financial incentives (Bereby-Meyer and Roth 2006, Duffy and Ochs 2009,
+#' Kunreuther, Silvasi, Bradlow, and Small 2009, Dal Bo and Frechette 2011,
+#' Fudenberg, Rand, and Dreber 2012).
+#'
+#' @format A vector with 135388 elements of players decisions at each time.
+#'
+#' @source Bereby-Meyer, Y., and A. E. Roth. 2006. ``The speed of learning in
+#'   noisy games: partial reinforcement and the sustainability of cooperation''.
+#'   American Economic Review 96 (4): 1029–1042.
+#'
+#'   Dal Bo, P., and G. R. Frechette. 2011. ``The Evolution of Cooperation in
+#'   Infinitely Repeated Games: Experimental Evidence''. American Economic
+#'   Review 101 (1): 411–429.
+#'
+#'   Duffy, J., and J. Ochs. 2009. ``Cooperative behavior and the frequency of
+#'   social interaction''. Games and Economic Behavior 66 (2): 785–812.
+#'
+#'   Fudenberg, D., D. G. Rand, and A. Dreber. 2012. ``Slow to Anger and Fast to
+#'   Forgive: Cooperation in an Uncertain World”'' American Economic Review 102
+#'   (2): 720–749.
+#'
+#'   Kunreuther, H., G. Silvasi, E. T. Bradlow, and D. Small. 2009. ``Bayesian
+#'   analysis of deterministic and stochastic prisoners dilemma games''.
+#'   Judgment and Decision Making 4 (5): 363–384.
+#'
+"outcome"
