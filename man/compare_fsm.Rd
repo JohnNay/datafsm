@@ -11,7 +11,7 @@ compare_fsm(users, gas, comparison = "manhattan")
 \item{gas}{Numeric vector or numeric matrix with an evolved FSM}
 
 \item{comparison}{Character string of length one with either "manhattan",
-"euclidean", or "binary".}
+  "euclidean", or "binary".}
 }
 \value{
 Numeric vector of length one for the distance between the two

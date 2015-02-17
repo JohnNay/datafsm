@@ -8,19 +8,25 @@ decode_state_mat(string, states, inputs, actions)
 \arguments{
 \item{string}{Numeric vector.}
 
-\item{states}{Numeric vector with the number of states.}
+\item{states}{Numeric vector with the number of states, which is the number
+of rows.}
 
-\item{inputs}{Numeric vector length one.}
+\item{inputs}{Numeric vector length one, with the number of columns.}
 
-\item{actions}{Numeric vector with the number of actions.}
+\item{actions}{Numeric vector with the number of actions. Actions (and
+  states) determine how many binary elements we need to represent an element
+  of the action (or state) matrix.}
 }
 \value{
-Returns numeric matrix.
+Returns numeric (integer) matrix.
 }
 \description{
-\code{decode_state_mat} decodes action vector.
+\code{decode_state_mat} decodes state matrix.
 }
 \details{
-add here
+This function takes a solution string of binary values in Gray
+representation, transforms it to a decimal representation, then puts it in
+matrix form with the correct sized matrices, given the specified numbers of
+states, inputs, and actions.
 }
 

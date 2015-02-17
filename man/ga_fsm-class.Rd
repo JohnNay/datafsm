@@ -6,7 +6,7 @@
 \alias{show,ga_fsm-method}
 \alias{summary,ga_fsm-method}
 \title{An S4 class to return the results of using a GA to estimate a FSM with
-evolve_model()}
+\code{\link{evolve_model}}.}
 \usage{
 \S4method{print}{ga_fsm}(x, ...)
 
@@ -19,7 +19,7 @@ evolve_model()}
 }
 \description{
 An S4 class to return the results of using a GA to estimate a FSM with
-evolve_model()
+\code{\link{evolve_model}}.
 }
 \section{Methods (by generic)}{
 \itemize{
@@ -32,7 +32,7 @@ evolve_model()
 \section{Slots}{
 
 \describe{
-\item{\code{call}}{Language from the call of the function evolve_model().}
+\item{\code{call}}{Language from the call of the function \code{\link{evolve_model}}.}
 
 \item{\code{actions}}{Numeric vector with the number of actions.}
 
@@ -46,7 +46,7 @@ evolve_model()
 state.}
 
 \item{\code{predictive}}{Numeric vector of length one with test data accuracy if test
-data was supplied; otherwise, a characte vector with a message that the
+data was supplied; otherwise, a character vector with a message that the
 user should provide test data for better estimate of performance.}
 
 \item{\code{degeneracy}}{List with message and sparse matrix.}

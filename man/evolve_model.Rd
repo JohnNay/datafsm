@@ -21,12 +21,59 @@ predictors.}
 \item{seed}{Numeric vector length one.}
 
 \item{fitness_func}{Function that takes data, action vector, and state matrix
-  as input and returns numeric vector of same length as the \code{outcome}.
-  This is then used inside \code{evolve_model} to compute a fitness score by
-  comparing it to the provided \code{outcome}.}
+as input and returns numeric vector of same length as the \code{outcome}.
+This is then used inside \code{evolve_model()} to compute a fitness score
+by comparing it to the provided \code{outcome}. Because this function must
+loop through all the data, it makes sense to implement in C++ so it is
+fast.}
 
-\item{cols}{Numeric vector that that denotes what action each column of
-  \code{state_mat} corresponds to.}
+\item{cols}{Numeric vector that denotes what action each column of
+\code{state_mat} corresponds to.}
+
+\item{test_data}{Numeric matrix that has first column the period of
+interaction between decision-makers and the rest of the columns are
+predictors for that decision. These predictors are often lagged decisions
+from previous time periods.}
+
+\item{test_outcome}{Numeric vector same length as the number of rows as
+test_data with the decision the decision-maker took for that period.}
+
+\item{popSize}{Numeric vector length one specifying the size of the GA
+population. A larger number will increase the probability of finding a very
+good solution but will also increase the computation time. This is passed
+to the ga() function of the GA package.}
+
+\item{pcrossover}{Numeric vector length one specifying probability of
+crossover for GA. This is passed to the ga() function of the GA package.}
+
+\item{pmutation}{Numeric vector length one specifying probability of mutation
+for GA. This is passed to the ga() function of the GA package.}
+
+\item{maxiter}{Numeric vector length one specifying max number of iterations
+for stopping the GA evolution. A larger number will increase the
+probability of finding a very good solution but will also increase the
+computation time. This is passed to the ga() function of the GA package.}
+
+\item{run}{Numeric vector length one specifying max number of consecutive
+iterations without improvement in best fitness score for stopping the GA
+evolution. A larger number will increase the probability of finding a very
+good solution but will also increase the computation time. This is passed
+to the ga() function of the GA package.}
+
+\item{parallel}{Logical vector length one. For running the GA evolution in
+parallel. Depending on the number of cores registered and the memory on
+your machine, this can make the process much faster.}
+
+\item{priors}{Numeric matrix of solutions strings to be included in the
+initialization, where the number of columns is equal to the number of bits.
+User needs to use a decoder function to translate prior decision models
+into bits and then provide them. If this is not specified, then random
+priors are automatically created.}
+
+\item{boltzmann}{Logical vector length one.}
+
+\item{alpha}{Numeric vector length one. This is an additional parameter to
+  tune/set if \code{boltzmann} is set to TRUE.}
 }
 \value{
 Returns an S4 object of class ga_fsm. See \linkS4class{ga_fsm} for
@@ -37,23 +84,29 @@ Returns an S4 object of class ga_fsm. See \linkS4class{ga_fsm} for
 }
 \description{
 \code{evolve_model} uses a genetic algorithm to estimate a finite-state
-machine model.
+machine model, primarily for understanding and predicting decision-making.
 }
 \details{
 This is the main function of the \strong{fsm} package. It takes data on
 predictors and data on the outcome and then uses a stochastic meta-heuristic
-optimization routine to estimate the parameter. Generalized simulated
+optimization routine to estimate the parameters. Generalized simulated
 annealing could work. The current version uses the \strong{GA} package's
 genetic algorithm because GAs perform well in rugged search spaces to solve
 integer optimization problems and are a natural complement to our binary
 string representation of FSMs.
+
+This function evolves the models on training data and then, if test set
+provided, uses the best solution to make predictions on test data, and then
+returns the GA object and the decoded version of the best string in the
+population. See \linkS4class{ga_fsm} for the details of the slots (objects)
+that this type of object will have.
 }
 \examples{
 \dontrun{
 # create "fitnessC"
 Rcpp::sourceCpp("/Users/johnnaymacbook/Documents/Rprojects/ga_fsm/genetic_abm/fitness.cpp")
 # load data from fsm package
-data(data); data (outcome)
+data(data); data(outcome)
 # 80\% of the data for training
 train_data <- data[1:108306, ]
 train_outcome <- outcome[1:108306]
@@ -64,7 +117,7 @@ evolved_models_empirical_data <- evolve_model(data = train_data, outcome = train
                                               actions = 2, states = 2, seed = 13,
                                               fitness_func = fitnessC, cols = c(1, 2, 1, 2),
                                               test_data =  test_data, test_outcome = test_outcome,
-                                              popSize = 175, maxiter = 55, run = 25, parallel = TRUE)
+                                              popSize = 75, maxiter = 55, run = 25, parallel = TRUE)
 print(evolved_models_empirical_data)
 show(evolved_models_empirical_data)
 summary(evolved_models_empirical_data)

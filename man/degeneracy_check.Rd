@@ -46,18 +46,17 @@ and 3 for D) for the row $k$ that corresponds to taking action j are not
 identifiable for a deterministic play of the strategy. For all elements of
 the matrix that are not identifiable, the value of the element can be any
 integer in the inclusive range of the number of rows of the matrix (e.g. 1 or
-2). We take this into account when testing the method's ability to estimate
-underlying deterministic models. When applying the method to empirical data,
-where the probability that a single deterministic model generated the data is
-effectively zero, we find every entry in the matrix that would be
-unidentifiable if the strategy were played deterministically and then for
-each element it flips it to its opposite value and tests for any change in
-fitness of the strategy on the data. If there is no change, a sparse matrix
-is returned where the the elements in that matrix with a 0 are unidentifiable
-because their value makes no difference to the fit of the strategy to the
-provided data. If, for each element in the matrix, switching its value led to
-a decrease in fitness the following message is displayed, ``Your strategy is
-a deterministic approximation of a stochastic process and all of the elements
+2). With empirical data, where the probability that a single deterministic
+model generated the data is effectively zero, it is useful to find every
+entry in the matrix that would be unidentifiable if the strategy were played
+deterministically and then for each element flip it to its opposite value and
+test for any change in fitness of the strategy on the data. This function
+implements this idea. If there is no change, a sparse matrix is returned
+where the the elements in that matrix with a 0 are unidentifiable because
+their value makes no difference to the fit of the strategy to the provided
+data. If, for each element in the matrix, switching its value led to a
+decrease in fitness the following message is displayed, ``Your strategy is a
+deterministic approximation of a stochastic process and all of the elements
 of the state matrix can be identified.'' If the model is fine, then
 \code{sparse_state_mat} and \code{corrected_state_mat} should be equal to
 \code{state_mat}.

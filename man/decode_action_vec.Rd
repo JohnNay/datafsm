@@ -6,21 +6,27 @@
 decode_action_vec(string, states, inputs, actions)
 }
 \arguments{
-\item{string}{Numeric vector.}
+\item{string}{Numeric (integer) vector of only 1's and 0's.}
 
-\item{states}{Numeric vector with the number of states.}
+\item{states}{Numeric vector with the number of states, which is the number
+of rows.}
 
-\item{inputs}{Numeric vector length one.}
+\item{inputs}{Numeric vector length one, with the number of columns.}
 
-\item{actions}{Numeric vector with the number of actions.}
+\item{actions}{Numeric vector with the number of actions. Actions (and
+  states) determine how many binary elements we need to represent an element
+  of the action (or state) matrix.}
 }
 \value{
-Returns numeric vector.
+Returns numeric (integer) vector.
 }
 \description{
 \code{decode_action_vec} decodes action vector.
 }
 \details{
-add here
+This function takes a solution string of binary values in Gray
+representation, transforms it to a decimal representation, then puts it in
+matrix form with the correct sized matrices, given the specified numbers of
+states, inputs, and actions.
 }
 
