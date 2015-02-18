@@ -10,6 +10,8 @@ print.summary.ga_fsm(x, digits = 3, ...)
 
 \item{digits}{numeric vector length one for how many significant digits to
 print}
+
+\item{...}{ignored.}
 }
 \description{
 Prints a summary of a ga_fsm S4 object

@@ -29,8 +29,12 @@
 #'   by comparing it to the provided \code{outcome}. Because this function must
 #'   loop through all the data, it makes sense to implement in C++ so it is
 #'   fast.
-#' @param cols Numeric vector that denotes what action each column of
-#'   \code{state_mat} corresponds to.
+#' @param cols Optional numeric vector same length as number of columns of the
+#'   state matrix (\code{state_mat}) with the action that each column of the
+#'   state matrix corresponds to the decision model taking in the previous
+#'   period. This is only relevant when the predictor variables of the FSM are
+#'   lagged outcomes that include the previous actions taken by that decision
+#'   model.
 #' @param test_data Numeric matrix that has first column the period of
 #'   interaction between decision-makers and the rest of the columns are
 #'   predictors for that decision. These predictors are often lagged decisions

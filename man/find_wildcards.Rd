@@ -12,8 +12,12 @@ predictors.}
 \item{action_vec}{Numeric vector indicating what action to take for each
 state.}
 
-\item{cols}{Numeric vector that that denotes what action each column of
-  \code{state_mat} corresponds to.}
+\item{cols}{Optional numeric vector same length as number of columns of the
+  state matrix (\code{state_mat}) with the action that each column of the
+  state matrix corresponds to the decision model taking in the previous
+  period. This is only relevant when the predictor variables of the FSM are
+  lagged outcomes that include the previous actions taken by that decision
+  model.}
 }
 \value{
 Returns a list of indices (tuples specifying row and column of a

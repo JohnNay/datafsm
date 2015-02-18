@@ -21,6 +21,13 @@ fitness score by comparing it to the provided \code{outcome}.}
 predictors.}
 
 \item{outcome}{Numeric vector same length as the number of rows as data.}
+
+\item{cols}{Optional numeric vector same length as number of columns of the
+  state matrix (\code{state_mat}) with the action that each column of the
+  state matrix corresponds to the decision model taking in the previous
+  period. This is only relevant when the predictor variables of the FSM are
+  lagged outcomes that include the previous actions taken by that decision
+  model.}
 }
 \value{
 Numeric vector the same length as the number of columns of the

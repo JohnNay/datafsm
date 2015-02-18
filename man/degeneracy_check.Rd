@@ -10,10 +10,14 @@ degeneracy_check(state_mat, action_vec, cols, fitness_func, data, outcome)
 predictors.}
 
 \item{action_vec}{Numeric vector indicating what action to take for each
-state.}
+ state.}
 
-\item{cols}{Numeric vector that that denotes what action each column of
-\code{state_mat} corresponds to.}
+\item{cols}{Optional numeric vector same length as number of columns of the
+state matrix (\code{state_mat}) with the action that each column of the
+state matrix corresponds to the decision model taking in the previous
+period. This is only relevant when the predictor variables of the FSM are
+lagged outcomes that include the previous actions taken by that decision
+model.}
 
 \item{fitness_func}{Function that takes data, action vector, and state matrix
 as input and returns numeric vector of same length as the \code{outcome}.

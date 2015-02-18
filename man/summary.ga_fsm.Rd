@@ -3,7 +3,7 @@
 \alias{summary.ga_fsm}
 \title{Turns ga_fsm S4 object into list for printing}
 \usage{
-summary.ga_fsm(object, ...)
+summary.ga_fsm(object)
 }
 \arguments{
 \item{object}{S4 ga_fsm object}

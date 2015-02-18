@@ -4,8 +4,11 @@
 
 # see \citep{sivanandam_introduction_2007} and GA package vignette for more
 # on this selection mechanism applied in the context of genetic algs.
+# this code is directly from the GA vignette.
+# Luca Scrucca (2013). GA: A Package for Genetic Algorithms in R. Journal of
+# Statistical Software, 53(4), 1-37. URL http://www.jstatsoft.org/v53/i04/.
 
-BoltzmannSelection <- function(object, alpha = 0.2, eps = gaControl("eps"), ...){
+BoltzmannSelection <- function(object, alpha = 0.2, eps = GA::gaControl("eps"), ...){
         f <- object@fitness
         T0 <- max(f)-min(f)
         k <- 1 + 100*object@iter/object@maxiter

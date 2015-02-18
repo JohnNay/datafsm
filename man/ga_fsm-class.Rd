@@ -12,7 +12,7 @@
 
 \S4method{show}{ga_fsm}(object)
 
-\S4method{summary}{ga_fsm}(object, ...)
+\S4method{summary}{ga_fsm}(object)
 }
 \arguments{
 \item{object}{S4 ga_fsm object}
