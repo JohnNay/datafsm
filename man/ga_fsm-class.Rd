@@ -12,7 +12,7 @@
 
 \S4method{show}{ga_fsm}(object)
 
-\S4method{summary}{ga_fsm}(object, ...)
+\S4method{summary}{ga_fsm}(object, digits = 3)
 }
 \arguments{
 \item{x}{S4 ga_fsm object}
@@ -20,10 +20,17 @@
 \item{...}{ignored}
 
 \item{object}{S4 ga_fsm object}
+
+\item{digits}{numeric vector length one for how many significant digits to
+print}
+
+\item{object}{S4 ga_fsm object}
 }
 \description{
 An S4 class to return the results of using a GA to estimate a FSM with
 \code{\link{evolve_model}}.
+
+Turns ga_fsm S4 object into list for printing
 }
 \section{Methods (by generic)}{
 \itemize{

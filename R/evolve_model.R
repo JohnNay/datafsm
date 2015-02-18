@@ -74,7 +74,7 @@
 #'   the details of the slots (objects) that this type of object will have and
 #'   for information on the methods that can be used to summarize the calling
 #'   and execution of \code{evolve_model()}, including
-#'   \code{\link{summary.ga_fsm}}.
+#'   \code{\link{summary}}.
 #'
 #' @examples
 #' \dontrun{

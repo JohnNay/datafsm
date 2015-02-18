@@ -56,9 +56,8 @@ setClass("ga_fsm",
 #' @param ... ignored
 #'  @export
 
-setMethod("print",
-                   "ga_fsm",
-                   function(x, ...) str(x)
+setMethod("print", "ga_fsm",
+          function(x, ...) str(x)
 )
 
 ################################################################################
@@ -68,91 +67,78 @@ setMethod("print",
 
 setMethod("show", "ga_fsm",
           function(object) {
-            cat("An object of class \"ga_fsm\"\n")
-            cat("\nCall:\n", deparse(object@call), "\n\n",sep="")
-            cat("Available slots:\n")
-            print(slotNames(object))
+                  cat("An object of class \"ga_fsm\"\n")
+                  cat("\nCall:\n", deparse(object@call), "\n\n",sep="")
+                  cat("Available slots:\n")
+                  print(slotNames(object))
           }
 )
 
 ################################################################################
 #' Turns ga_fsm S4 object into list for printing
-#' @param object S4 ga_fsm object
-#' @param ... ignored
-#'  @export
-
-summary.ga_fsm <- function(object, ...) {
-  out <- list(
-    # ga-related
-    popSize = object@GA@popSize,
-    maxiter = object@GA@maxiter,
-    elitism = object@GA@elitism,
-    pcrossover = object@GA@pcrossover,
-    pmutation = object@GA@pmutation,
-    iter = object@GA@iter,
-    fitness = object@GA@fitnessValue,
-    bit_string_solution = object@GA@solution,
-    # fsm-related
-    actions = object@actions,
-    states = object@states,
-    state_mat = object@state_mat,
-    action_vec = object@action_vec,
-    predictive = object@predictive,
-    degeneracy = object@degeneracy,
-    varImp = object@varImp
-  )
-  class(out) <- "summary.ga_fsm"
-  out
-}
-
-################################################################################
 #' @describeIn ga_fsm An S4 method for summarizing a ga_fsm S4 object
-#'  @export
-setMethod("summary", "ga_fsm", summary.ga_fsm)
-
-################################################################################
-#' Prints a summary of a ga_fsm S4 object
-#' @param x ga_fsm object
+#'
+#' @param object S4 ga_fsm object
 #' @param digits numeric vector length one for how many significant digits to
 #' print
-#' @param ... ignored.
 #'  @export
 
-print.summary.ga_fsm <- function(x, digits = 3, ...) {
-  cat("                                    \n")
-  cat("           GA-FSM Results:          \n")
-  cat("                                    \n")
+setMethod("summary", "ga_fsm",
+          function(object, digits = 3) {
+                  x <- list(
+                          # ga-related
+                          popSize = object@GA@popSize,
+                          maxiter = object@GA@maxiter,
+                          elitism = object@GA@elitism,
+                          pcrossover = object@GA@pcrossover,
+                          pmutation = object@GA@pmutation,
+                          iter = object@GA@iter,
+                          fitness = object@GA@fitnessValue,
+                          bit_string_solution = object@GA@solution,
+                          # fsm-related
+                          actions = object@actions,
+                          states = object@states,
+                          state_mat = object@state_mat,
+                          action_vec = object@action_vec,
+                          predictive = object@predictive,
+                          degeneracy = object@degeneracy,
+                          varImp = object@varImp
+                  )
+                  cat("                                    \n")
+                  cat("           GA-FSM Results:          \n")
+                  cat("                                    \n")
 
-  cat("Gentic Algorithm Settings: \n")
-  cat(paste("Population size       = ", x$popSize, "\n"))
-  cat(paste("Number of generations = ", x$maxiter, "\n"))
-  cat(paste("Elitism               = ", x$elitism, "\n"))
-  cat(paste("Crossover probability = ", format(x$pcrossover, digits = digits), "\n"))
-  cat(paste("Mutation probability  = ", format(x$pmutation, digits = digits), "\n"))
+                  cat("Gentic Algorithm Settings: \n")
+                  cat(paste("Population size       = ", x$popSize, "\n"))
+                  cat(paste("Number of generations = ", x$maxiter, "\n"))
+                  cat(paste("Elitism               = ", x$elitism, "\n"))
+                  cat(paste("Crossover probability = ", format(x$pcrossover, digits = digits), "\n"))
+                  cat(paste("Mutation probability  = ", format(x$pmutation, digits = digits), "\n"))
 
-  cat("\nFinite State Machine Settings: \n")
-  cat(paste("Actions = ", x$actions, "\n"))
-  cat(paste("States  = ", x$states, "\n"))
+                  cat("\nFinite State Machine Settings: \n")
+                  cat(paste("Actions = ", x$actions, "\n"))
+                  cat(paste("States  = ", x$states, "\n"))
 
-  cat("\nResults: \n\n")
-  cat(paste("Iterations For This Run              =", format(x$iter, digits = digits), "\n"))
-  cat(paste("Training Data Fitness Function Value =", format(x$fitness, digits = digits), "\n"))
-  cat(paste("Test Data Fitness Function Value     =", format(x$predictive, digits = digits), "\n"))
+                  cat("\nResults: \n\n")
+                  cat(paste("Iterations For This Run              =", format(x$iter, digits = digits), "\n"))
+                  cat(paste("Training Data Fitness Function Value =", format(x$fitness, digits = digits), "\n"))
+                  cat(paste("Test Data Fitness Function Value     =", format(x$predictive, digits = digits), "\n"))
 
-  cat(paste("\n(Bit String Form) of Solution: \n"))
-  print(x$bit_string_solution[1, ], digits = digits)
+                  cat(paste("\n(Bit String Form) of Solution: \n"))
+                  print(x$bit_string_solution[1, ], digits = digits)
 
-  cat("\nState Matrix of Solution: \n")
-  print(x$state_mat, digits = digits)
+                  cat("\nState Matrix of Solution: \n")
+                  print(x$state_mat, digits = digits)
 
-  cat("\nAction Vector of Solution: \n")
-  print(x$action_vec, digits = digits)
+                  cat("\nAction Vector of Solution: \n")
+                  print(x$action_vec, digits = digits)
 
-  cat(paste("\nFriendly Degeneracy Message:", x$degeneracy$message, "\n"))
-  #         TODO: degeneracy$diff TODO: degeneracy$sparse_state_mat
+                  cat(paste("\nFriendly Degeneracy Message:", x$degeneracy$message, "\n"))
+                  #         TODO: degeneracy$diff TODO: degeneracy$sparse_state_mat
 
-  cat("\nVariable Importance: \n")
-  print(x$varImp, digits = digits)
+                  cat("\nVariable Importance: \n")
+                  print(x$varImp, digits = digits)
 
-  invisible()
-}
+                  invisible(x)
+          }
+)
