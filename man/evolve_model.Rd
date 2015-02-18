@@ -123,15 +123,16 @@ show(evolved_models_empirical_data)
 summary(evolved_models_empirical_data)
 
 data <- data.frame(y = evolved_models_empirical_data@varImp, x= c("cc", "dc", "cd", "dd"))
-p <- ggplot(data, aes(x = x, y=y)) + geom_bar(stat="identity") + coord_flip() +
-        ylab("Relative Importance") +
-        xlab("Variables")
+p <- ggplot2::ggplot(data, ggplot2::aes(x = x, y=y)) + ggplot2::geom_bar(stat="identity") +
+                     ggplot2::coord_flip() +
+                     ggplot2::ylab("Relative Importance") + ggplot2::xlab("Variables")
 p
 
 plot(evolved_models_empirical_data@GA,
      cex.points = 1.2, cex.lab = 1.1, cex.axis = 1.1,
      col = c("green3", "dodgerblue3", adjustcolor("green3", alpha.f = 0.1)),
     pch = c(16, 1), lty = c(1,2), grid = graphics:::grid)
+
 }
 }
 
