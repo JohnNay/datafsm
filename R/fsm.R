@@ -8,3 +8,6 @@
 #' @docType package
 #' @name fsm
 NULL
+
+#' @importFrom methods setClass setGeneric setMethod setRefClass
+NULL

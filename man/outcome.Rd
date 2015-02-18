@@ -17,7 +17,7 @@ Bereby-Meyer, Y., and A. E. Roth. 2006. ``The speed of learning in
   social interaction''. Games and Economic Behavior 66 (2): 785–812.
 
   Fudenberg, D., D. G. Rand, and A. Dreber. 2012. ``Slow to Anger and Fast to
-  Forgive: Cooperation in an Uncertain World”'' American Economic Review 102
+  Forgive: Cooperation in an Uncertain World'' American Economic Review 102
   (2): 720–749.
 
   Kunreuther, H., G. Silvasi, E. T. Bradlow, and D. Small. 2009. ``Bayesian

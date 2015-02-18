@@ -15,12 +15,13 @@ Description: This package implements a method for estimating interpretable
     international relations data. This work was supported by NSF grants
     EAR-1416964 and EAR-1204685.
 Depends:
-    R (>= 3.1.1)
+    R (>= 3.1.1),
+    methods
 License: What license is it under?
 LazyData: true
 LinkingTo: Rcpp
-Imports:
-    GA,
+Suggests:
     ggplot2,
-    parallel,
-    Rcpp
+    parallel
+Imports:
+    GA

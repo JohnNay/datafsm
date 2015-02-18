@@ -7,25 +7,25 @@
 #' Fudenberg, Rand, and Dreber 2012).
 #'
 #' @format A matrix with 135388 rows and 3 variables for period of play, my
-#'   previous decision, and the other agent's previous decision.
+#'   previous decision, and the other agents previous decision.
 #'
-#' @source Bereby-Meyer, Y., and A. E. Roth. 2006. ``The speed of learning in
-#'   noisy games: partial reinforcement and the sustainability of cooperation''.
+#' @source Bereby-Meyer, Y., and A. E. Roth. 2006. "The speed of learning in
+#'   noisy games: partial reinforcement and the sustainability of cooperation".
 #'   American Economic Review 96 (4): 1029–1042.
 #'
-#'   Dal Bo, P., and G. R. Frechette. 2011. ``The Evolution of Cooperation in
-#'   Infinitely Repeated Games: Experimental Evidence''. American Economic
+#'   Dal Bo, P., and G. R. Frechette. 2011. "The Evolution of Cooperation in
+#'   Infinitely Repeated Games: Experimental Evidence". American Economic
 #'   Review 101 (1): 411–429.
 #'
-#'   Duffy, J., and J. Ochs. 2009. ``Cooperative behavior and the frequency of
-#'   social interaction''. Games and Economic Behavior 66 (2): 785–812.
+#'   Duffy, J., and J. Ochs. 2009. "Cooperative behavior and the frequency of
+#'   social interaction". Games and Economic Behavior 66 (2): 785–812.
 #'
-#'   Fudenberg, D., D. G. Rand, and A. Dreber. 2012. ``Slow to Anger and Fast to
-#'   Forgive: Cooperation in an Uncertain World”'' American Economic Review 102
+#'   Fudenberg, D., D. G. Rand, and A. Dreber. 2012. "Slow to Anger and Fast to
+#'   Forgive: Cooperation in an Uncertain World". American Economic Review 102
 #'   (2): 720–749.
 #'
-#'   Kunreuther, H., G. Silvasi, E. T. Bradlow, and D. Small. 2009. ``Bayesian
-#'   analysis of deterministic and stochastic prisoners dilemma games''.
+#'   Kunreuther, H., G. Silvasi, E. T. Bradlow, and D. Small. 2009. "Bayesian
+#'   analysis of deterministic and stochastic prisoners dilemma games".
 #'   Judgment and Decision Making 4 (5): 363–384.
 #'
 "data"
@@ -52,7 +52,7 @@
 #'   social interaction''. Games and Economic Behavior 66 (2): 785–812.
 #'
 #'   Fudenberg, D., D. G. Rand, and A. Dreber. 2012. ``Slow to Anger and Fast to
-#'   Forgive: Cooperation in an Uncertain World”'' American Economic Review 102
+#'   Forgive: Cooperation in an Uncertain World'' American Economic Review 102
 #'   (2): 720–749.
 #'
 #'   Kunreuther, H., G. Silvasi, E. T. Bradlow, and D. Small. 2009. ``Bayesian

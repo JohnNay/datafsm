@@ -33,6 +33,7 @@ setClassUnion("numericOrchar", members = c("numeric", "character"))
 #' @slot degeneracy List with message and sparse matrix.
 #' @slot varImp Numeric vector same length as number of columns of state matrix
 #'   with relative importance scores for each predictor.
+#'   @export
 
 setClass("ga_fsm",
          slots = c(call = "language",
@@ -49,11 +50,13 @@ setClass("ga_fsm",
 
 ################################################################################
 #' @describeIn ga_fsm An S4 method for printing a ga_fsm S4 object
+#' @param x S4 ga_fsm object
+#' @param ... ignored
 #'  @export
 
 setMethod("print",
-          "ga_fsm",
-          function(x, ...) str(x)
+                   "ga_fsm",
+                   function(x, ...) str(x)
 )
 
 ################################################################################
@@ -73,9 +76,10 @@ setMethod("show", "ga_fsm",
 ################################################################################
 #' Turns ga_fsm S4 object into list for printing
 #' @param object S4 ga_fsm object
+#' @param ... ignored
 #'  @export
 
-summary.ga_fsm <- function(object) {
+summary.ga_fsm <- function(object, ...) {
   out <- list(
     # ga-related
     popSize = object@GA@popSize,

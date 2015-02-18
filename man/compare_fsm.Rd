@@ -23,10 +23,10 @@ Numeric vector of length one for the distance between the two
 \details{
 Compares a user-defined FSM to a decoded estimated FSM. If you have have FSMs
 that may have values in the matrices that arent all simple integers, you can
-use the distance metric that is most appropriate. "euclidean" does
-sqrt(sum((x_i - y_i)^2)) - the L2 norm. "manhattan" takes abs diff between
-them - the L1 norm. "binary" treats non-zero elements as ‘on’ and zero
-elements as ‘off’ and distance is the proportion of bits in which only one is
+use the distance metric that is most appropriate. Euclidean does
+sqrt(sum((x_i - y_i)^2)) - the L2 norm. Manhattan takes abs diff between
+them - the L1 norm. Binary treats non-zero elements as "on" and zero
+elements as "off" and distance is the proportion of bits in which only one is
 on amongst those in which at least one is on.
 }
 
