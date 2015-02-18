@@ -16,6 +16,7 @@ check_ga_fsm <- function(object) {
 ################################################################################
 setClassUnion("numericOrchar", members = c("numeric", "character"))
 
+
 ################################################################################
 #' An S4 class to return the results of using a GA to estimate a FSM with
 #' \code{\link{evolve_model}}.
@@ -35,11 +36,12 @@ setClassUnion("numericOrchar", members = c("numeric", "character"))
 #'   with relative importance scores for each predictor.
 #'   @export
 
+#' @importClassesFrom GA ga
 setClass("ga_fsm",
          slots = c(call = "language",
                    actions = "numeric",
                    states = "numeric",
-                   GA = "ANY", # from package "GA"
+                   GA = "ga", # from package "GA"
                    state_mat = "matrix",
                    action_vec = "numeric",
                    predictive = "numericOrchar",
