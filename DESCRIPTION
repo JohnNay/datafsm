@@ -17,7 +17,7 @@ Description: This package implements a method for estimating interpretable
 Depends:
     R (>= 3.1.1),
     methods
-License: What license is it under?
+License: GPL-3
 LazyData: true
 LinkingTo: Rcpp
 Suggests:

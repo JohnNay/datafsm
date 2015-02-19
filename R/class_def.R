@@ -1,5 +1,10 @@
 ################################################################################
-check_ga_fsm <- function(object) {
+#' A function to check for errors
+#'
+#' @param object S4 ga_fsm object
+#'
+
+check_ga_fsm <- function(object){
   errors <- character()
   #         timeSteps <- times(object)
   #         if (timeSteps[1] > timeSteps[2]) {
@@ -34,6 +39,7 @@ setClassUnion("numericOrchar", members = c("numeric", "character"))
 #' @slot degeneracy List with message and sparse matrix.
 #' @slot varImp Numeric vector same length as number of columns of state matrix
 #'   with relative importance scores for each predictor.
+#'
 #'   @export
 
 #' @importClassesFrom GA ga
@@ -62,7 +68,6 @@ setMethod("print", "ga_fsm",
 
 ################################################################################
 #' @describeIn ga_fsm An S4 method for showing a ga_fsm S4 object
-#' @param object S4 ga_fsm object
 #'  @export
 
 setMethod("show", "ga_fsm",
@@ -81,6 +86,7 @@ setMethod("show", "ga_fsm",
 #' @param object S4 ga_fsm object
 #' @param digits numeric vector length one for how many significant digits to
 #' print
+#'
 #'  @export
 
 setMethod("summary", "ga_fsm",

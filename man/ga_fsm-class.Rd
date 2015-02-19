@@ -23,8 +23,6 @@
 
 \item{digits}{numeric vector length one for how many significant digits to
 print}
-
-\item{object}{S4 ga_fsm object}
 }
 \description{
 An S4 class to return the results of using a GA to estimate a FSM with
@@ -63,6 +61,6 @@ user should provide test data for better estimate of performance.}
 \item{\code{degeneracy}}{List with message and sparse matrix.}
 
 \item{\code{varImp}}{Numeric vector same length as number of columns of state matrix
-with relative importance scores for each predictor.}
+  with relative importance scores for each predictor.}
 }}
 
