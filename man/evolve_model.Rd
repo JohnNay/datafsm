@@ -3,18 +3,17 @@
 \alias{evolve_model}
 \title{Uses a Genetic Algorithm to Estimate a Finite-state Machine}
 \usage{
-evolve_model(data, outcome, seed, fitness_func, states = 2, actions = NULL,
-  cols = NULL, test_data = NULL, test_outcome = NULL, popSize = 39,
-  pcrossover = 0.8, pmutation = 0.1, maxiter = 20, run = 8,
-  parallel = FALSE, priors = NULL, boltzmann = FALSE, alpha = 0.4)
+evolve_model(data, outcome, fitness_func, states = 2, actions = NULL,
+  seed = NULL, cols = NULL, test_data = NULL, test_outcome = NULL,
+  popSize = 75, pcrossover = 0.8, pmutation = 0.1, maxiter = 55,
+  run = 25, parallel = FALSE, priors = NULL, boltzmann = FALSE,
+  alpha = 0.4)
 }
 \arguments{
 \item{data}{Numeric matrix that has first col period and rest of cols are
 predictors.}
 
 \item{outcome}{Numeric vector same length as the number of rows as data.}
-
-\item{seed}{Numeric vector length one.}
 
 \item{fitness_func}{Function that takes data, action vector, and state matrix
 as input and returns numeric vector of same length as the \code{outcome}.
@@ -28,6 +27,8 @@ fast.}
 \item{actions}{Optional numeric vector with the number of actions. If not
 provided, then actions will be set as the number of unique values in the
 outcome vector.}
+
+\item{seed}{Optional numeric vector length one.}
 
 \item{cols}{Optional numeric vector same length as number of columns of the
 state matrix (\code{state_mat}) with the action that each column of the
@@ -120,10 +121,9 @@ train_outcome <- outcome[1:108306]
 test_data <- data[108307:nrow(data), ]
 test_outcome <- outcome[108307:nrow(data)]
 evolved_models_empirical_data <- evolve_model(data = train_data, outcome = train_outcome,
-                                              actions = 2, states = 2, seed = 13,
                                               fitness_func = fitnessC, cols = c(1, 2, 1, 2),
                                               test_data =  test_data, test_outcome = test_outcome,
-                                              popSize = 75, maxiter = 55, run = 25, parallel = TRUE)
+                                              parallel = TRUE)
 print(evolved_models_empirical_data)
 show(evolved_models_empirical_data)
 summary(evolved_models_empirical_data)
@@ -133,11 +133,6 @@ p <- ggplot2::ggplot(data, ggplot2::aes(x = x, y=y)) + ggplot2::geom_bar(stat="i
                      ggplot2::coord_flip() +
                      ggplot2::ylab("Relative Importance") + ggplot2::xlab("Variables")
 p
-
-plot(evolved_models_empirical_data@GA,
-     cex.points = 1.2, cex.lab = 1.1, cex.axis = 1.1,
-     col = c("green3", "dodgerblue3", adjustcolor("green3", alpha.f = 0.1)),
-    pch = c(16, 1), lty = c(1,2), grid = graphics:::grid)
 
 }
 }

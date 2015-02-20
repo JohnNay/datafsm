@@ -20,7 +20,6 @@
 #' @param data Numeric matrix that has first col period and rest of cols are
 #'   predictors.
 #' @param outcome Numeric vector same length as the number of rows as data.
-#' @param seed Numeric vector length one.
 #' @param fitness_func Function that takes data, action vector, and state matrix
 #'   as input and returns numeric vector of same length as the \code{outcome}.
 #'   This is then used inside \code{evolve_model()} to compute a fitness score
@@ -31,6 +30,7 @@
 #' @param actions Optional numeric vector with the number of actions. If not
 #'   provided, then actions will be set as the number of unique values in the
 #'   outcome vector.
+#' @param seed Optional numeric vector length one.
 #' @param cols Optional numeric vector same length as number of columns of the
 #'   state matrix (\code{state_mat}) with the action that each column of the
 #'   state matrix corresponds to the decision model taking in the previous
@@ -91,10 +91,9 @@
 #' test_data <- data[108307:nrow(data), ]
 #' test_outcome <- outcome[108307:nrow(data)]
 #' evolved_models_empirical_data <- evolve_model(data = train_data, outcome = train_outcome,
-#'                                               actions = 2, states = 2, seed = 13,
 #'                                               fitness_func = fitnessC, cols = c(1, 2, 1, 2),
 #'                                               test_data =  test_data, test_outcome = test_outcome,
-#'                                               popSize = 75, maxiter = 55, run = 25, parallel = TRUE)
+#'                                               parallel = TRUE)
 #' print(evolved_models_empirical_data)
 #' show(evolved_models_empirical_data)
 #' summary(evolved_models_empirical_data)
@@ -105,22 +104,18 @@
 #'                      ggplot2::ylab("Relative Importance") + ggplot2::xlab("Variables")
 #' p
 #'
-#' plot(evolved_models_empirical_data@@GA,
-#'      cex.points = 1.2, cex.lab = 1.1, cex.axis = 1.1,
-#'      col = c("green3", "dodgerblue3", adjustcolor("green3", alpha.f = 0.1)),
-#'     pch = c(16, 1), lty = c(1,2), grid = graphics:::grid)
-#'
 #' }
 #'
 #' @export
 
 ################################################################################
-evolve_model <- function(data, outcome, seed, fitness_func,
+evolve_model <- function(data, outcome, fitness_func,
                          states = 2,
                          actions = NULL,
+                         seed = NULL,
                          cols = NULL,
                          test_data = NULL, test_outcome = NULL,
-                         popSize = 39, pcrossover = 0.8, pmutation = 0.1, maxiter = 20, run = 8,
+                         popSize = 75, pcrossover = 0.8, pmutation = 0.1, maxiter = 55, run = 25,
                          parallel = FALSE,
                          priors = NULL,
                          boltzmann = FALSE, alpha=0.4) {
@@ -129,8 +124,16 @@ evolve_model <- function(data, outcome, seed, fitness_func,
   # where the number of columns == the number of bits. so you need to use the decoder funcs
   # to translate prior decision models into bits and then provide them.
 
-        #TODO: add automatic CV on training data to find optimal value for states
-        #TODO: automatically create fitness_func in cpp
+        #TODO: add automatic run CV across states==2:4 on training data to find optimal value
+        # in terms of generalization performance.
+
+        #TODO: generalize fitness_obs_new.cpp to make it so fitnessR() can be built in here
+        # without needing to pass in any fitness_func arg. you will just need to pass in a
+        # data matrix with predictor columns that are only binary for whether that predictor
+        # variable is true or false for that period. And then a period column that is
+        # integer valued denoting what period that row corresponds to. Then in here we take the
+        # predictor columns and use data.matrix() to create new rows for all the combinations of
+        # values of predictors.
 
   call <- match.call()
 
@@ -146,18 +149,23 @@ evolve_model <- function(data, outcome, seed, fitness_func,
                                               outcome variable are not the same length.")
   if (anyNA(outcome)) stop("Error: There are missing values in the data.")
   if (length(outcome) == 0) stop("Error: The outcome is zero length.")
-  if (missing(seed)) stop("Error: Set a seed to make this reproducible.")
-  if (length(unique(outcome)) != actions) {warning("The number of unique values in the
+  if (missing(seed)) {
+          seed <- floor(runif(1, 1,101))
+          warning(paste("We set a seed for you to make this reproducible. It is ", seed, ".", sep=""))
+  }
+  if (missing(actions)) {
+          actions <- length(unique(outcome))
+  } else {
+          if (length(unique(outcome)) != actions) {warning("The number of unique values in the
                                                   outcome vector you supplied does not
                                                   equal the value of actions you supplied.
                                                   The outcome vector should be a vector of
                                                   observed actions. We are going to use the
                                                   number of unique values in the outcome
                                                   vector you supplied as the value of actions.")
-                                           actions <- length(unique(outcome))
+                                                   actions <- length(unique(outcome))
+          }
   }
-
-  if (missing(actions)) actions <- length(unique(outcome))
 
   inputs <- 2^(ncol(data)-1) # bc 1 of the columns is for period, and the rest are covariates
 
