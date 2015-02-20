@@ -3,20 +3,16 @@
 \alias{evolve_model}
 \title{Uses a Genetic Algorithm to Estimate a Finite-state Machine}
 \usage{
-evolve_model(data, outcome, actions, states, seed, fitness_func, cols = NULL,
-  test_data = NULL, test_outcome = NULL, popSize = 39, pcrossover = 0.8,
-  pmutation = 0.1, maxiter = 20, run = 8, parallel = FALSE,
-  priors = NULL, boltzmann = FALSE, alpha = 0.4)
+evolve_model(data, outcome, seed, fitness_func, states = 2, actions = NULL,
+  cols = NULL, test_data = NULL, test_outcome = NULL, popSize = 39,
+  pcrossover = 0.8, pmutation = 0.1, maxiter = 20, run = 8,
+  parallel = FALSE, priors = NULL, boltzmann = FALSE, alpha = 0.4)
 }
 \arguments{
 \item{data}{Numeric matrix that has first col period and rest of cols are
 predictors.}
 
 \item{outcome}{Numeric vector same length as the number of rows as data.}
-
-\item{actions}{Numeric vector with the number of actions.}
-
-\item{states}{Numeric vector with the number of states.}
 
 \item{seed}{Numeric vector length one.}
 
@@ -27,6 +23,12 @@ by comparing it to the provided \code{outcome}. Because this function must
 loop through all the data, it makes sense to implement in C++ so it is
 fast.}
 
+\item{states}{Optional numeric vector with the number of states.}
+
+\item{actions}{Optional numeric vector with the number of actions. If not
+provided, then actions will be set as the number of unique values in the
+outcome vector.}
+
 \item{cols}{Optional numeric vector same length as number of columns of the
 state matrix (\code{state_mat}) with the action that each column of the
 state matrix corresponds to the decision model taking in the previous
@@ -34,57 +36,57 @@ period. This is only relevant when the predictor variables of the FSM are
 lagged outcomes that include the previous actions taken by that decision
 model.}
 
-\item{test_data}{Numeric matrix that has first column the period of
+\item{test_data}{Optional numeric matrix that has first column the period of
 interaction between decision-makers and the rest of the columns are
 predictors for that decision. These predictors are often lagged decisions
 from previous time periods.}
 
-\item{test_outcome}{Numeric vector same length as the number of rows as
-test_data with the decision the decision-maker took for that period.}
+\item{test_outcome}{Optional numeric vector same length as the number of rows
+as test_data with the decision the decision-maker took for that period.}
 
-\item{popSize}{Numeric vector length one specifying the size of the GA
-population. A larger number will increase the probability of finding a very
-good solution but will also increase the computation time. This is passed
-to the ga() function of the GA package.}
+\item{popSize}{Optional numeric vector length one specifying the size of the
+GA population. A larger number will increase the probability of finding a
+very good solution but will also increase the computation time. This is
+passed to the ga() function of the GA package.}
 
-\item{pcrossover}{Numeric vector length one specifying probability of
-crossover for GA. This is passed to the ga() function of the GA package.}
+\item{pcrossover}{Optional numeric vector length one specifying probability
+of crossover for GA. This is passed to the ga() function of the GA package.}
 
-\item{pmutation}{Numeric vector length one specifying probability of mutation
-for GA. This is passed to the ga() function of the GA package.}
+\item{pmutation}{Optional numeric vector length one specifying probability of
+mutation for GA. This is passed to the ga() function of the GA package.}
 
-\item{maxiter}{Numeric vector length one specifying max number of iterations
-for stopping the GA evolution. A larger number will increase the
+\item{maxiter}{Optional numeric vector length one specifying max number of
+iterations for stopping the GA evolution. A larger number will increase the
 probability of finding a very good solution but will also increase the
 computation time. This is passed to the ga() function of the GA package.}
 
-\item{run}{Numeric vector length one specifying max number of consecutive
-iterations without improvement in best fitness score for stopping the GA
-evolution. A larger number will increase the probability of finding a very
-good solution but will also increase the computation time. This is passed
-to the ga() function of the GA package.}
+\item{run}{Optional numeric vector length one specifying max number of
+consecutive iterations without improvement in best fitness score for
+stopping the GA evolution. A larger number will increase the probability of
+finding a very good solution but will also increase the computation time.
+This is passed to the ga() function of the GA package.}
 
-\item{parallel}{Logical vector length one. For running the GA evolution in
-parallel. Depending on the number of cores registered and the memory on
-your machine, this can make the process much faster.}
+\item{parallel}{Optional logical vector length one. For running the GA
+evolution in parallel. Depending on the number of cores registered and the
+memory on your machine, this can make the process much faster, but only
+works for Unix-based machines that can fork the processes.}
 
-\item{priors}{Numeric matrix of solutions strings to be included in the
-initialization, where the number of columns is equal to the number of bits.
-User needs to use a decoder function to translate prior decision models
-into bits and then provide them. If this is not specified, then random
-priors are automatically created.}
+\item{priors}{Optional numeric matrix of solutions strings to be included in
+the initialization, where the number of columns is equal to the number of
+bits. User needs to use a decoder function to translate prior decision
+models into bits and then provide them. If this is not specified, then
+random priors are automatically created.}
 
-\item{boltzmann}{Logical vector length one.}
+\item{boltzmann}{Optional logical vector length one.}
 
-\item{alpha}{Numeric vector length one. This is an additional parameter to
-  tune/set if \code{boltzmann} is set to TRUE.}
+\item{alpha}{Optional numeric vector length one. This is an additional
+  parameter to tune/set if \code{boltzmann} is set to TRUE.}
 }
 \value{
 Returns an S4 object of class ga_fsm. See \linkS4class{ga_fsm} for
   the details of the slots (objects) that this type of object will have and
   for information on the methods that can be used to summarize the calling
-  and execution of \code{evolve_model()}, including
-  \code{\link{summary}}.
+  and execution of \code{evolve_model()}, including \code{\link{summary}}.
 }
 \description{
 \code{evolve_model} uses a genetic algorithm to estimate a finite-state

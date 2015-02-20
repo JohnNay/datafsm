@@ -20,8 +20,6 @@
 #' @param data Numeric matrix that has first col period and rest of cols are
 #'   predictors.
 #' @param outcome Numeric vector same length as the number of rows as data.
-#' @param actions Numeric vector with the number of actions.
-#' @param states Numeric vector with the number of states.
 #' @param seed Numeric vector length one.
 #' @param fitness_func Function that takes data, action vector, and state matrix
 #'   as input and returns numeric vector of same length as the \code{outcome}.
@@ -29,52 +27,56 @@
 #'   by comparing it to the provided \code{outcome}. Because this function must
 #'   loop through all the data, it makes sense to implement in C++ so it is
 #'   fast.
+#' @param states Optional numeric vector with the number of states.
+#' @param actions Optional numeric vector with the number of actions. If not
+#'   provided, then actions will be set as the number of unique values in the
+#'   outcome vector.
 #' @param cols Optional numeric vector same length as number of columns of the
 #'   state matrix (\code{state_mat}) with the action that each column of the
 #'   state matrix corresponds to the decision model taking in the previous
 #'   period. This is only relevant when the predictor variables of the FSM are
 #'   lagged outcomes that include the previous actions taken by that decision
 #'   model.
-#' @param test_data Numeric matrix that has first column the period of
+#' @param test_data Optional numeric matrix that has first column the period of
 #'   interaction between decision-makers and the rest of the columns are
 #'   predictors for that decision. These predictors are often lagged decisions
 #'   from previous time periods.
-#' @param test_outcome Numeric vector same length as the number of rows as
-#'   test_data with the decision the decision-maker took for that period.
-#' @param popSize Numeric vector length one specifying the size of the GA
-#'   population. A larger number will increase the probability of finding a very
-#'   good solution but will also increase the computation time. This is passed
-#'   to the ga() function of the GA package.
-#' @param pcrossover Numeric vector length one specifying probability of
-#'   crossover for GA. This is passed to the ga() function of the GA package.
-#' @param pmutation Numeric vector length one specifying probability of mutation
-#'   for GA. This is passed to the ga() function of the GA package.
-#' @param maxiter Numeric vector length one specifying max number of iterations
-#'   for stopping the GA evolution. A larger number will increase the
+#' @param test_outcome Optional numeric vector same length as the number of rows
+#'   as test_data with the decision the decision-maker took for that period.
+#' @param popSize Optional numeric vector length one specifying the size of the
+#'   GA population. A larger number will increase the probability of finding a
+#'   very good solution but will also increase the computation time. This is
+#'   passed to the ga() function of the GA package.
+#' @param pcrossover Optional numeric vector length one specifying probability
+#'   of crossover for GA. This is passed to the ga() function of the GA package.
+#' @param pmutation Optional numeric vector length one specifying probability of
+#'   mutation for GA. This is passed to the ga() function of the GA package.
+#' @param maxiter Optional numeric vector length one specifying max number of
+#'   iterations for stopping the GA evolution. A larger number will increase the
 #'   probability of finding a very good solution but will also increase the
 #'   computation time. This is passed to the ga() function of the GA package.
-#' @param run Numeric vector length one specifying max number of consecutive
-#'   iterations without improvement in best fitness score for stopping the GA
-#'   evolution. A larger number will increase the probability of finding a very
-#'   good solution but will also increase the computation time. This is passed
-#'   to the ga() function of the GA package.
-#' @param parallel Logical vector length one. For running the GA evolution in
-#'   parallel. Depending on the number of cores registered and the memory on
-#'   your machine, this can make the process much faster.
-#' @param priors Numeric matrix of solutions strings to be included in the
-#'   initialization, where the number of columns is equal to the number of bits.
-#'   User needs to use a decoder function to translate prior decision models
-#'   into bits and then provide them. If this is not specified, then random
-#'   priors are automatically created.
-#' @param boltzmann Logical vector length one.
-#' @param alpha Numeric vector length one. This is an additional parameter to
-#'   tune/set if \code{boltzmann} is set to TRUE.
+#' @param run Optional numeric vector length one specifying max number of
+#'   consecutive iterations without improvement in best fitness score for
+#'   stopping the GA evolution. A larger number will increase the probability of
+#'   finding a very good solution but will also increase the computation time.
+#'   This is passed to the ga() function of the GA package.
+#' @param parallel Optional logical vector length one. For running the GA
+#'   evolution in parallel. Depending on the number of cores registered and the
+#'   memory on your machine, this can make the process much faster, but only
+#'   works for Unix-based machines that can fork the processes.
+#' @param priors Optional numeric matrix of solutions strings to be included in
+#'   the initialization, where the number of columns is equal to the number of
+#'   bits. User needs to use a decoder function to translate prior decision
+#'   models into bits and then provide them. If this is not specified, then
+#'   random priors are automatically created.
+#' @param boltzmann Optional logical vector length one.
+#' @param alpha Optional numeric vector length one. This is an additional
+#'   parameter to tune/set if \code{boltzmann} is set to TRUE.
 #'
 #' @return Returns an S4 object of class ga_fsm. See \linkS4class{ga_fsm} for
 #'   the details of the slots (objects) that this type of object will have and
 #'   for information on the methods that can be used to summarize the calling
-#'   and execution of \code{evolve_model()}, including
-#'   \code{\link{summary}}.
+#'   and execution of \code{evolve_model()}, including \code{\link{summary}}.
 #'
 #' @examples
 #' \dontrun{
@@ -113,7 +115,9 @@
 #' @export
 
 ################################################################################
-evolve_model <- function(data, outcome, actions, states, seed, fitness_func,
+evolve_model <- function(data, outcome, seed, fitness_func,
+                         states = 2,
+                         actions = NULL,
                          cols = NULL,
                          test_data = NULL, test_outcome = NULL,
                          popSize = 39, pcrossover = 0.8, pmutation = 0.1, maxiter = 20, run = 8,
@@ -124,6 +128,9 @@ evolve_model <- function(data, outcome, actions, states, seed, fitness_func,
   # priors is a matrix of solutions strings to be included in the initialization,
   # where the number of columns == the number of bits. so you need to use the decoder funcs
   # to translate prior decision models into bits and then provide them.
+
+        #TODO: add automatic CV on training data to find optimal value for states
+        #TODO: automatically create fitness_func in cpp
 
   call <- match.call()
 
@@ -138,8 +145,19 @@ evolve_model <- function(data, outcome, actions, states, seed, fitness_func,
   if (nrow(data)!=length(outcome)) stop("Error: The data (covariates) and the
                                               outcome variable are not the same length.")
   if (anyNA(outcome)) stop("Error: There are missing values in the data.")
-  if (length(outcome)==0) stop("Error: The outcome is zero length.")
+  if (length(outcome) == 0) stop("Error: The outcome is zero length.")
   if (missing(seed)) stop("Error: Set a seed to make this reproducible.")
+  if (length(unique(outcome)) != actions) {warning("The number of unique values in the
+                                                  outcome vector you supplied does not
+                                                  equal the value of actions you supplied.
+                                                  The outcome vector should be a vector of
+                                                  observed actions. We are going to use the
+                                                  number of unique values in the outcome
+                                                  vector you supplied as the value of actions.")
+                                           actions <- length(unique(outcome))
+  }
+
+  if (missing(actions)) actions <- length(unique(outcome))
 
   inputs <- 2^(ncol(data)-1) # bc 1 of the columns is for period, and the rest are covariates
 
