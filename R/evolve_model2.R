@@ -4,12 +4,17 @@
 #' machine model, primarily for understanding and predicting decision-making.
 #'
 #' This is the main function of the \strong{fsm} package. It takes data on
-#' predictors and data on the outcome and then uses a stochastic meta-heuristic
-#' optimization routine to estimate the parameters. Generalized simulated
-#' annealing could work. The current version uses the \strong{GA} package's
-#' genetic algorithm because GAs perform well in rugged search spaces to solve
-#' integer optimization problems and are a natural complement to our binary
-#' string representation of FSMs.
+#' predictors and data on the outcome. It automatically creates a fitness
+#' function that takes data, action vector, and state matrix as input and
+#' returns numeric vector of same length as the \code{outcome}. This is then
+#' used to compute a fitness score by comparing it to the provided
+#' \code{outcome}. Because this function must loop through all the data, it is
+#' implemented in C++ so it is fast. Then \code{evolve_model} uses a stochastic
+#' meta-heuristic optimization routine to estimate the parameters. Generalized
+#' simulated annealing could work. The current version uses the \strong{GA}
+#' package's genetic algorithm because GAs perform well in rugged search spaces
+#' to solve integer optimization problems and are a natural complement to our
+#' binary string representation of FSMs.
 #'
 #' This function evolves the models on training data and then, if test set
 #' provided, uses the best solution to make predictions on test data, and then
@@ -17,15 +22,8 @@
 #' population. See \linkS4class{ga_fsm} for the details of the slots (objects)
 #' that this type of object will have.
 #'
-#' @param data Numeric matrix that has first col period and rest of cols are
+#' @param data Data frame that has "period" and "outcome" columns and rest of cols are
 #'   predictors.
-#' @param outcome Numeric vector same length as the number of rows as data.
-#' @param fitness_func Function that takes data, action vector, and state matrix
-#'   as input and returns numeric vector of same length as the \code{outcome}.
-#'   This is then used inside \code{evolve_model()} to compute a fitness score
-#'   by comparing it to the provided \code{outcome}. Because this function must
-#'   loop through all the data, it makes sense to implement in C++ so it is
-#'   fast.
 #' @param states Optional numeric vector with the number of states.
 #' @param actions Optional numeric vector with the number of actions. If not
 #'   provided, then actions will be set as the number of unique values in the
@@ -109,7 +107,7 @@
 #' @export
 
 ################################################################################
-evolve_model <- function(data, outcome, fitness_func,
+evolve_model <- function(data,
                          states = 2,
                          actions = NULL,
                          seed = NULL,
@@ -167,12 +165,64 @@ evolve_model <- function(data, outcome, fitness_func,
           }
   }
 
-  inputs <- 2^(ncol(data)-1) # bc 1 of the columns is for period, and the rest are covariates
+#   data <- data.frame(period = 1:5, outcome = rep(1, 5),
+#                      my.decision1 = c(F, T, T, F, T),
+#                      other.decision1 = c(T, T, F, F, T))
+
+  inputs <- 2^(ncol(data[ , -which(names(data) %in% c("period", "outcome"))]))
+  period <- data$period
+  outcome <- data$outcome
+  #  data <- data[ , -which(names(data) %in% c("period", "outcome"))]
+
+  names <- colnames(data[ , -which(names(data) %in% c("period", "outcome"))])
+  if (length(names)==2){
+          names[1] <- parse(text=(names[1]))
+          names[2] <- parse(text=(names[2]))
+          data <- model.matrix(outcome ~ 0 + eval(names[1]):eval(names[2]), data)
+  } else{
+          if (length(names)==3){
+                  names[1] <- parse(text=(names[1]))
+                  names[2] <- parse(text=(names[2]))
+                  names[3] <- parse(text=(names[3]))
+                  data <- model.matrix(outcome ~ 0 + eval(names[1]):eval(names[2]):eval(names[3]), data)
+          } else {
+                  if (length(names)==4){
+                          names[1] <- parse(text=(names[1]))
+                          names[2] <- parse(text=(names[2]))
+                          names[3] <- parse(text=(names[3]))
+                          names[4] <- parse(text=(names[4]))
+                          data <- model.matrix(outcome ~ 0 + eval(names[1]):eval(names[2]):eval(names[3]):eval(names[4]), data)
+                  } else {
+                          stop("Error: You have more than 4 or less than 2 predictors.
+                               Your model will either be boring or too complicated.")
+                  }
+          }
+  }
+
+if (ncol(data) != inputs)
+        stop("Error: At least one of your predictor variables does not have exactly 2 levels.")
+
+#   for (i in seq(from=1, to=ncol(data)+1, by=2)){
+#           name <- colnames(data[i])
+#           newcol <- data.frame(!data[ , i, drop = FALSE])
+#           colnames(newcol) <- paste(name, "F", sep="")
+#           data1 <- data.frame(data[ , 1:i, drop = FALSE])
+#           if (i==ncol(data)){
+#                   data <- cbind(data1, newcol)
+#           } else {
+#                   data2 <- data.frame(data[ , (i+1):ncol(data), drop = FALSE])
+#                   data <- cbind(data1, newcol, data2)
+#           }
+#   }
+
+
+
 
   fitnessR <- function(s){ # functions defined elsewhere: decode_action_vec, decode_state_mat
     action_vec <- decode_action_vec(s, states, inputs, actions)
     state_mat <- decode_state_mat(s, states, inputs, actions)
-    results <- fitness_func(action_vec, state_mat, data)
+    # results <- fitness_func(action_vec, state_mat, data) # TODO: ADD PERIOD AS AN INPUT TO FITNESSCPP
+    results <- fitnessCPP(action_vec, state_mat, data, period)
 
     if (anyNA(results) | length(results)==0){
       stop("Error: Results from fitness evaluation have missing values.")
