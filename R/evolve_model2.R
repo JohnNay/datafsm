@@ -30,18 +30,10 @@
 #'   provided, then actions will be set as the number of unique values in the
 #'   outcome vector.
 #' @param seed Optional numeric vector length one.
-#' @param cols Optional numeric vector same length as number of columns of the
-#'   state matrix (\code{state_mat}) with the action that each column of the
-#'   state matrix corresponds to the decision model taking in the previous
-#'   period. This is only relevant when the predictor variables of the FSM are
-#'   lagged outcomes that include the previous actions taken by that decision
-#'   model.
-#' @param test_data Optional numeric matrix that has first column the period of
-#'   interaction between decision-makers and the rest of the columns are
-#'   predictors for that decision. These predictors are often lagged decisions
-#'   from previous time periods.
-#' @param test_outcome Optional numeric vector same length as the number of rows
-#'   as test_data with the decision the decision-maker took for that period.
+#' @param test_data Optional Data frame that has "period" and "outcome" columns
+#'   and rest of cols are predictors, ranging from one to three predictors. All
+#'   of the (3-5 columns) should be named. Outcome variable is the decision the
+#'   decision-maker took for that period.
 #' @param popSize Optional numeric vector length one specifying the size of the
 #'   GA population. A larger number will increase the probability of finding a
 #'   very good solution but will also increase the computation time. This is
@@ -79,8 +71,6 @@
 #'
 #' @examples
 #' \dontrun{
-#' # create "fitnessC"
-#' Rcpp::sourceCpp("/Users/johnnaymacbook/Documents/Rprojects/ga_fsm/genetic_abm/fitness.cpp")
 #' # load data from fsm package
 #' data(data); data(outcome)
 #' # 80% of the data for training
@@ -89,35 +79,26 @@
 #' # 20% of the data for testing
 #' test_data <- data[108307:nrow(data), ]
 #' test_outcome <- outcome[108307:nrow(data)]
-#' evolved_models_empirical_data <- evolve_model(data = train_data, outcome = train_outcome,
-#'                                               fitness_func = fitnessC, cols = c(1, 2, 1, 2),
-#'                                               test_data =  test_data, test_outcome = test_outcome,
-#'                                               parallel = TRUE)
+#' evolved_models_empirical_data <- evolve_model(data = train_data,
+#'                                              test_data =  test_data, parallel = TRUE)
 #' print(evolved_models_empirical_data)
 #' show(evolved_models_empirical_data)
 #' summary(evolved_models_empirical_data)
-#'
-#' data <- data.frame(y = evolved_models_empirical_data@@varImp, x= c("cc", "dc", "cd", "dd"))
-#' p <- ggplot2::ggplot(data, ggplot2::aes(x = x, y=y)) + ggplot2::geom_bar(stat="identity") +
+#' plot_data <- data.frame(y = evolved_models_empirical_data@@varImp,
+#'                         x = colnames(evolved_models_empirical_data@@state_mat))
+#' p <- ggplot2::ggplot(plot_data, ggplot2::aes(x = x, y=y)) + ggplot2::geom_bar(stat="identity") +
 #'                      ggplot2::coord_flip() +
 #'                      ggplot2::ylab("Relative Importance") + ggplot2::xlab("Variables")
 #' p
-#'
 #' }
-#'
 #' @export
-
-data <- data.frame(period = 1:5, outcome = c(1,0,1,1,1),
-                   my.decision1 = as.logical(c(1,0,1,1,1)),
-                   other.decision1 = as.logical(c(0,0,0,1,1)))
 
 ################################################################################
 evolve_model <- function(data,
                          states = 2,
                          actions = NULL,
                          seed = NULL,
-                         cols = NULL,
-                         test_data = NULL, test_outcome = NULL,
+                         test_data = NULL,
                          popSize = 75, pcrossover = 0.8, pmutation = 0.1, maxiter = 55, run = 25,
                          parallel = FALSE,
                          priors = NULL,
@@ -136,6 +117,8 @@ evolve_model <- function(data,
         # integer valued denoting what period that row corresponds to. Then in here we take the
         # predictor columns and use model.matrix() to create new cols for all the combinations of
         # values of predictors.
+
+        #TODO: varImp and degen check need to use new fitnessCPP()
 
         call <- match.call()
 
@@ -158,7 +141,7 @@ evolve_model <- function(data,
         }
         if (missing(actions)) {
                 if(length(unique(outcome))==1){
-                        Error("Error: There is only one unique values in the
+                        Error("Error: There is only one unique value in the
                                                   outcome vector you supplied.")
                 } else {
                         actions <- length(unique(outcome))
@@ -176,47 +159,43 @@ evolve_model <- function(data,
         }
 
         inputs <- 2^(ncol(data[ , -which(names(data) %in% c("period", "outcome"))]))
-        #  data <- data[ , -which(names(data) %in% c("period", "outcome"))]
+
+        # change any non-logical predictor variable vectors to logical
+        data[ , -which(names(data) %in% c("period", "outcome"))] <- data.frame(lapply(data[ , -which(names(data) %in% c("period", "outcome"))],
+                                                                                      function(x) {
+                                                                                              if (class(x)!="logical") {
+                                                                                                      as.logical(x)
+                                                                                              } else {
+                                                                                                      x
+                                                                                              }}))
 
         names <- colnames(data[ , -which(names(data) %in% c("period", "outcome"))])
+
         if (length(names)==1){
-                names[1] <- parse(text=(names[1]))
-                data <- model.matrix(outcome ~ 0 + eval(names[1]):eval(names[2]), data)
+                form <- paste("outcome ~ 0 +", names, sep=" ")
+                data <- model.matrix(eval(parse(text=form)), data)
         } else {
-                if (length(names)==2){
-                        names[1] <- parse(text=(names[1]))
-                        names[2] <- parse(text=(names[2]))
-                        data <- model.matrix(outcome ~ 0 + eval(names[1]):eval(names[2]), data)
-                } else {
-                        if (length(names)==3){
-                                names[1] <- parse(text=(names[1]))
-                                names[2] <- parse(text=(names[2]))
-                                names[3] <- parse(text=(names[3]))
-                                data <- model.matrix(outcome ~ 0 + eval(names[1]):eval(names[2]):eval(names[3]), data)
-                        } else {
-                                stop("Error: You have more than 3 predictors.
-                                             Your model will be too complicated. Do some type of feature selection
-                                             to choose less than 4 predictors and then use the data.frame
-                                             with just those features next time.")
-                        }
-                }
+                predictors <- paste(names, collapse=":")
+                form <- paste("outcome ~ 0 +", predictors, sep=" ")
+                data <- model.matrix(eval(parse(text=form)), data)
         }
+
+        if (length(names) > 3) stop("Error: You have more than 3 predictors.
+                                  Your model will be too complicated.
+                                  Do some type of feature selection to choose less
+                                  than 4 predictors and then use the data.frame
+                                  with just those features next time.")
 
         if (ncol(data) != inputs)
                 stop("Error: At least one of your predictor variables does not have exactly 2 levels.")
 
-        #   for (i in seq(from=1, to=ncol(data)+1, by=2)){
-        #           name <- colnames(data[i])
-        #           newcol <- data.frame(!data[ , i, drop = FALSE])
-        #           colnames(newcol) <- paste(name, "F", sep="")
-        #           data1 <- data.frame(data[ , 1:i, drop = FALSE])
-        #           if (i==ncol(data)){
-        #                   data <- cbind(data1, newcol)
-        #           } else {
-        #                   data2 <- data.frame(data[ , (i+1):ncol(data), drop = FALSE])
-        #                   data <- cbind(data1, newcol, data2)
-        #           }
-        #   }
+        cols <- colnames(data)
+        # numeric vector same length as number of columns of the
+        # state matrix (\code{state_mat}) with the action that each column of the
+        # state matrix corresponds to the decision model taking in the previous
+        # period. This is only relevant when the predictor variables of the FSM are
+        # lagged outcomes that include the previous actions taken by that decision model.
+
         fitnessR <- function(s){ # functions defined elsewhere: decode_action_vec, decode_state_mat
                 action_vec <- decode_action_vec(s, states, inputs, actions)
                 state_mat <- decode_state_mat(s, states, inputs, actions)
@@ -348,35 +327,49 @@ evolve_model <- function(data,
         }
 
         state_mat <- decode_state_mat(GA@solution[1, ],  states, inputs, actions)
+        colnames(state_mat) <- cols
+
         action_vec <- decode_action_vec(GA@solution[1, ],  states, inputs, actions)
 
         if (missing(test_data)){
                 predictive <- "No test data provided. Provide some to get more accurate estimation of generalization power."
         } else {
                 test_period <- test_data$period
+
+                test_inputs <- 2^(ncol(test_data[ , -which(names(test_data) %in% c("period", "outcome"))]))
+
+                # change any non-logical predictor variable vectors to logical
+                test_data[ , -which(names(test_data) %in% c("period", "outcome"))] <- data.frame(lapply(test_data[ , -which(names(test_data) %in% c("period", "outcome"))],
+                                                                                                        function(x) {
+                                                                                                                if (class(x)!="logical") {
+                                                                                                                        as.logical(x)
+                                                                                                                } else {
+                                                                                                                        x
+                                                                                                                }}))
+
                 names <- colnames(test_data[ , -which(names(test_data) %in% c("period", "outcome"))])
+
                 if (length(names)==1){
-                        names[1] <- parse(text=(names[1]))
-                        test_data <- model.matrix(outcome ~ 0 + eval(names[1]):eval(names[2]), test_data)
+                        form <- paste("outcome ~ 0 +", names, sep=" ")
+                        test_data <- model.matrix(eval(parse(text=form)), test_data)
                 } else {
-                        if (length(names)==2){
-                                names[1] <- parse(text=(names[1]))
-                                names[2] <- parse(text=(names[2]))
-                                test_data <- model.matrix(outcome ~ 0 + eval(names[1]):eval(names[2]), test_data)
-                        } else {
-                                if (length(names)==3){
-                                        names[1] <- parse(text=(names[1]))
-                                        names[2] <- parse(text=(names[2]))
-                                        names[3] <- parse(text=(names[3]))
-                                        test_data <- model.matrix(outcome ~ 0 + eval(names[1]):eval(names[2]):eval(names[3]), test_data)
-                                } else {
-                                        stop("Error: You have more than 3 predictors.
-                                             Your model will be too complicated. Do some type of feature selection
-                                             to choose less than 4 predictors and then use the data.frame
-                                             with just those features next time.")
-                                }
-                        }
+                        predictors <- paste(names, collapse=":")
+                        form <- paste("outcome ~ 0 +", predictors, sep=" ")
+                        test_data <- model.matrix(eval(parse(text=form)), test_data)
                 }
+
+                if (length(names) > 3) stop("Error: You have more than 3 predictors.
+                                  Your model will be too complicated.
+                                  Do some type of feature selection to choose less
+                                  than 4 predictors and then use the data.frame
+                                  with just those features next time.")
+
+                if (ncol(test_data) != test_inputs)
+                        stop("Error: At least one of your predictor variables in your test data
+                             does not have exactly 2 levels.")
+
+                test_cols <- colnames(test_data)
+
                 results <- fitnessCPP(action_vec, state_mat, test_data, test_period)
                 if (anyNA(results) | length(results)==0){
                         stop("Error: Results from fitness evaluation have missing values.")
@@ -384,27 +377,21 @@ evolve_model <- function(data,
                 predictive <-  sum(ifelse( results == test_outcome , 1 , 0)) / length(results)
         }
 
-        if (missing(cols)){
-                message <- "No column actions provided. Provide some to get a degeneracy check."
-                dif <- NA
-                sparse_state_mat <- NA
-                corrected_state_mat <- state_mat # need this to be non-NA for varImp below
-        } else {
-                #     d_check <- degeneracy_check(state_mat, action_vec, cols, fitnessCPP, data, outcome, period)
-                #     dif <- d_check$dif
-                #     sparse_state_mat <- d_check$sparse_state_mat
-                #     corrected_state_mat <- d_check$corrected_state_mat
-                #
-                #     if (any(dif >= 0)) {
-                #       message <- ifelse(any(dif == 0), "See the sparse matrix returned. The elements in that matrix with a 0 are unidentifiable. Their value makes no difference to the fit of the strategy to the provided data.",
-                #                         "You have not found an optimal strategy, by randomly flipping values of some components, we improved it.")
-                #     } else {
-                #       message <- ifelse(all(dif < 0), "Your strategy is a deterministic approximation of a stochastic process. All of the elements of the state matrix can be identified.",
-                #                         "You could improve your strategy by changing at least one component to its opposite value.")
-                #     }
-        }
+        #     d_check <- degeneracy_check(state_mat, action_vec, cols, fitnessCPP, data, outcome, period)
+        #     dif <- d_check$dif
+        #     sparse_state_mat <- d_check$sparse_state_mat
+        #     corrected_state_mat <- d_check$corrected_state_mat
+        #
+        #     if (any(dif >= 0)) {
+        #       message <- ifelse(any(dif == 0), "See the sparse matrix returned. The elements in that matrix with a 0 are unidentifiable. Their value makes no difference to the fit of the strategy to the provided data.",
+        #                         "You have not found an optimal strategy, by randomly flipping values of some components, we improved it.")
+        #     } else {
+        #       message <- ifelse(all(dif < 0), "Your strategy is a deterministic approximation of a stochastic process. All of the elements of the state matrix can be identified.",
+        #                         "You could improve your strategy by changing at least one component to its opposite value.")
+        #     }
 
         # if the model is fine, then corrected_state_mat should be equal to state_mat
+
         #varImp <- var_imp(corrected_state_mat, action_vec, fitness_func, data, outcome, cols)
 
         object <- new("ga_fsm",
@@ -414,9 +401,14 @@ evolve_model <- function(data,
                       GA = GA,
                       state_mat = state_mat,
                       action_vec = action_vec,
-                      predictive = predictive,
-                      degeneracy = list(message=message, dif=dif, sparse_state_mat = sparse_state_mat)) #,
+                      predictive = predictive) #,
+        #degeneracy = list(message=message, dif=dif, sparse_state_mat = sparse_state_mat)),
         #varImp = varImp)
 
         object
 }
+
+data <- data.frame(period = 1:5, outcome = c(1,0,1,1,1),
+                   my.decision1 = c(1,0,1,1,1),
+                   other.decision1 = c(0,0,0,1,1))
+result <- evolve_model(data)
