@@ -25,15 +25,15 @@
 #' @param data Data frame that has "period" and "outcome" columns and rest of
 #'   cols are predictors, ranging from one to three predictors. All of the (3-5
 #'   columns) should be named.
+#' @param test_data Optional Data frame that has "period" and "outcome" columns
+#'   and rest of cols are predictors, ranging from one to three predictors. All
+#'   of the (3-5 columns) should be named. Outcome variable is the decision the
+#'   decision-maker took for that period.
 #' @param states Optional numeric vector with the number of states.
 #' @param actions Optional numeric vector with the number of actions. If not
 #'   provided, then actions will be set as the number of unique values in the
 #'   outcome vector.
 #' @param seed Optional numeric vector length one.
-#' @param test_data Optional Data frame that has "period" and "outcome" columns
-#'   and rest of cols are predictors, ranging from one to three predictors. All
-#'   of the (3-5 columns) should be named. Outcome variable is the decision the
-#'   decision-maker took for that period.
 #' @param popSize Optional numeric vector length one specifying the size of the
 #'   GA population. A larger number will increase the probability of finding a
 #'   very good solution but will also increase the computation time. This is
@@ -94,11 +94,10 @@
 #' @export
 
 ################################################################################
-evolve_model <- function(data,
+evolve_model <- function(data, test_data = NULL,
                          states = 2,
                          actions = NULL,
                          seed = NULL,
-                         test_data = NULL,
                          popSize = 75, pcrossover = 0.8, pmutation = 0.1, maxiter = 55, run = 25,
                          parallel = FALSE,
                          priors = NULL,
