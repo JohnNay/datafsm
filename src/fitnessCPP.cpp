@@ -18,7 +18,16 @@ int history_lookup(IntegerVector x){
   return result;
 }
 
+//' Fitness Function
+//'
+//' @param action_vec Integer Vector.
+//' @param state_mat Integer Matrix.
+//' @param covariates Integer Matrix.
+//' @param period Integer Vector.
+//'
+//' @export
 // [[Rcpp::export]]
+
 IntegerVector fitnessCPP(IntegerVector action_vec, IntegerMatrix state_mat, IntegerMatrix covariates, IntegerVector period){
 
   int n = covariates.nrow();
