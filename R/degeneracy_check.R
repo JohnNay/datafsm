@@ -94,10 +94,6 @@ find_wildcards <- function(state_mat, action_vec, cols){
 #'   period. This is only relevant when the predictor variables of the FSM are
 #'   lagged outcomes that include the previous actions taken by that decision
 #'   model.
-#' @param fitness_func Function that takes data, action vector, and state matrix
-#'   as input and returns numeric vector of same length as the \code{outcome}.
-#'   This is then used inside \code{evolve_model} to compute a fitness score by
-#'   comparing it to the provided \code{outcome}.
 #' @param data Numeric matrix that has first col period and rest of cols are
 #'   predictors.
 #' @param outcome Numeric vector same length as the number of rows as data.
@@ -108,7 +104,7 @@ find_wildcards <- function(state_mat, action_vec, cols){
 #'
 #' @export
 
-degeneracy_check <- function(state_mat, action_vec, cols, fitness_func, data, outcome){
+degeneracy_check <- function(state_mat, action_vec, cols, data, outcome){
   indices <- find_wildcards(state_mat, action_vec, cols)
 
   results1 <- fitness_func(action_vec, state_mat, data)

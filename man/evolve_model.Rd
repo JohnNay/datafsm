@@ -3,15 +3,70 @@
 \alias{evolve_model}
 \title{Uses a Genetic Algorithm to Estimate a Finite-state Machine}
 \usage{
-evolve_model(data, outcome, fitness_func, states = 2, actions = NULL,
-  seed = NULL, cols = NULL, test_data = NULL, test_outcome = NULL,
-  popSize = 75, pcrossover = 0.8, pmutation = 0.1, maxiter = 55,
-  run = 25, parallel = FALSE, priors = NULL, boltzmann = FALSE,
-  alpha = 0.4)
+evolve_model(data, test_data = NULL, states = 2, actions = NULL,
+  seed = NULL, popSize = 75, pcrossover = 0.8, pmutation = 0.1,
+  maxiter = 55, run = 25, parallel = FALSE, priors = NULL,
+  boltzmann = FALSE, alpha = 0.4)
+
+evolve_model(data, test_data = NULL, states = 2, actions = NULL,
+  seed = NULL, popSize = 75, pcrossover = 0.8, pmutation = 0.1,
+  maxiter = 55, run = 25, parallel = FALSE, priors = NULL,
+  boltzmann = FALSE, alpha = 0.4)
 }
 \arguments{
 \item{data}{Numeric matrix that has first col period and rest of cols are
 predictors.}
+
+\item{test_data}{Optional numeric matrix that has first column the period of
+interaction between decision-makers and the rest of the columns are
+predictors for that decision. These predictors are often lagged decisions
+from previous time periods.}
+
+\item{states}{Optional numeric vector with the number of states.}
+
+\item{actions}{Optional numeric vector with the number of actions. If not
+provided, then actions will be set as the number of unique values in the
+outcome vector.}
+
+\item{seed}{Optional numeric vector length one.}
+
+\item{popSize}{Optional numeric vector length one specifying the size of the
+GA population. A larger number will increase the probability of finding a
+very good solution but will also increase the computation time. This is
+passed to the ga() function of the GA package.}
+
+\item{pcrossover}{Optional numeric vector length one specifying probability
+of crossover for GA. This is passed to the ga() function of the GA package.}
+
+\item{pmutation}{Optional numeric vector length one specifying probability of
+mutation for GA. This is passed to the ga() function of the GA package.}
+
+\item{maxiter}{Optional numeric vector length one specifying max number of
+iterations for stopping the GA evolution. A larger number will increase the
+probability of finding a very good solution but will also increase the
+computation time. This is passed to the ga() function of the GA package.}
+
+\item{run}{Optional numeric vector length one specifying max number of
+consecutive iterations without improvement in best fitness score for
+stopping the GA evolution. A larger number will increase the probability of
+finding a very good solution but will also increase the computation time.
+This is passed to the ga() function of the GA package.}
+
+\item{parallel}{Optional logical vector length one. For running the GA
+evolution in parallel. Depending on the number of cores registered and the
+memory on your machine, this can make the process much faster, but only
+works for Unix-based machines that can fork the processes.}
+
+\item{priors}{Optional numeric matrix of solutions strings to be included in
+the initialization, where the number of columns is equal to the number of
+bits. User needs to use a decoder function to translate prior decision
+models into bits and then provide them. If this is not specified, then
+random priors are automatically created.}
+
+\item{boltzmann}{Optional logical vector length one.}
+
+\item{alpha}{Optional numeric vector length one. This is an additional
+  parameter to tune/set if \code{boltzmann} is set to TRUE.}
 
 \item{outcome}{Numeric vector same length as the number of rows as data.}
 
@@ -22,14 +77,6 @@ by comparing it to the provided \code{outcome}. Because this function must
 loop through all the data, it makes sense to implement in C++ so it is
 fast.}
 
-\item{states}{Optional numeric vector with the number of states.}
-
-\item{actions}{Optional numeric vector with the number of actions. If not
-provided, then actions will be set as the number of unique values in the
-outcome vector.}
-
-\item{seed}{Optional numeric vector length one.}
-
 \item{cols}{Optional numeric vector same length as number of columns of the
 state matrix (\code{state_mat}) with the action that each column of the
 state matrix corresponds to the decision model taking in the previous
@@ -37,13 +84,25 @@ period. This is only relevant when the predictor variables of the FSM are
 lagged outcomes that include the previous actions taken by that decision
 model.}
 
-\item{test_data}{Optional numeric matrix that has first column the period of
-interaction between decision-makers and the rest of the columns are
-predictors for that decision. These predictors are often lagged decisions
-from previous time periods.}
-
 \item{test_outcome}{Optional numeric vector same length as the number of rows
 as test_data with the decision the decision-maker took for that period.}
+
+\item{data}{Data frame that has "period" and "outcome" columns and rest of
+cols are predictors, ranging from one to three predictors. All of the (3-5
+columns) should be named.}
+
+\item{test_data}{Optional Data frame that has "period" and "outcome" columns
+and rest of cols are predictors, ranging from one to three predictors. All
+of the (3-5 columns) should be named. Outcome variable is the decision the
+decision-maker took for that period.}
+
+\item{states}{Optional numeric vector with the number of states.}
+
+\item{actions}{Optional numeric vector with the number of actions. If not
+provided, then actions will be set as the number of unique values in the
+outcome vector.}
+
+\item{seed}{Optional numeric vector length one.}
 
 \item{popSize}{Optional numeric vector length one specifying the size of the
 GA population. A larger number will increase the probability of finding a
@@ -88,8 +147,16 @@ Returns an S4 object of class ga_fsm. See \linkS4class{ga_fsm} for
   the details of the slots (objects) that this type of object will have and
   for information on the methods that can be used to summarize the calling
   and execution of \code{evolve_model()}, including \code{\link{summary}}.
+
+Returns an S4 object of class ga_fsm. See \linkS4class{ga_fsm} for
+  the details of the slots (objects) that this type of object will have and
+  for information on the methods that can be used to summarize the calling
+  and execution of \code{evolve_model()}, including \code{\link{summary}}.
 }
 \description{
+\code{evolve_model} uses a genetic algorithm to estimate a finite-state
+machine model, primarily for understanding and predicting decision-making.
+
 \code{evolve_model} uses a genetic algorithm to estimate a finite-state
 machine model, primarily for understanding and predicting decision-making.
 }
@@ -101,6 +168,25 @@ annealing could work. The current version uses the \strong{GA} package's
 genetic algorithm because GAs perform well in rugged search spaces to solve
 integer optimization problems and are a natural complement to our binary
 string representation of FSMs.
+
+This function evolves the models on training data and then, if test set
+provided, uses the best solution to make predictions on test data, and then
+returns the GA object and the decoded version of the best string in the
+population. See \linkS4class{ga_fsm} for the details of the slots (objects)
+that this type of object will have.
+
+This is the main function of the \strong{fsm} package. It takes data on
+predictors and data on the outcome. It automatically creates a fitness
+function that takes data, action vector, and state matrix as input and
+returns numeric vector of same length as the \code{outcome}. This is then
+used to compute a fitness score by comparing it to the provided
+\code{outcome}. Because this function must loop through all the data, it is
+implemented in C++ so it is fast. Then \code{evolve_model} uses a stochastic
+meta-heuristic optimization routine to estimate the parameters. Generalized
+simulated annealing could work. The current version uses the \strong{GA}
+package's genetic algorithm because GAs perform well in rugged search spaces
+to solve integer optimization problems and are a natural complement to our
+binary string representation of FSMs.
 
 This function evolves the models on training data and then, if test set
 provided, uses the best solution to make predictions on test data, and then
@@ -134,6 +220,27 @@ p <- ggplot2::ggplot(data, ggplot2::aes(x = x, y=y)) + ggplot2::geom_bar(stat="i
                      ggplot2::ylab("Relative Importance") + ggplot2::xlab("Variables")
 p
 
+}
+\dontrun{
+# load data from fsm package
+data(data); data(outcome)
+# 80\% of the data for training
+train_data <- data[1:108306, ]
+train_outcome <- outcome[1:108306]
+# 20\% of the data for testing
+test_data <- data[108307:nrow(data), ]
+test_outcome <- outcome[108307:nrow(data)]
+evolved_models_empirical_data <- evolve_model(data = train_data,
+                                             test_data =  test_data, parallel = TRUE)
+print(evolved_models_empirical_data)
+show(evolved_models_empirical_data)
+summary(evolved_models_empirical_data)
+plot_data <- data.frame(y = evolved_models_empirical_data@varImp,
+                        x = colnames(evolved_models_empirical_data@state_mat))
+p <- ggplot2::ggplot(plot_data, ggplot2::aes(x = x, y=y)) + ggplot2::geom_bar(stat="identity") +
+                     ggplot2::coord_flip() +
+                     ggplot2::ylab("Relative Importance") + ggplot2::xlab("Variables")
+p
 }
 }
 

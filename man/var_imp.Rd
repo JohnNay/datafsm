@@ -3,7 +3,7 @@
 \alias{var_imp}
 \title{Variable Importance Measure for A FSM Model}
 \usage{
-var_imp(state_mat, action_vec, fitness_func, data, outcome, cols = NULL)
+var_imp(state_mat, action_vec, data, outcome, period)
 }
 \arguments{
 \item{state_mat}{Numeric matrix with rows as states and columns as
@@ -12,22 +12,13 @@ predictors.}
 \item{action_vec}{Numeric vector indicating what action to take for each
 state.}
 
-\item{fitness_func}{Function that takes \code{data}, \code{action_vec}, and
-\code{state_mat} as input and returns numeric vector of same length as the
-\code{outcome}. This is then used inside \code{var_imp} to compute a
-fitness score by comparing it to the provided \code{outcome}.}
-
-\item{data}{Numeric matrix that has first col period and rest of cols are
-predictors.}
+\item{data}{Data frame that has "period" and "outcome" columns and rest of
+cols are predictors, ranging from one to three predictors. All of the (3-5
+columns) should be named.}
 
 \item{outcome}{Numeric vector same length as the number of rows as data.}
 
-\item{cols}{Optional numeric vector same length as number of columns of the
-  state matrix (\code{state_mat}) with the action that each column of the
-  state matrix corresponds to the decision model taking in the previous
-  period. This is only relevant when the predictor variables of the FSM are
-  lagged outcomes that include the previous actions taken by that decision
-  model.}
+\item{period}{Numeric vector same length as the number of rows as data.}
 }
 \value{
 Numeric vector the same length as the number of columns of the

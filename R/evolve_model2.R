@@ -129,6 +129,8 @@ evolve_model <- function(data, test_data = NULL,
         ## Data-related errors:
         period <- data$period
         outcome <- data$outcome
+        test_period <- test_data$period
+        test_outcome <- test_data$outcome
 
         if (nrow(data)!=length(outcome)) stop("Error: The data (covariates) and the
                                               outcome variable are not the same length.")
@@ -155,6 +157,18 @@ evolve_model <- function(data, test_data = NULL,
                                                   vector you supplied as the value of actions.")
                                                          actions <- length(unique(outcome))
                 }
+        }
+
+        # so we are assured that the action vec will just need to be comprised of the possible
+        # number of actions in the data:
+        if (!identical(unique(outcome), as.numeric(unique(seq(length(unique(outcome))))),
+                       ignore.environment = TRUE)){
+                stop("Error: The actions in the outcome column of the data are not the right values.
+                     There should be actions sequenced from 1 to however many actions that are feasible.
+                     E.g., if there are two feasible actions, then the outcome column should be comprised
+                     of only 1s and 2s, with at least one 1 and and at least one 2. If there are three feasible
+                     actions, the outcome column should be comprised of only 1s, 2s, and 3s, with at least one
+                     1 and, at least one 2, and at least one 3.")
         }
 
         inputs <- 2^(ncol(data[ , -which(names(data) %in% c("period", "outcome"))]))
@@ -333,7 +347,14 @@ evolve_model <- function(data, test_data = NULL,
         if (missing(test_data)){
                 predictive <- "No test data provided. Provide some to get more accurate estimation of generalization power."
         } else {
-                test_period <- test_data$period
+                if (!identical(unique(test_outcome), as.numeric(unique(seq(length(unique(test_outcome))))),
+                               ignore.environment = TRUE)){
+                        stop("Error: The actions in the outcome column of the test data
+                              are not the right values. There should be actions sequenced from
+                              1 to however many actions that are feasible. E.g., if there are
+                              two feasible actions, then the outcome columns should be comprised
+                              of only 1s and 2s, with at least one 1 and and at least one 2.")
+                }
 
                 test_inputs <- 2^(ncol(test_data[ , -which(names(test_data) %in% c("period", "outcome"))]))
 
@@ -361,7 +382,7 @@ evolve_model <- function(data, test_data = NULL,
                                   Your model will be too complicated.
                                   Do some type of feature selection to choose less
                                   than 4 predictors and then use the data.frame
-                                  with just those features next time.")
+                                  with just those predictors next time.")
 
                 if (ncol(test_data) != test_inputs)
                         stop("Error: At least one of your predictor variables in your test data
@@ -376,22 +397,24 @@ evolve_model <- function(data, test_data = NULL,
                 predictive <-  sum(ifelse( results == test_outcome , 1 , 0)) / length(results)
         }
 
-        #     d_check <- degeneracy_check(state_mat, action_vec, cols, fitnessCPP, data, outcome, period)
-        #     dif <- d_check$dif
-        #     sparse_state_mat <- d_check$sparse_state_mat
-        #     corrected_state_mat <- d_check$corrected_state_mat
+        # degeneracy_check
+        #             d_check <- degeneracy_check(state_mat, action_vec, cols, data, outcome, period)
+        #             dif <- d_check$dif
+        #             sparse_state_mat <- d_check$sparse_state_mat
+        #             corrected_state_mat <- d_check$corrected_state_mat
         #
-        #     if (any(dif >= 0)) {
-        #       message <- ifelse(any(dif == 0), "See the sparse matrix returned. The elements in that matrix with a 0 are unidentifiable. Their value makes no difference to the fit of the strategy to the provided data.",
-        #                         "You have not found an optimal strategy, by randomly flipping values of some components, we improved it.")
-        #     } else {
-        #       message <- ifelse(all(dif < 0), "Your strategy is a deterministic approximation of a stochastic process. All of the elements of the state matrix can be identified.",
-        #                         "You could improve your strategy by changing at least one component to its opposite value.")
-        #     }
-
+        #             if (any(dif >= 0)) {
+        #               message <- ifelse(any(dif == 0), "See the sparse matrix returned. The elements in that matrix with a 0 are unidentifiable. Their value makes no difference to the fit of the strategy to the provided data.",
+        #                                 "You have not found an optimal strategy, by randomly flipping values of some components, we improved it.")
+        #             } else {
+        #               message <- ifelse(all(dif < 0), "Your strategy is a deterministic approximation of a stochastic process. All of the elements of the state matrix can be identified.",
+        #                                 "You could improve your strategy by changing at least one component to its opposite value.")
+        #             }
         # if the model is fine, then corrected_state_mat should be equal to state_mat
 
+        # Variable Importance:
         #varImp <- var_imp(corrected_state_mat, action_vec, fitness_func, data, outcome, cols)
+        varImp <- var_imp(state_mat, action_vec, data, outcome, period)
 
         object <- new("ga_fsm",
                       call = call,
@@ -400,14 +423,14 @@ evolve_model <- function(data, test_data = NULL,
                       GA = GA,
                       state_mat = state_mat,
                       action_vec = action_vec,
-                      predictive = predictive) #,
-        #degeneracy = list(message=message, dif=dif, sparse_state_mat = sparse_state_mat)),
-        #varImp = varImp)
+                      predictive = predictive,
+                      varImp = varImp) #,
+        #degeneracy = list(message=message, dif=dif, sparse_state_mat = sparse_state_mat)))
 
         object
 }
 
-data <- data.frame(period = 1:5, outcome = c(1,0,1,1,1),
-                   my.decision1 = c(1,0,1,1,1),
-                   other.decision1 = c(0,0,0,1,1))
-result <- evolve_model(data)
+# data <- data.frame(period = 1:5, outcome = c(1,2,1,1,1),
+#                    my.decision1 = c(1,0,1,1,1),
+#                    other.decision1 = c(0,0,0,1,1))
+# result <- evolve_model(data)

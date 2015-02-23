@@ -3,7 +3,7 @@
 \alias{degeneracy_check}
 \title{Determines if State Matrix is Degenerate for Given Data Set.}
 \usage{
-degeneracy_check(state_mat, action_vec, cols, fitness_func, data, outcome)
+degeneracy_check(state_mat, action_vec, cols, data, outcome)
 }
 \arguments{
 \item{state_mat}{Numeric matrix with rows as states and columns as
@@ -18,11 +18,6 @@ state matrix corresponds to the decision model taking in the previous
 period. This is only relevant when the predictor variables of the FSM are
 lagged outcomes that include the previous actions taken by that decision
 model.}
-
-\item{fitness_func}{Function that takes data, action vector, and state matrix
-as input and returns numeric vector of same length as the \code{outcome}.
-This is then used inside \code{evolve_model} to compute a fitness score by
-comparing it to the provided \code{outcome}.}
 
 \item{data}{Numeric matrix that has first col period and rest of cols are
 predictors.}
