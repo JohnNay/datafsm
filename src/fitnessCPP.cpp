@@ -26,6 +26,8 @@ int history_lookup(IntegerVector x){
 //' @param period Integer Vector.
 //'
 //' @export
+//' @useDynLib fsm
+//' @importFrom Rcpp sourceCpp
 // [[Rcpp::export]]
 
 IntegerVector fitnessCPP(IntegerVector action_vec, IntegerMatrix state_mat, IntegerMatrix covariates, IntegerVector period){

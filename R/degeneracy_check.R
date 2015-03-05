@@ -107,7 +107,7 @@ find_wildcards <- function(state_mat, action_vec, cols){
 degeneracy_check <- function(state_mat, action_vec, cols, data, outcome){
   indices <- find_wildcards(state_mat, action_vec, cols)
 
-  results1 <- fitness_func(action_vec, state_mat, data)
+  results1 <- fitnessCPP(action_vec, state_mat, data)
   if (anyNA(results1) | length(results1)==0){
     stop("Results from first fitness evaluation have missing values.")
   }
@@ -127,7 +127,7 @@ degeneracy_check <- function(state_mat, action_vec, cols, data, outcome){
                       indices[[i]][2]] <- ifelse(state_mat[indices[[i]][1],
                                                            indices[[i]][2]]==1, 2, 1)
 
-    results2 <- fitness_func(action_vec, state_mat_flipped, data)
+    results2 <- fitnessCPP(action_vec, state_mat_flipped, data)
     if (anyNA(results2) | length(results2)==0){
       stop("Results from subsequent fitness evaluation have missing values.")
     }

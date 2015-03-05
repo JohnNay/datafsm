@@ -13,6 +13,8 @@ history_lookup <- function(x) {
 #' @param period Integer Vector.
 #'
 #' @export
+#' @useDynLib fsm
+#' @importFrom Rcpp sourceCpp
 fitnessCPP <- function(action_vec, state_mat, covariates, period) {
     .Call('fsm_fitnessCPP', PACKAGE = 'fsm', action_vec, state_mat, covariates, period)
 }

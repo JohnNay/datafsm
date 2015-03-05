@@ -5,16 +5,18 @@
 #'
 #' This is the main function of the \strong{fsm} package. It takes data on
 #' predictors and data on the outcome. It automatically creates a fitness
-#' function that takes data, action vector, and state matrix as input and
-#' returns numeric vector of same length as the \code{outcome}. This is then
-#' used to compute a fitness score by comparing it to the provided
-#' \code{outcome}. Because this function must loop through all the data, it is
-#' implemented in C++ so it is fast. Then \code{evolve_model} uses a stochastic
-#' meta-heuristic optimization routine to estimate the parameters. Generalized
-#' simulated annealing could work. The current version uses the \strong{GA}
-#' package's genetic algorithm because GAs perform well in rugged search spaces
-#' to solve integer optimization problems and are a natural complement to our
-#' binary string representation of FSMs.
+#' function that takes the data, an action vector \code{evolve_model} generates,
+#' and a state matrix \code{evolve_model} generates as input and returns numeric
+#' vector of same length as the \code{outcome}. \code{evolve_model} then
+#' computes a fitness score by comparing it to the provided \code{outcome}.
+#' Because this fitness function that \code{evolve_model} creates must loop
+#' through all the data everytime it is evaluated, it is implemented in C++ so
+#' it is very fast. Then \code{evolve_model} uses a stochastic meta-heuristic
+#' optimization routine to estimate the parameters. Generalized simulated
+#' annealing could work, but it is much more difficult to parallelize. The
+#' current version uses the \strong{GA} package's genetic algorithm because GAs
+#' perform well in rugged search spaces to solve integer optimization problems
+#' and are a natural complement to our binary string representation of FSMs.
 #'
 #' This function evolves the models on training data and then, if test set
 #' provided, uses the best solution to make predictions on test data, and then
@@ -70,6 +72,10 @@
 #'   and execution of \code{evolve_model()}, including \code{\link{summary}}.
 #'
 #' @examples
+#' data <- data.frame(period = 1:5, outcome = c(1,2,1,1,1),
+#' my.decision1 = c(1,0,1,1,1), other.decision1 = c(0,0,0,1,1))
+#' result <- evolve_model(data)
+#'
 #' \dontrun{
 #' # load data from fsm package
 #' data(data); data(outcome)
@@ -106,9 +112,6 @@ evolve_model <- function(data, test_data = NULL,
         # where the number of columns == the number of bits. so you need to use the decoder funcs
         # to translate prior decision models into bits and then provide them.
 
-        #TODO: add automatic run CV across states==2:4 on training data to find optimal value
-        # in terms of generalization performance.
-
         # made it so fitnessR() can be built in here
         # without needing to pass in any fitness_func arg. you will just need to pass in a
         # matrix with predictor columns that are only binary for whether that predictor
@@ -116,8 +119,11 @@ evolve_model <- function(data, test_data = NULL,
         # integer valued denoting what period that row corresponds to. Then in here we take the
         # predictor columns and use model.matrix() to create new cols for all the combinations of
         # values of predictors.
-
-        #TODO: varImp and degen check need to use new fitnessCPP()
+        #TODO: get cpp func to show up to be used by rest of package.
+        #TODO: degen check need to use new fitnessCPP()
+        #TODO: varImp to generalize to more than 2-state FSMs
+        #TODO: add automatic run CV across states==2:4 on training data to find optimal value
+        # in terms of generalization performance.
 
         call <- match.call()
 
@@ -142,7 +148,7 @@ evolve_model <- function(data, test_data = NULL,
         }
         if (missing(actions)) {
                 if(length(unique(outcome))==1){
-                        Error("Error: There is only one unique value in the
+                stop("Error: There is only one unique value in the
                                                   outcome vector you supplied.")
                 } else {
                         actions <- length(unique(outcome))
@@ -429,8 +435,3 @@ evolve_model <- function(data, test_data = NULL,
 
         object
 }
-
-# data <- data.frame(period = 1:5, outcome = c(1,2,1,1,1),
-#                    my.decision1 = c(1,0,1,1,1),
-#                    other.decision1 = c(0,0,0,1,1))
-# result <- evolve_model(data)
