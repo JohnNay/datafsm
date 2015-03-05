@@ -16,14 +16,13 @@ Description: This package implements a method for estimating interpretable
     EAR-1416964 and EAR-1204685.
 Depends:
     R (>= 3.1.1),
-    methods,
-    Rcpp
+    methods
 License: GPL-3
 LazyData: true
 LinkingTo: Rcpp
 Suggests:
     doParallel,
-    ggplot2,
-    parallel
+    ggplot2
 Imports:
-    GA
+    GA,
+    Rcpp

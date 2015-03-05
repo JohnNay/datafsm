@@ -116,7 +116,7 @@ degeneracy_check <- function(state_mat, action_vec, cols, data, outcome){
   sparse_state_mat <- state_mat
   corrected_state_mat <- state_mat
   # sparse will be corrected and have zeros added for non-identifiable
-  # corrected will only be corrected, this way it can be directyly used for varImp()
+  # corrected will only be corrected, this way it can be directly used for varImp()
 
   dif <- rep(NA, length(indices)) # how many are not identifiable
 

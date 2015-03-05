@@ -119,8 +119,6 @@ evolve_model <- function(data, test_data = NULL,
         # integer valued denoting what period that row corresponds to. Then in here we take the
         # predictor columns and use model.matrix() to create new cols for all the combinations of
         # values of predictors.
-        #TODO: get cpp func to show up to be used by rest of package.
-        #TODO: degen check need to use new fitnessCPP()
         #TODO: varImp to generalize to more than 2-state FSMs
         #TODO: add automatic run CV across states==2:4 on training data to find optimal value
         # in terms of generalization performance.
@@ -132,6 +130,9 @@ evolve_model <- function(data, test_data = NULL,
         if (maxiter < 1) stop("Error: The maximum number of iterations must be at least 1.")
         if (pcrossover < 0 || pcrossover > 1) stop("Error: Probability of crossover must be between 0 and 1.")
         if (pmutation < 0 || pmutation > 1) stop("Error: Probability of mutation must be between 0 and 1.")
+        if(!requireNamespace("doParallel", quietly = TRUE) & parallel == TRUE)
+                stop("You asked to run this in parallel, but you dont have package doParallel installed.
+                     run install.package() for this package, library() it and then try this again.")
         ## Data-related errors:
         period <- data$period
         outcome <- data$outcome
