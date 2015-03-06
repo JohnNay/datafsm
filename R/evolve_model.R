@@ -1,4 +1,4 @@
-#' Uses a Genetic Algorithm to Estimate a Finite-state Machine
+#' Use a Genetic Algorithm to Estimate a Finite-state Machine Model
 #'
 #' \code{evolve_model} uses a genetic algorithm to estimate a finite-state
 #' machine model, primarily for understanding and predicting decision-making.
@@ -8,21 +8,28 @@
 #' function that takes the data, an action vector \code{evolve_model} generates,
 #' and a state matrix \code{evolve_model} generates as input and returns numeric
 #' vector of same length as the \code{outcome}. \code{evolve_model} then
-#' computes a fitness score by comparing it to the provided \code{outcome}.
-#' Because this fitness function that \code{evolve_model} creates must loop
-#' through all the data everytime it is evaluated, it is implemented in C++ so
-#' it is very fast. Then \code{evolve_model} uses a stochastic meta-heuristic
-#' optimization routine to estimate the parameters. Generalized simulated
-#' annealing could work, but it is much more difficult to parallelize. The
-#' current version uses the \strong{GA} package's genetic algorithm because GAs
-#' perform well in rugged search spaces to solve integer optimization problems
-#' and are a natural complement to our binary string representation of FSMs.
+#' computes a fitness score for that potential solution FSM by comparing it to
+#' the provided \code{outcome}. This is repeated for every FSM in the
+#' population. If parallel is set to TRUE, then these evaluations are
+#' distributed across the available processors of the computer, otherwise, the
+#' evalulations of fitness are conducted sequentially. Because this fitness
+#' function that \code{evolve_model} creates must loop through all the data
+#' everytime it is evaluated and we need to evaluate many possible solution
+#' FSMs, the fitness function is implemented in C++ so it is very fast.
 #'
-#' This function evolves the models on training data and then, if test set
-#' provided, uses the best solution to make predictions on test data, and then
-#' returns the GA object and the decoded version of the best string in the
-#' population. See \linkS4class{ga_fsm} for the details of the slots (objects)
-#' that this type of object will have.
+#' \code{evolve_model} uses a stochastic meta-heuristic optimization routine to
+#' estimate the parameters that define a FSM model. Generalized simulated
+#' annealing, or tabu search could work, but they are more difficult to
+#' parallelize. The current version uses the \strong{GA} package's genetic
+#' algorithm because GAs perform well in rugged search spaces to solve integer
+#' optimization problems, are a natural complement to our binary string
+#' representation of FSMs, and are easily parallelized.
+#'
+#' This function evolves the models on training data and then, if a test set is
+#' provided, uses the best solution to make predictions on test data. Finally,
+#' the function returns the GA object and the decoded version of the best string
+#' in the population. See \linkS4class{ga_fsm} for the details of the slots
+#' (objects) that this type of object will have.
 #'
 #' @param data Data frame that has "period" and "outcome" columns and rest of
 #'   cols are predictors, ranging from one to three predictors. All of the (3-5
@@ -39,20 +46,23 @@
 #' @param popSize Optional numeric vector length one specifying the size of the
 #'   GA population. A larger number will increase the probability of finding a
 #'   very good solution but will also increase the computation time. This is
-#'   passed to the ga() function of the GA package.
+#'   passed to the GA::ga() function of the \strong{GA} package.
 #' @param pcrossover Optional numeric vector length one specifying probability
-#'   of crossover for GA. This is passed to the ga() function of the GA package.
+#'   of crossover for GA. This is passed to the GA::ga() function of the
+#'   \strong{GA} package.
 #' @param pmutation Optional numeric vector length one specifying probability of
-#'   mutation for GA. This is passed to the ga() function of the GA package.
+#'   mutation for GA. This is passed to the GA::ga() function of the \strong{GA}
+#'   package.
 #' @param maxiter Optional numeric vector length one specifying max number of
 #'   iterations for stopping the GA evolution. A larger number will increase the
 #'   probability of finding a very good solution but will also increase the
-#'   computation time. This is passed to the ga() function of the GA package.
+#'   computation time. This is passed to the GA::ga() function of the
+#'   \strong{GA} package.
 #' @param run Optional numeric vector length one specifying max number of
 #'   consecutive iterations without improvement in best fitness score for
 #'   stopping the GA evolution. A larger number will increase the probability of
 #'   finding a very good solution but will also increase the computation time.
-#'   This is passed to the ga() function of the GA package.
+#'   This is passed to the GA::ga() function of the \strong{GA} package.
 #' @param parallel Optional logical vector length one. For running the GA
 #'   evolution in parallel. Depending on the number of cores registered and the
 #'   memory on your machine, this can make the process much faster, but only
@@ -69,16 +79,28 @@
 #' @return Returns an S4 object of class ga_fsm. See \linkS4class{ga_fsm} for
 #'   the details of the slots (objects) that this type of object will have and
 #'   for information on the methods that can be used to summarize the calling
-#'   and execution of \code{evolve_model()}, including \code{\link{summary}}.
+#'   and execution of \code{evolve_model()}, including \code{\link{summary}} and
+#'   print.
 #'
 #' @examples
 #' # Create data:
-#' data <- data.frame(period = 1:5, outcome = c(1,2,1,1,1),
+#' cdata <- data.frame(period = 1:5, outcome = c(1,2,1,1,1),
 #' my.decision1 = c(1,0,1,1,1), other.decision1 = c(0,0,0,1,1))
-#' result <- evolve_model(data)
+#' (result <- evolve_model(cdata))
 #'
-#' # Use data from fsm package:
-#' data(ipd_data); summary(evolve_model(ipd_data))
+#' # Use data from this package:
+#' data(ipd_data)
+#' percent_train <- 0.80
+#' ipd_samples <- nrow(ipd_data)
+#' ntrain <- as.integer(percent_train * ipd_samples)
+#' # Back up to just before a new interaction starts:
+#' ntrain <- ntrain - ipd_data[ntrain,"period"]
+#' train_indices <- 1:ntrain
+#' test_indices <- 1:ipd_samples
+#' test_indices <- test_indices[! test_indices %in% train_indices]
+#' train_data <- ipd_data[train_indices, ]
+#' test_data <- ipd_data[test_indices,]
+#' summary(evolve_model(train_data, test_data, run = 5))
 #' @export
 
 ################################################################################
@@ -131,7 +153,7 @@ evolve_model <- function(data, test_data = NULL,
         }
         if (missing(actions)) {
                 if(length(unique(outcome))==1){
-                stop("Error: There is only one unique value in the
+                        stop("Error: There is only one unique value in the
                                                   outcome vector you supplied.")
                 } else {
                         actions <- length(unique(outcome))
@@ -361,6 +383,13 @@ evolve_model <- function(data, test_data = NULL,
                                                                                                                 } else {
                                                                                                                         x
                                                                                                                 }}))
+
+                #replace all NA's with 0 or 1 so these rows are not dropped
+                # TODO: this works fine if the NAs are only for the first period play bc
+                # then the predictor columns dont make a difference bc the FSM will initialize
+                # with the same action regardless of the predictors at that time
+                # but this would bias the results if NA's are occuring in predictors in other periods
+                test_data[is.na(test_data)] <- TRUE
 
                 names <- colnames(test_data[ , -which(names(test_data) %in% c("period", "outcome"))])
 
