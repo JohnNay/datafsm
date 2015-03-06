@@ -4,6 +4,7 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 int history_lookup(IntegerVector x){
   int result;
+  int num_ones = 0;
   int n = x.length();
 
   for(int i = 0; i < n; i++){
@@ -12,13 +13,15 @@ int history_lookup(IntegerVector x){
           }
           if (x[i]==1){
                   result = i; // Not using R indexing convention here
+                  num_ones = num_ones + 1;
           }
   }
+  if (num_ones > 1) Rprintf("There are %d 1s in this row, but there can only be one 1 in each row.\n", num_ones);
 
   return result;
 }
 
-//' Fitness Function
+//' Fitness Function in C++
 //'
 //' @param action_vec Integer Vector.
 //' @param state_mat Integer Matrix.
@@ -26,13 +29,13 @@ int history_lookup(IntegerVector x){
 //' @param period Integer Vector.
 //'
 //' @export
+//' @useDynLib fsm
+//' @importFrom Rcpp sourceCpp
 // [[Rcpp::export]]
 
 IntegerVector fitnessCPP(IntegerVector action_vec, IntegerMatrix state_mat, IntegerMatrix covariates, IntegerVector period){
 
   int n = covariates.nrow();
-
-  //IntegerMatrix covariates = x(_, Range(1, x.ncol()-1));
 
   int state = 1;
   int max_state = state_mat.nrow();
@@ -71,7 +74,7 @@ IntegerVector fitnessCPP(IntegerVector action_vec, IntegerMatrix state_mat, Inte
       state = 1;
     }
     // TODO: abort the cpp func if the user aborts in R: Rcpp::checkUserInterrupt();
-  } // or if saving fitness results, could do: fitness_count[i] = decision == outcome[i] ? 1 : 0;
+  }
 
   return decision;
 }

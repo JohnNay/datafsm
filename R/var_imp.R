@@ -13,19 +13,11 @@
 #'   predictors.
 #' @param action_vec Numeric vector indicating what action to take for each
 #'   state.
-#' @param fitness_func Function that takes \code{data}, \code{action_vec}, and
-#'   \code{state_mat} as input and returns numeric vector of same length as the
-#'   \code{outcome}. This is then used inside \code{var_imp} to compute a
-#'   fitness score by comparing it to the provided \code{outcome}.
-#' @param data Numeric matrix that has first col period and rest of cols are
-#'   predictors.
+#' @param data Data frame that has "period" and "outcome" columns and rest of
+#'   cols are predictors, ranging from one to three predictors. All of the (3-5
+#'   columns) should be named.
 #' @param outcome Numeric vector same length as the number of rows as data.
-#' @param cols Optional numeric vector same length as number of columns of the
-#'   state matrix (\code{state_mat}) with the action that each column of the
-#'   state matrix corresponds to the decision model taking in the previous
-#'   period. This is only relevant when the predictor variables of the FSM are
-#'   lagged outcomes that include the previous actions taken by that decision
-#'   model.
+#' @param period Numeric vector same length as the number of rows as data.
 #'
 #' @return Numeric vector the same length as the number of columns of the
 #'   provided state matrix (the number of predictors in the model) with relative
@@ -33,7 +25,7 @@
 #'
 #' @export
 
-var_imp <- function(state_mat, action_vec, fitness_func, data, outcome, cols=NULL){
+var_imp <- function(state_mat, action_vec, data, outcome, period){
 
   counter <- 1
   indices <- as.list(rep(NA, length(as.vector(state_mat))))
@@ -51,12 +43,10 @@ var_imp <- function(state_mat, action_vec, fitness_func, data, outcome, cols=NUL
 
   fitness_mat <- state_mat
 
-  results1 <- fitness_func(action_vec, state_mat, data)
-
+  results1 <- fitnessCPP(action_vec, state_mat, data, period)
   if (anyNA(results1) | length(results1)==0){
     stop("Error: Results from initial fitness evaluation have missing values.")
   }
-
   results1 <- sum(ifelse( results1 == outcome , 1 , 0)) / length(results1)
 
   for (i in seq(length(indices))) {
@@ -64,7 +54,7 @@ var_imp <- function(state_mat, action_vec, fitness_func, data, outcome, cols=NUL
     state_mat_flipped[indices[[i]][1],
                       indices[[i]][2]] <- ifelse(state_mat[indices[[i]][1],
                                                            indices[[i]][2]]==1, 2, 1)
-    results2 <- fitness_func(action_vec, state_mat_flipped, data)
+    results2 <- fitnessCPP(action_vec, state_mat_flipped, data, period)
 
     if (anyNA(results2) | length(results2)==0){
       stop("Results from subsequent fitness evaluation have missing values.")
@@ -81,11 +71,6 @@ var_imp <- function(state_mat, action_vec, fitness_func, data, outcome, cols=NUL
   varImp <- as.vector(apply(fitness_mat, MARGIN=2, sum)) # sum each col
   varImp <- (varImp/ifelse(max(varImp)==0, 0.001, max(varImp)))*100 # make the best be 100
   varImp <- ifelse(varImp < 0, 0, varImp)
-
-  if (missing(cols)){
-    return(varImp)
-  } else {
-    names(varImp) <- cols
-    return(varImp)
-  }
+  names(varImp) <- colnames(state_mat)
+  varImp
 }

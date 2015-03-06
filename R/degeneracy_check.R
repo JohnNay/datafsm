@@ -94,10 +94,6 @@ find_wildcards <- function(state_mat, action_vec, cols){
 #'   period. This is only relevant when the predictor variables of the FSM are
 #'   lagged outcomes that include the previous actions taken by that decision
 #'   model.
-#' @param fitness_func Function that takes data, action vector, and state matrix
-#'   as input and returns numeric vector of same length as the \code{outcome}.
-#'   This is then used inside \code{evolve_model} to compute a fitness score by
-#'   comparing it to the provided \code{outcome}.
 #' @param data Numeric matrix that has first col period and rest of cols are
 #'   predictors.
 #' @param outcome Numeric vector same length as the number of rows as data.
@@ -108,10 +104,10 @@ find_wildcards <- function(state_mat, action_vec, cols){
 #'
 #' @export
 
-degeneracy_check <- function(state_mat, action_vec, cols, fitness_func, data, outcome){
+degeneracy_check <- function(state_mat, action_vec, cols, data, outcome){
   indices <- find_wildcards(state_mat, action_vec, cols)
 
-  results1 <- fitness_func(action_vec, state_mat, data)
+  results1 <- fitnessCPP(action_vec, state_mat, data)
   if (anyNA(results1) | length(results1)==0){
     stop("Results from first fitness evaluation have missing values.")
   }
@@ -120,7 +116,7 @@ degeneracy_check <- function(state_mat, action_vec, cols, fitness_func, data, ou
   sparse_state_mat <- state_mat
   corrected_state_mat <- state_mat
   # sparse will be corrected and have zeros added for non-identifiable
-  # corrected will only be corrected, this way it can be directyly used for varImp()
+  # corrected will only be corrected, this way it can be directly used for varImp()
 
   dif <- rep(NA, length(indices)) # how many are not identifiable
 
@@ -131,7 +127,7 @@ degeneracy_check <- function(state_mat, action_vec, cols, fitness_func, data, ou
                       indices[[i]][2]] <- ifelse(state_mat[indices[[i]][1],
                                                            indices[[i]][2]]==1, 2, 1)
 
-    results2 <- fitness_func(action_vec, state_mat_flipped, data)
+    results2 <- fitnessCPP(action_vec, state_mat_flipped, data)
     if (anyNA(results2) | length(results2)==0){
       stop("Results from subsequent fitness evaluation have missing values.")
     }
