@@ -18,7 +18,7 @@ int history_lookup(IntegerVector x){
   return result;
 }
 
-//' Fitness Function
+//' Fitness Function in C++
 //'
 //' @param action_vec Integer Vector.
 //' @param state_mat Integer Matrix.
@@ -33,8 +33,6 @@ int history_lookup(IntegerVector x){
 IntegerVector fitnessCPP(IntegerVector action_vec, IntegerMatrix state_mat, IntegerMatrix covariates, IntegerVector period){
 
   int n = covariates.nrow();
-
-  //IntegerMatrix covariates = x(_, Range(1, x.ncol()-1));
 
   int state = 1;
   int max_state = state_mat.nrow();
@@ -73,7 +71,7 @@ IntegerVector fitnessCPP(IntegerVector action_vec, IntegerMatrix state_mat, Inte
       state = 1;
     }
     // TODO: abort the cpp func if the user aborts in R: Rcpp::checkUserInterrupt();
-  } // or if saving fitness results, could do: fitness_count[i] = decision == outcome[i] ? 1 : 0;
+  }
 
   return decision;
 }

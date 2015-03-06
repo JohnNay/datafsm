@@ -98,8 +98,8 @@ estimate the parameters that define a FSM model. Generalized simulated
 annealing, or tabu search could work, but they are more difficult to
 parallelize. The current version uses the \strong{GA} package's genetic
 algorithm because GAs perform well in rugged search spaces to solve integer
-optimization problems and are a natural complement to our binary string
-representation of FSMs.
+optimization problems, are a natural complement to our binary string
+representation of FSMs, and are easily parallelized.
 
 This function evolves the models on training data and then, if a test set is
 provided, uses the best solution to make predictions on test data. Finally,

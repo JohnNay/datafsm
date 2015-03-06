@@ -5,7 +5,7 @@ history_lookup <- function(x) {
     .Call('fsm_history_lookup', PACKAGE = 'fsm', x)
 }
 
-#' Fitness Function
+#' Fitness Function in C++
 #'
 #' @param action_vec Integer Vector.
 #' @param state_mat Integer Matrix.
