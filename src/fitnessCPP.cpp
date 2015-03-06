@@ -4,6 +4,7 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 int history_lookup(IntegerVector x){
   int result;
+  int num_ones = 0;
   int n = x.length();
 
   for(int i = 0; i < n; i++){
@@ -12,8 +13,10 @@ int history_lookup(IntegerVector x){
           }
           if (x[i]==1){
                   result = i; // Not using R indexing convention here
+                  num_ones = num_ones + 1;
           }
   }
+  if (num_ones > 1) Rprintf("There are %d 1s in this row, but there can only be one 1 in each row.\n", num_ones);
 
   return result;
 }

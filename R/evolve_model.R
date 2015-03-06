@@ -149,7 +149,9 @@ evolve_model <- function(data, test_data = NULL,
         if (length(outcome) == 0) stop("Error: The outcome is zero length.")
         if (missing(seed)) {
                 seed <- floor(runif(1, 1,101))
-                warning(paste("We set a seed for you to make this reproducible. It is ", seed, ".", sep=""))
+                warning(paste("We set a seed for you to make this reproducible. It is ", seed, ".
+                              If you want the same results, next time you run this with the same settings,
+                              also set the seed argument of this function to ", seed, ".", sep=""))
         }
         if (missing(actions)) {
                 if(length(unique(outcome))==1){
