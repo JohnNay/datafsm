@@ -97,30 +97,12 @@ population. See \linkS4class{ga_fsm} for the details of the slots (objects)
 that this type of object will have.
 }
 \examples{
+# Create data:
 data <- data.frame(period = 1:5, outcome = c(1,2,1,1,1),
 my.decision1 = c(1,0,1,1,1), other.decision1 = c(0,0,0,1,1))
 result <- evolve_model(data)
 
-\dontrun{
-# load data from fsm package
-data(data); data(outcome)
-# 80\% of the data for training
-train_data <- data[1:108306, ]
-train_outcome <- outcome[1:108306]
-# 20\% of the data for testing
-test_data <- data[108307:nrow(data), ]
-test_outcome <- outcome[108307:nrow(data)]
-evolved_models_empirical_data <- evolve_model(data = train_data,
-                                             test_data =  test_data, parallel = TRUE)
-print(evolved_models_empirical_data)
-show(evolved_models_empirical_data)
-summary(evolved_models_empirical_data)
-plot_data <- data.frame(y = evolved_models_empirical_data@varImp,
-                        x = colnames(evolved_models_empirical_data@state_mat))
-p <- ggplot2::ggplot(plot_data, ggplot2::aes(x = x, y=y)) + ggplot2::geom_bar(stat="identity") +
-                     ggplot2::coord_flip() +
-                     ggplot2::ylab("Relative Importance") + ggplot2::xlab("Variables")
-p
-}
+# Use data from fsm package:
+data(ipd_data); summary(evolve_model(ipd_data))
 }
 

@@ -72,31 +72,13 @@
 #'   and execution of \code{evolve_model()}, including \code{\link{summary}}.
 #'
 #' @examples
+#' # Create data:
 #' data <- data.frame(period = 1:5, outcome = c(1,2,1,1,1),
 #' my.decision1 = c(1,0,1,1,1), other.decision1 = c(0,0,0,1,1))
 #' result <- evolve_model(data)
 #'
-#' \dontrun{
-#' # load data from fsm package
-#' data(data); data(outcome)
-#' # 80% of the data for training
-#' train_data <- data[1:108306, ]
-#' train_outcome <- outcome[1:108306]
-#' # 20% of the data for testing
-#' test_data <- data[108307:nrow(data), ]
-#' test_outcome <- outcome[108307:nrow(data)]
-#' evolved_models_empirical_data <- evolve_model(data = train_data,
-#'                                              test_data =  test_data, parallel = TRUE)
-#' print(evolved_models_empirical_data)
-#' show(evolved_models_empirical_data)
-#' summary(evolved_models_empirical_data)
-#' plot_data <- data.frame(y = evolved_models_empirical_data@@varImp,
-#'                         x = colnames(evolved_models_empirical_data@@state_mat))
-#' p <- ggplot2::ggplot(plot_data, ggplot2::aes(x = x, y=y)) + ggplot2::geom_bar(stat="identity") +
-#'                      ggplot2::coord_flip() +
-#'                      ggplot2::ylab("Relative Importance") + ggplot2::xlab("Variables")
-#' p
-#' }
+#' # Use data from fsm package:
+#' data(ipd_data); summary(evolve_model(ipd_data))
 #' @export
 
 ################################################################################
@@ -168,7 +150,7 @@ evolve_model <- function(data, test_data = NULL,
 
         # so we are assured that the action vec will just need to be comprised of the possible
         # number of actions in the data:
-        if (!identical(unique(outcome), as.numeric(unique(seq(length(unique(outcome))))),
+        if (!all.equal(unique(outcome), as.numeric(unique(seq(length(unique(outcome))))),
                        ignore.environment = TRUE)){
                 stop("Error: The actions in the outcome column of the data are not the right values.
                      There should be actions sequenced from 1 to however many actions that are feasible.
@@ -188,6 +170,12 @@ evolve_model <- function(data, test_data = NULL,
                                                                                               } else {
                                                                                                       x
                                                                                               }}))
+        #replace all NA's with 0 or 1 so these rows are not dropped
+        # TODO: this works fine if the NAs are only for the first period play bc
+        # then the predictor columns dont make a difference bc the FSM will initialize
+        # with the same action regardless of the predictors at that time
+        # but this would bias the results if NA's are occuring in predictors in other periods
+        data[is.na(data)] <- TRUE
 
         names <- colnames(data[ , -which(names(data) %in% c("period", "outcome"))])
 
@@ -354,7 +342,7 @@ evolve_model <- function(data, test_data = NULL,
         if (missing(test_data)){
                 predictive <- "No test data provided. Provide some to get more accurate estimation of generalization power."
         } else {
-                if (!identical(unique(test_outcome), as.numeric(unique(seq(length(unique(test_outcome))))),
+                if (!all.equal(unique(test_outcome), as.numeric(unique(seq(length(unique(test_outcome))))),
                                ignore.environment = TRUE)){
                         stop("Error: The actions in the outcome column of the test data
                               are not the right values. There should be actions sequenced from
