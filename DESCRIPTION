@@ -1,7 +1,7 @@
 Package: fsm
 Title: Estimating Finite State Machine Models
 Version: 0.0.0.9000
-Date: March 9, 2015
+Date: 2015-03-09
 Authors@R: c( person("Nay", "John", email = "john.j.nay@gmail.com", role =
     c("cre", "aut")), person("Gilligan", "Jonathan", email =
     "jonathan.gilligan@vanderbilt.edu", role = "aut") )
