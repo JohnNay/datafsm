@@ -1,6 +1,7 @@
 Package: fsm
 Title: Estimating Finite State Machine Models
 Version: 0.0.0.9000
+Date: March 9, 2015
 Authors@R: c( person("Nay", "John", email = "john.j.nay@gmail.com", role =
     c("cre", "aut")), person("Gilligan", "Jonathan", email =
     "jonathan.gilligan@vanderbilt.edu", role = "aut") )
@@ -18,7 +19,7 @@ Depends:
     R (>= 3.1.1),
     methods,
     stats
-License: GPL (>= 2)
+License: GPL 3
 LazyData: true
 LinkingTo: Rcpp
 Suggests:
