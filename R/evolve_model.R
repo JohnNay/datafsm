@@ -203,7 +203,7 @@ evolve_model <- function(data, test_data = NULL,
         # with the same action regardless of the predictors at that time
         # but this would bias the results if NA's are occuring in predictors in other periods
         # so return an error for that:
-        if (any(!complete.cases(data) == !data$period == 1))
+        if (any(!complete.cases(data) & !data$period == 1))
                 stop(paste("Error: You have missing values in your training data somewhere other than the first period interactions.",
                            "You can only have missing values for predictor columns, AND these must be in rows where period==1."))
         data[is.na(data)] <- TRUE

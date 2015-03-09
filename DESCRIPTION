@@ -23,7 +23,8 @@ LazyData: true
 LinkingTo: Rcpp
 Suggests:
     doParallel,
-    ggplot2
+    ggplot2,
+    testthat
 Imports:
     GA,
     Rcpp
