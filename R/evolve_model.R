@@ -7,15 +7,18 @@
 #' predictors and data on the outcome. It automatically creates a fitness
 #' function that takes the data, an action vector \code{evolve_model} generates,
 #' and a state matrix \code{evolve_model} generates as input and returns numeric
-#' vector of same length as the \code{outcome}. \code{evolve_model} then
+#' vector of the same length as the \code{outcome}. \code{evolve_model} then
 #' computes a fitness score for that potential solution FSM by comparing it to
-#' the provided \code{outcome}. This is repeated for every FSM in the
-#' population. If parallel is set to TRUE, then these evaluations are
-#' distributed across the available processors of the computer, otherwise, the
-#' evalulations of fitness are conducted sequentially. Because this fitness
-#' function that \code{evolve_model} creates must loop through all the data
-#' everytime it is evaluated and we need to evaluate many possible solution
-#' FSMs, the fitness function is implemented in C++ so it is very fast.
+#' the provided \code{outcome}. This is repeated for every FSM in the population
+#' and then the probability of selection for the next generation is proportional
+#' to the fitness scores.
+#'
+#' If parallel is set to TRUE, then these evaluations are distributed across the
+#' available processors of the computer using the \strong{doParallel} package,
+#' otherwise, the evalulations of fitness are conducted sequentially. Because
+#' this fitness function that \code{evolve_model} creates must loop through all
+#' the data everytime it is evaluated and we need to evaluate many possible
+#' solution FSMs, the fitness function is implemented in C++ so it is very fast.
 #'
 #' \code{evolve_model} uses a stochastic meta-heuristic optimization routine to
 #' estimate the parameters that define a FSM model. Generalized simulated
@@ -31,13 +34,13 @@
 #' in the population. See \linkS4class{ga_fsm} for the details of the slots
 #' (objects) that this type of object will have.
 #'
-#' @param data Data frame that has "period" and "outcome" columns and rest of
-#'   cols are predictors, ranging from one to three predictors. All of the (3-5
-#'   columns) should be named.
-#' @param test_data Optional Data frame that has "period" and "outcome" columns
-#'   and rest of cols are predictors, ranging from one to three predictors. All
-#'   of the (3-5 columns) should be named. Outcome variable is the decision the
-#'   decision-maker took for that period.
+#' @param data data.frame that has "period" and "outcome" columns and rest of
+#'   columns are predictors, ranging from one to three predictors. All of the
+#'   (3-5 columns) should be named.
+#' @param test_data Optional data.frame that has "period" and "outcome" columns
+#'   and rest of columns are predictors, ranging from one to three predictors.
+#'   All of the (3-5 columns) should be named. Outcome variable is the decision
+#'   the decision-maker took for that period.
 #' @param states Optional numeric vector with the number of states.
 #' @param actions Optional numeric vector with the number of actions. If not
 #'   provided, then actions will be set as the number of unique values in the
@@ -135,39 +138,39 @@ evolve_model <- function(data, test_data = NULL,
         if (pcrossover < 0 || pcrossover > 1) stop("Error: Probability of crossover must be between 0 and 1.")
         if (pmutation < 0 || pmutation > 1) stop("Error: Probability of mutation must be between 0 and 1.")
         if(!requireNamespace("doParallel", quietly = TRUE) & parallel == TRUE)
-                stop("You asked to run this in parallel, but you dont have package doParallel installed.
-                     run install.package() for this package, library() it and then try this again.")
+                stop(paste("You asked to run this in parallel, but you don't have package doParallel installed.",
+                     "run install.packages() for this package, library() it, and then try this again."))
         ## Data-related errors:
         period <- data$period
         outcome <- data$outcome
         test_period <- test_data$period
         test_outcome <- test_data$outcome
 
-        if (nrow(data)!=length(outcome)) stop("Error: The data (covariates) and the
-                                              outcome variable are not the same length.")
+        if (nrow(data)!=length(outcome)) stop(paste("Error: The predictor variables and the",
+                                              "outcome variable are not the same length."))
         if (anyNA(outcome)) stop("Error: There are missing values in the data.")
         if (length(outcome) == 0) stop("Error: The outcome is zero length.")
         if (missing(seed)) {
                 seed <- floor(runif(1, 1,101))
-                warning(paste("We set a seed for you to make this reproducible. It is ", seed, ".
-                              If you want the same results, next time you run this with the same settings,
-                              also set the seed argument of this function to ", seed, ".", sep=""))
+                warning(paste("We set a seed for you to make this reproducible. It is ", seed, ".",
+                              " If you want the same results, next time you run this with the same settings,",
+                              " also set the seed argument of this function to ", seed, ".", sep=""))
         }
         if (missing(actions)) {
                 if(length(unique(outcome))==1){
-                        stop("Error: There is only one unique value in the
-                                                  outcome vector you supplied.")
+                        stop(paste("Error: There is only one unique value in the",
+                                                  "outcome vector you supplied."))
                 } else {
                         actions <- length(unique(outcome))
                 }
         } else {
-                if (length(unique(outcome)) != actions) {warning("The number of unique values in the
-                                                  outcome vector you supplied does not
-                                                  equal the value of actions you supplied.
-                                                  The outcome vector should be a vector of
-                                                  observed actions. We are going to use the
-                                                  number of unique values in the outcome
-                                                  vector you supplied as the value of actions.")
+                if (length(unique(outcome)) != actions) {warning(paste("The number of unique values in the",
+                                                  "outcome vector you supplied does not",
+                                                  "equal the value of actions you supplied.",
+                                                  "The outcome vector should be a vector of",
+                                                  "observed actions. We are going to use the",
+                                                  "number of unique values in the outcome",
+                                                  "vector you supplied as the value of actions."))
                                                          actions <- length(unique(outcome))
                 }
         }
@@ -176,12 +179,12 @@ evolve_model <- function(data, test_data = NULL,
         # number of actions in the data:
         if (!all.equal(unique(outcome), as.numeric(unique(seq(length(unique(outcome))))),
                        ignore.environment = TRUE)){
-                stop("Error: The actions in the outcome column of the data are not the right values.
-                     There should be actions sequenced from 1 to however many actions that are feasible.
-                     E.g., if there are two feasible actions, then the outcome column should be comprised
-                     of only 1s and 2s, with at least one 1 and and at least one 2. If there are three feasible
-                     actions, the outcome column should be comprised of only 1s, 2s, and 3s, with at least one
-                     1 and, at least one 2, and at least one 3.")
+                stop(paste("Error: The actions in the outcome column of the data are not the right values.",
+                     "There should be actions sequenced from 1 to however many actions that are feasible.",
+                     "E.g., if there are two feasible actions, then the outcome column should be comprised",
+                     "of only 1s and 2s, with at least one 1 and and at least one 2. If there are three feasible",
+                     "actions, the outcome column should be comprised of only 1s, 2s, and 3s, with at least one",
+                     "1 and, at least one 2, and at least one 3."))
         }
 
         inputs <- 2^(ncol(data[ , -which(names(data) %in% c("period", "outcome"))]))
@@ -194,11 +197,15 @@ evolve_model <- function(data, test_data = NULL,
                                                                                               } else {
                                                                                                       x
                                                                                               }}))
-        #replace all NA's with 0 or 1 so these rows are not dropped
-        # TODO: this works fine if the NAs are only for the first period play bc
+        # replace all NA's with 0 or 1 so these rows are not dropped
+        # this works fine if the NAs are only for the first period play bc
         # then the predictor columns dont make a difference bc the FSM will initialize
         # with the same action regardless of the predictors at that time
         # but this would bias the results if NA's are occuring in predictors in other periods
+        # so return an error for that:
+        if (any(!complete.cases(data) == !data$period == 1))
+                stop(paste("Error: You have missing values in your training data somewhere other than the first period interactions.",
+                           "You can only have missing values for predictor columns, AND these must be in rows where period==1."))
         data[is.na(data)] <- TRUE
 
         names <- colnames(data[ , -which(names(data) %in% c("period", "outcome"))])
@@ -212,11 +219,11 @@ evolve_model <- function(data, test_data = NULL,
                 data <- model.matrix(eval(parse(text=form)), data)
         }
 
-        if (length(names) > 3) stop("Error: You have more than 3 predictors.
-                                  Your model will be too complicated.
-                                  Do some type of feature selection to choose less
-                                  than 4 predictors and then use the data.frame
-                                  with just those features next time.")
+        if (length(names) > 3) stop(paste("Error: You have more than 3 predictors.",
+                                  "Your model will be too complicated.",
+                                  "Do some type of feature selection to choose less",
+                                  "than 4 predictors and then use the data.frame",
+                                  "with just those features next time."))
 
         if (ncol(data) != inputs)
                 stop("Error: At least one of your predictor variables does not have exactly 2 levels.")
@@ -321,8 +328,8 @@ evolve_model <- function(data, test_data = NULL,
                 } else {
                         priors <- as.matrix(priors)
                 }
-                if (nBits != ncol(priors)) stop("Error: Priors do not match number of variables.
-                                                Remember that you need to provide a decoded bitstring for the priors.")
+                if (nBits != ncol(priors)) stop(paste("Error: Priors do not match number of variables.",
+                                                "Remember that you need to provide a decoded bitstring for the priors."))
         }
 
         if (!boltzmann) {
@@ -368,11 +375,12 @@ evolve_model <- function(data, test_data = NULL,
         } else {
                 if (!all.equal(unique(test_outcome), as.numeric(unique(seq(length(unique(test_outcome))))),
                                ignore.environment = TRUE)){
-                        stop("Error: The actions in the outcome column of the test data
-                              are not the right values. There should be actions sequenced from
-                              1 to however many actions that are feasible. E.g., if there are
-                              two feasible actions, then the outcome columns should be comprised
-                              of only 1s and 2s, with at least one 1 and and at least one 2.")
+                        stop(paste("Error: The actions in the outcome column of the test data are not the right values.",
+                                   "There should be actions sequenced from 1 to however many actions that are feasible.",
+                                   "E.g., if there are two feasible actions, then the outcome column should be comprised",
+                                   "of only 1s and 2s, with at least one 1 and and at least one 2. If there are three feasible",
+                                   "actions, the outcome column should be comprised of only 1s, 2s, and 3s, with at least one",
+                                   "1 and, at least one 2, and at least one 3."))
                 }
 
                 test_inputs <- 2^(ncol(test_data[ , -which(names(test_data) %in% c("period", "outcome"))]))
@@ -386,11 +394,14 @@ evolve_model <- function(data, test_data = NULL,
                                                                                                                         x
                                                                                                                 }}))
 
-                #replace all NA's with 0 or 1 so these rows are not dropped
-                # TODO: this works fine if the NAs are only for the first period play bc
+                # replace all NA's with 0 or 1 so these rows are not dropped
+                # this works fine if the NAs are only for the first period play bc
                 # then the predictor columns dont make a difference bc the FSM will initialize
                 # with the same action regardless of the predictors at that time
                 # but this would bias the results if NA's are occuring in predictors in other periods
+                # so return an error for that:
+                if (any(!complete.cases(test_data) == !test_data$period == 1))
+                        stop("Error: You have missing values in your test data somewhere other than the first period interactions. You can only have missing values for predictor columns, AND these must be in rows where period==1.")
                 test_data[is.na(test_data)] <- TRUE
 
                 names <- colnames(test_data[ , -which(names(test_data) %in% c("period", "outcome"))])
@@ -404,15 +415,15 @@ evolve_model <- function(data, test_data = NULL,
                         test_data <- model.matrix(eval(parse(text=form)), test_data)
                 }
 
-                if (length(names) > 3) stop("Error: You have more than 3 predictors.
-                                  Your model will be too complicated.
-                                  Do some type of feature selection to choose less
-                                  than 4 predictors and then use the data.frame
-                                  with just those predictors next time.")
+                if (length(names) > 3) stop(paste("Error: You have more than 3 predictors in your test data.",
+                                                  "Your model will be too complicated.",
+                                                  "Do some type of feature selection to choose less",
+                                                  "than 4 predictors and then use the data.frame",
+                                                  "with just those features next time."))
 
                 if (ncol(test_data) != test_inputs)
-                        stop("Error: At least one of your predictor variables in your test data
-                             does not have exactly 2 levels.")
+                        stop(paste("Error: At least one of your predictor variables in your test data",
+                             "does not have exactly 2 levels."))
 
                 test_cols <- colnames(test_data)
 

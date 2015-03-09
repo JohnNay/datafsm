@@ -5,15 +5,15 @@
 
 using namespace Rcpp;
 
-// history_lookup
-int history_lookup(IntegerVector x);
-RcppExport SEXP fsm_history_lookup(SEXP xSEXP) {
+// predictor_lookup
+int predictor_lookup(IntegerVector x);
+RcppExport SEXP fsm_predictor_lookup(SEXP xSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
         Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP );
-        int __result = history_lookup(x);
+        int __result = predictor_lookup(x);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);

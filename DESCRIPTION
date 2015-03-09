@@ -16,7 +16,8 @@ URL: https://github.com/JohnNay/fsm
 BugReports: https://github.com/JohnNay/fsm/issues
 Depends:
     R (>= 3.1.1),
-    methods
+    methods,
+    stats
 License: GPL (>= 2)
 LazyData: true
 LinkingTo: Rcpp

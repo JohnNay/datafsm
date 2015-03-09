@@ -9,14 +9,14 @@ evolve_model(data, test_data = NULL, states = 2, actions = NULL,
   boltzmann = FALSE, alpha = 0.4)
 }
 \arguments{
-\item{data}{Data frame that has "period" and "outcome" columns and rest of
-cols are predictors, ranging from one to three predictors. All of the (3-5
-columns) should be named.}
+\item{data}{data.frame that has "period" and "outcome" columns and rest of
+columns are predictors, ranging from one to three predictors. All of the
+(3-5 columns) should be named.}
 
-\item{test_data}{Optional Data frame that has "period" and "outcome" columns
-and rest of cols are predictors, ranging from one to three predictors. All
-of the (3-5 columns) should be named. Outcome variable is the decision the
-decision-maker took for that period.}
+\item{test_data}{Optional data.frame that has "period" and "outcome" columns
+and rest of columns are predictors, ranging from one to three predictors.
+All of the (3-5 columns) should be named. Outcome variable is the decision
+the decision-maker took for that period.}
 
 \item{states}{Optional numeric vector with the number of states.}
 
@@ -83,15 +83,18 @@ This is the main function of the \strong{fsm} package. It takes data on
 predictors and data on the outcome. It automatically creates a fitness
 function that takes the data, an action vector \code{evolve_model} generates,
 and a state matrix \code{evolve_model} generates as input and returns numeric
-vector of same length as the \code{outcome}. \code{evolve_model} then
+vector of the same length as the \code{outcome}. \code{evolve_model} then
 computes a fitness score for that potential solution FSM by comparing it to
-the provided \code{outcome}. This is repeated for every FSM in the
-population. If parallel is set to TRUE, then these evaluations are
-distributed across the available processors of the computer, otherwise, the
-evalulations of fitness are conducted sequentially. Because this fitness
-function that \code{evolve_model} creates must loop through all the data
-everytime it is evaluated and we need to evaluate many possible solution
-FSMs, the fitness function is implemented in C++ so it is very fast.
+the provided \code{outcome}. This is repeated for every FSM in the population
+and then the probability of selection for the next generation is proportional
+to the fitness scores.
+
+If parallel is set to TRUE, then these evaluations are distributed across the
+available processors of the computer using the \strong{doParallel} package,
+otherwise, the evalulations of fitness are conducted sequentially. Because
+this fitness function that \code{evolve_model} creates must loop through all
+the data everytime it is evaluated and we need to evaluate many possible
+solution FSMs, the fitness function is implemented in C++ so it is very fast.
 
 \code{evolve_model} uses a stochastic meta-heuristic optimization routine to
 estimate the parameters that define a FSM model. Generalized simulated
