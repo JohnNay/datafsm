@@ -1,6 +1,6 @@
 Package: fsm
 Title: Estimating Finite State Machine Models
-Version: 0.0.0.9000
+Version: 0.1.0
 Date: 2015-03-09
 Authors@R: c( person("Nay", "John", email = "john.j.nay@gmail.com", role =
     c("cre", "aut")), person("Gilligan", "Jonathan", email =
@@ -10,8 +10,8 @@ Description: This package implements a method for estimating interpretable
     Nay and Jonathan Gilligan. We use an efficient representation
     of a model as a matrix and a genetic algorithm-based estimation process.
     This combination of representation and optimization has proven effective in
-    modeling decision-making with experimental game data and observational
-    international relations data. This work was supported by NSF grants
+    modeling decision-making with empirical data at the individual and country
+    levels. This work was supported by NSF grants
     EAR-1416964 and EAR-1204685.
 URL: https://github.com/JohnNay/fsm
 BugReports: https://github.com/JohnNay/fsm/issues
@@ -19,7 +19,7 @@ Depends:
     R (>= 3.1.1),
     methods,
     stats
-License: GPL 3
+License: GPL-3
 LazyData: true
 LinkingTo: Rcpp
 Suggests:
