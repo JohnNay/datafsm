@@ -91,6 +91,7 @@
 #' my.decision1 = c(1,0,1,1,1), other.decision1 = c(0,0,0,1,1))
 #' (result <- evolve_model(cdata))
 #' summary(result)
+#'
 #' @export
 
 ################################################################################
@@ -126,7 +127,8 @@ evolve_model <- function(data, test_data = NULL,
         if (pmutation < 0 || pmutation > 1) stop("Error: Probability of mutation must be between 0 and 1.")
         if(!requireNamespace("doParallel", quietly = TRUE) & parallel == TRUE)
                 stop(paste("You asked to run this in parallel, but you don't have package doParallel installed.",
-                     "run install.packages() for this package, library() it, and then try this again."))
+                     "run 'install.packages(''doParallel''); library(''doParallel''), and then try this again."))
+
         ## Data-related errors:
         period <- data$period
         outcome <- data$outcome
@@ -162,7 +164,7 @@ evolve_model <- function(data, test_data = NULL,
                 }
         }
 
-        # so we are assured that the action vec will just need to be comprised of the possible
+        # So we are assured that the action vec will just need to be comprised of the possible
         # number of actions in the data:
         if (!all.equal(unique(outcome), as.numeric(unique(seq(length(unique(outcome))))),
                        ignore.environment = TRUE)){

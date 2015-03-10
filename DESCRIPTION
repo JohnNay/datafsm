@@ -5,14 +5,34 @@ Date: 2015-03-09
 Authors@R: c( person("Nay", "John", email = "john.j.nay@gmail.com", role =
     c("cre", "aut")), person("Gilligan", "Jonathan", email =
     "jonathan.gilligan@vanderbilt.edu", role = "aut") )
-Description: This package implements a method for estimating interpretable
-    models of dynamic decision-making that is described in a 2015 paper by John
-    Nay and Jonathan Gilligan. We use an efficient representation
-    of a model as a matrix and a genetic algorithm-based estimation process.
-    This combination of representation and optimization has proven effective in
-    modeling decision-making with empirical data at the individual and country
-    levels. This work was supported by NSF grants
-    EAR-1416964 and EAR-1204685.
+Description: This R package implements our method for automatically
+    generating models of dynamic decision-making that both have strong
+    predictive power and are interpretable in human terms. This is
+    useful for designing empirically grounded agent-based simulations
+    and for gaining direct insight into observed dynamic processes.
+    We use an efficient model representation and a genetic algorithm-based
+    estimation process to generate simple deterministic approximations that
+    explain most of the structure of complex stochastic processes.
+    This method, implemented in C++ and R, scales well to large data sets.
+    We have applied the package to empirical data, and demonstrated the
+    method's ability to recover known data-generating processes by simulating
+    data with agent-based models and correctly deriving the underlying decision
+    models for multiple agent models and degrees of stochasticity.
+    These applications of the package are described in a 2015 working paper
+    by John Nay and Jonathan Gilligan: ``Data-driven Dynamic Decision Models''.
+
+    A user of our package can estimate models by providing their data in a
+    common "panel data" matrix format. The package is designed to estimate any
+    time series classification model that uses a small number of binary
+    predictor variables and moves back and forth between the values of the
+    outcome variable over time. Larger sets of predictor variables can be
+    reduced to smaller sets with cross-validation. Although the predictor
+    variables must be binary, a quantitative variable can be converted into
+    binary by division of the observed values into high/low classes. Future
+    releases of the package may include additional estimation methods to
+    complement GA optimization.
+
+    This work was supported by NSF grants EAR-1416964 and EAR-1204685.
 URL: https://github.com/JohnNay/fsm
 BugReports: https://github.com/JohnNay/fsm/issues
 Depends:
