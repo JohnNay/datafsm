@@ -42,6 +42,15 @@
 #'   All of the (3-5 columns) should be named. Outcome variable is the decision
 #'   the decision-maker took for that period.
 #' @param states Optional numeric vector with the number of states.
+#' @param cv Optional logical vector length one for whether cross-validation
+#'   should be conducted on training data to select optimal number of states.
+#'   This can drastically increase computation time because if TRUE, it will run
+#'   evolve_model k*max_states times to estimate optimal value for states.
+#' @param max_states Optional numeric vector length one only relevant if
+#'   cv==TRUE. It specifies how up to how many states that cross-validation
+#'   should search through.
+#' @param k Optional numeric vector length one only relevant if cv==TRUE,
+#'   specifying number of folds for cross-validation.
 #' @param actions Optional numeric vector with the number of actions. If not
 #'   provided, then actions will be set as the number of unique values in the
 #'   outcome vector.
@@ -96,7 +105,7 @@
 
 ################################################################################
 evolve_model <- function(data, test_data = NULL,
-                         states = 2,
+                         states = 2, cv = FALSE, max_states = 4, k = 2,
                          actions = NULL,
                          seed = NULL,
                          popSize = 75, pcrossover = 0.8, pmutation = 0.1, maxiter = 55, run = 25,
@@ -115,8 +124,6 @@ evolve_model <- function(data, test_data = NULL,
         # predictor columns and use model.matrix() to create new cols for all the combinations of
         # values of predictors.
         #TODO: varImp to generalize to more than 2-state FSMs
-        #TODO: add automatic run CV across states==2:4 on training data to find optimal value
-        # in terms of generalization performance.
 
         call <- match.call()
 
@@ -127,7 +134,7 @@ evolve_model <- function(data, test_data = NULL,
         if (pmutation < 0 || pmutation > 1) stop("Error: Probability of mutation must be between 0 and 1.")
         if(!requireNamespace("doParallel", quietly = TRUE) & parallel == TRUE)
                 stop(paste("You asked to run this in parallel, but you don't have package doParallel installed.",
-                     "run 'install.packages(''doParallel''); library(''doParallel''), and then try this again."))
+                     "run 'install.packages(''doParallel''); library(''doParallel'')', and then try this again."))
 
         ## Data-related errors:
         period <- data$period
@@ -177,6 +184,17 @@ evolve_model <- function(data, test_data = NULL,
         }
 
         inputs <- 2^(ncol(data[ , -which(names(data) %in% c("period", "outcome"))]))
+
+        if (cv) {
+                states <- evolve_model_cv(data, k,
+                                          actions,
+                                          max_states,
+                                          seed,
+                                          popSize, pcrossover, pmutation, maxiter, run,
+                                          parallel,
+                                          boltzmann, alpha)
+                cat("Cross-validation found optimal number of states to be ", states, ".", sep="")
+        }
 
         # change any non-logical predictor variable vectors to logical
         data[ , -which(names(data) %in% c("period", "outcome"))] <- data.frame(lapply(data[ , -which(names(data) %in% c("period", "outcome"))],

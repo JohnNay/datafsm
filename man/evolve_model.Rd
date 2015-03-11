@@ -3,10 +3,10 @@
 \alias{evolve_model}
 \title{Use a Genetic Algorithm to Estimate a Finite-state Machine Model}
 \usage{
-evolve_model(data, test_data = NULL, states = 2, actions = NULL,
-  seed = NULL, popSize = 75, pcrossover = 0.8, pmutation = 0.1,
-  maxiter = 55, run = 25, parallel = FALSE, priors = NULL,
-  boltzmann = FALSE, alpha = 0.4)
+evolve_model(data, test_data = NULL, states = 2, cv = FALSE,
+  max_states = 4, k = 2, actions = NULL, seed = NULL, popSize = 75,
+  pcrossover = 0.8, pmutation = 0.1, maxiter = 55, run = 25,
+  parallel = FALSE, priors = NULL, boltzmann = FALSE, alpha = 0.4)
 }
 \arguments{
 \item{data}{data.frame that has "period" and "outcome" columns and rest of
@@ -19,6 +19,18 @@ All of the (3-5 columns) should be named. Outcome variable is the decision
 the decision-maker took for that period.}
 
 \item{states}{Optional numeric vector with the number of states.}
+
+\item{cv}{Optional logical vector length one for whether cross-validation
+should be conducted on training data to select optimal number of states.
+This can drastically increase computation time because if TRUE, it will run
+evolve_model k*max_states times to estimate optimal value for states.}
+
+\item{max_states}{Optional numeric vector length one only relevant if
+cv==TRUE. It specifies how up to how many states that cross-validation
+should search through.}
+
+\item{k}{Optional numeric vector length one only relevant if cv==TRUE,
+specifying number of folds for cross-validation.}
 
 \item{actions}{Optional numeric vector with the number of actions. If not
 provided, then actions will be set as the number of unique values in the
