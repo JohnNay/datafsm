@@ -11,7 +11,9 @@
 #' computes a fitness score for that potential solution FSM by comparing it to
 #' the provided \code{outcome}. This is repeated for every FSM in the population
 #' and then the probability of selection for the next generation is proportional
-#' to the fitness scores.
+#' to the fitness scores. The default is also for the function to call itself
+#' recursively while varying the number of states inside a cross-validation loop
+#' in order to estimate the optimal number of states.
 #'
 #' If parallel is set to TRUE, then these evaluations are distributed across the
 #' available processors of the computer using the \strong{doParallel} package,
@@ -69,7 +71,8 @@
 #'   iterations for stopping the GA evolution. A larger number will increase the
 #'   probability of finding a very good solution but will also increase the
 #'   computation time. This is passed to the GA::ga() function of the
-#'   \strong{GA} package.
+#'   \strong{GA} package. maxiter scaled by how many parameters are in the
+#'   model: maxiter + ((maxiter*(nBits^2)) / maxiter).
 #' @param run Optional numeric vector length one specifying max number of
 #'   consecutive iterations without improvement in best fitness score for
 #'   stopping the GA evolution. A larger number will increase the probability of
@@ -96,19 +99,21 @@
 #'
 #' @examples
 #' # Create data:
-#' cdata <- data.frame(period = 1:5, outcome = c(1,2,1,1,1),
-#' my.decision1 = c(1,0,1,1,1), other.decision1 = c(0,0,0,1,1))
-#' (result <- evolve_model(cdata))
+#'cdata <- data.frame(period = rep(1:10, 1000),
+#'                    outcome = rep(1:2, 5000),
+#'                    my.decision1 = sample(1:0, 10000, TRUE),
+#'                    other.decision1 = sample(1:0, 10000, TRUE))
+#' (result <- evolve_model(cdata, cv=FALSE))
 #' summary(result)
 #'
 #' @export
 
 ################################################################################
 evolve_model <- function(data, test_data = NULL,
-                         states = 2, cv = FALSE, max_states = 4, k = 2,
+                         states = 2, cv = TRUE, max_states = 3, k = 2,
                          actions = NULL,
                          seed = NULL,
-                         popSize = 75, pcrossover = 0.8, pmutation = 0.1, maxiter = 55, run = 25,
+                         popSize = 75, pcrossover = 0.8, pmutation = 0.1, maxiter = 50, run = 25,
                          parallel = FALSE,
                          priors = NULL,
                          boltzmann = FALSE, alpha=0.4) {
@@ -193,7 +198,7 @@ evolve_model <- function(data, test_data = NULL,
                                           popSize, pcrossover, pmutation, maxiter, run,
                                           parallel,
                                           boltzmann, alpha)
-                cat("Cross-validation found optimal number of states to be ", states, ".", sep="")
+                cat("Cross-validation found optimal number of states to be ", states, ".\n\n", sep="")
         }
 
         # change any non-logical predictor variable vectors to logical
@@ -339,6 +344,10 @@ evolve_model <- function(data, test_data = NULL,
                                                 "Remember that you need to provide a decoded bitstring for the priors."))
         }
 
+        # Scale convergence criteria by how many parameters are in the model:
+        maxiter <- maxiter + ((maxiter*(nBits^2)) / maxiter)
+        #run <- run + ((run*(nBits)) / run)
+
         if (!boltzmann) {
                 GA <- GA::ga(type = "binary",
                              fitness = fitnessR,
@@ -407,7 +416,7 @@ evolve_model <- function(data, test_data = NULL,
                 # with the same action regardless of the predictors at that time
                 # but this would bias the results if NA's are occuring in predictors in other periods
                 # so return an error for that:
-                if (any(!complete.cases(test_data) == !test_data$period == 1))
+                if (any(!complete.cases(test_data) & !test_data$period == 1))
                         stop("Error: You have missing values in your test data somewhere other than the first period interactions. You can only have missing values for predictor columns, AND these must be in rows where period==1.")
                 test_data[is.na(test_data)] <- TRUE
 
