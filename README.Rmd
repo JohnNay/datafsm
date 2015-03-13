@@ -1,4 +1,7 @@
 ---
+header-includes:
+        - \usepackage{tikz}
+        - \usetikzlibrary{automata,positioning} 
 output:
   md_document:
     variant: markdown_github

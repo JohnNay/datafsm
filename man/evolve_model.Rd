@@ -3,10 +3,11 @@
 \alias{evolve_model}
 \title{Use a Genetic Algorithm to Estimate a Finite-state Machine Model}
 \usage{
-evolve_model(data, test_data = NULL, states = 2, cv = TRUE,
-  max_states = 3, k = 2, actions = NULL, seed = NULL, popSize = 75,
-  pcrossover = 0.8, pmutation = 0.1, maxiter = 50, run = 25,
-  parallel = FALSE, priors = NULL, boltzmann = FALSE, alpha = 0.4)
+evolve_model(data, test_data = NULL, measure = c("accuracy", "sens", "spec",
+  "ppv"), states = 2, cv = TRUE, max_states = 3, k = 2,
+  actions = NULL, seed = NULL, popSize = 75, pcrossover = 0.8,
+  pmutation = 0.1, maxiter = 50, run = 25, parallel = FALSE,
+  priors = NULL, boltzmann = FALSE, alpha = 0.4)
 }
 \arguments{
 \item{data}{data.frame that has "period" and "outcome" columns and rest of
@@ -17,6 +18,19 @@ columns are predictors, ranging from one to three predictors. All of the
 and rest of columns are predictors, ranging from one to three predictors.
 All of the (3-5 columns) should be named. Outcome variable is the decision
 the decision-maker took for that period.}
+
+\item{measure}{Optional character vector that is either: "accuracy", "sens",
+"spec", or "ppv". This specifies what measure of predictive performance to
+use for training and evaluating the model. The default measure is
+"accuracy". However, accuracy can be a problematic measure when the classes
+are imbalanced in the samples, i.e. if a class the model is trying to
+predict is very rare. Alternatives to accuracy are available that illuminate
+different aspects of predictive power. Sensitivity answers the question, ``
+given that a result is truly an event, what is the probability that the
+model will predict an event?'' Specificity answers the question, ``given
+that a result is truly not an event, what is the probability that the model
+will predict a negative?'' Positive predictive value answers, ``what is the
+percent of predicted positives that are actually positive?''}
 
 \item{states}{Optional numeric vector with the number of states.}
 
@@ -43,9 +57,9 @@ GA population. A larger number will increase the probability of finding a
 very good solution but will also increase the computation time. This is
 passed to the GA::ga() function of the \strong{GA} package.}
 
-\item{pcrossover}{Optional numeric vector length one specifying probability
-of crossover for GA. This is passed to the GA::ga() function of the
-\strong{GA} package.}
+\item{pcrossover}{Optional numeric vector length one specifying probability of
+crossover for GA. This is passed to the GA::ga() function of the \strong{GA}
+package.}
 
 \item{pmutation}{Optional numeric vector length one specifying probability of
 mutation for GA. This is passed to the GA::ga() function of the \strong{GA}
@@ -54,9 +68,9 @@ package.}
 \item{maxiter}{Optional numeric vector length one specifying max number of
 iterations for stopping the GA evolution. A larger number will increase the
 probability of finding a very good solution but will also increase the
-computation time. This is passed to the GA::ga() function of the
-\strong{GA} package. maxiter scaled by how many parameters are in the
-model: maxiter + ((maxiter*(nBits^2)) / maxiter).}
+computation time. This is passed to the GA::ga() function of the \strong{GA}
+package. maxiter scaled by how many parameters are in the model: maxiter +
+((maxiter*(nBits^2)) / maxiter).}
 
 \item{run}{Optional numeric vector length one specifying max number of
 consecutive iterations without improvement in best fitness score for
@@ -78,14 +92,14 @@ random priors are automatically created.}
 \item{boltzmann}{Optional logical vector length one.}
 
 \item{alpha}{Optional numeric vector length one. This is an additional
-  parameter to tune/set if \code{boltzmann} is set to TRUE.}
+ parameter to tune/set if \code{boltzmann} is set to TRUE.}
 }
 \value{
-Returns an S4 object of class ga_fsm. See \linkS4class{ga_fsm} for
-  the details of the slots (objects) that this type of object will have and
-  for information on the methods that can be used to summarize the calling
-  and execution of \code{evolve_model()}, including \code{\link{summary}} and
-  print.
+Returns an S4 object of class ga_fsm. See \linkS4class{ga_fsm} for the
+ details of the slots (objects) that this type of object will have and for
+ information on the methods that can be used to summarize the calling and
+ execution of \code{evolve_model()}, including \code{\link{summary}} and
+ print.
 }
 \description{
 \code{evolve_model} uses a genetic algorithm to estimate a finite-state
