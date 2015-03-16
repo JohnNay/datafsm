@@ -37,7 +37,8 @@ percent of predicted positives that are actually positive?''}
 \item{cv}{Optional logical vector length one for whether cross-validation
 should be conducted on training data to select optimal number of states.
 This can drastically increase computation time because if TRUE, it will run
-evolve_model k*max_states times to estimate optimal value for states.}
+evolve_model k*max_states times to estimate optimal value for states. Ties
+are broken by choosing the smaller number of states.}
 
 \item{max_states}{Optional numeric vector length one only relevant if
 cv==TRUE. It specifies how up to how many states that cross-validation
@@ -84,10 +85,9 @@ memory on your machine, this can make the process much faster, but only
 works for Unix-based machines that can fork the processes.}
 
 \item{priors}{Optional numeric matrix of solutions strings to be included in
-the initialization, where the number of columns is equal to the number of
-bits. User needs to use a decoder function to translate prior decision
-models into bits and then provide them. If this is not specified, then
-random priors are automatically created.}
+the initialization. User needs to use a decoder function to translate prior
+decision models into bits and then provide them. If this is not specified,
+then random priors are automatically created.}
 
 \item{boltzmann}{Optional logical vector length one.}
 
@@ -147,5 +147,8 @@ cdata <- data.frame(period = rep(1:10, 1000),
                    other.decision1 = sample(1:0, 10000, TRUE))
 (result <- evolve_model(cdata, cv=FALSE))
 summary(result)
+
+# In scripts, it can makes sense to set parallel to
+# 'as.logical(Sys.info()['sysname'] != 'Windows')'.
 }
 

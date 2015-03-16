@@ -59,7 +59,8 @@
 #'@param cv Optional logical vector length one for whether cross-validation
 #'  should be conducted on training data to select optimal number of states.
 #'  This can drastically increase computation time because if TRUE, it will run
-#'  evolve_model k*max_states times to estimate optimal value for states.
+#'  evolve_model k*max_states times to estimate optimal value for states. Ties
+#'  are broken by choosing the smaller number of states.
 #'@param max_states Optional numeric vector length one only relevant if
 #'  cv==TRUE. It specifies how up to how many states that cross-validation
 #'  should search through.
@@ -95,10 +96,9 @@
 #'  memory on your machine, this can make the process much faster, but only
 #'  works for Unix-based machines that can fork the processes.
 #'@param priors Optional numeric matrix of solutions strings to be included in
-#'  the initialization, where the number of columns is equal to the number of
-#'  bits. User needs to use a decoder function to translate prior decision
-#'  models into bits and then provide them. If this is not specified, then
-#'  random priors are automatically created.
+#'  the initialization. User needs to use a decoder function to translate prior
+#'  decision models into bits and then provide them. If this is not specified,
+#'  then random priors are automatically created.
 #'@param boltzmann Optional logical vector length one.
 #'@param alpha Optional numeric vector length one. This is an additional
 #'  parameter to tune/set if \code{boltzmann} is set to TRUE.
@@ -118,6 +118,9 @@
 #' (result <- evolve_model(cdata, cv=FALSE))
 #' summary(result)
 #'
+#' # In scripts, it can makes sense to set parallel to
+#' # 'as.logical(Sys.info()['sysname'] != 'Windows')'.
+#'
 #'@export
 
 ################################################################################
@@ -129,10 +132,7 @@ evolve_model <- function(data, test_data = NULL,
                          popSize = 75, pcrossover = 0.8, pmutation = 0.1, maxiter = 50, run = 25,
                          parallel = FALSE,
                          priors = NULL,
-                         boltzmann = FALSE, alpha=0.4) {
-        # priors is a matrix of solutions strings to be included in the initialization,
-        # where the number of columns == the number of bits. so you need to use the decoder funcs
-        # to translate prior decision models into bits and then provide them.
+                         boltzmann = FALSE, alpha = 0.4) {
 
         # made it so fitnessR() can be built in here
         # without needing to pass in any fitness_func arg. you will just need to pass in a
@@ -206,7 +206,9 @@ evolve_model <- function(data, test_data = NULL,
         inputs <- 2^(ncol(data[ , -which(names(data) %in% c("period", "outcome"))]))
 
         if (cv) {
-                states <- evolve_model_cv(data, k,
+                states <- evolve_model_cv(data,
+                                          measure,
+                                          k,
                                           actions,
                                           max_states,
                                           seed,
@@ -271,18 +273,11 @@ evolve_model <- function(data, test_data = NULL,
                         stop("Error: Results from fitness evaluation have missing values.")
                 }
 
-                if (measure == "accuracy"){
-                        return(sum(ifelse( results == outcome , 1 , 0)) / length(results))
-                }
-                if (measure == "sens"){
-                        return(caret::sensitivity(data = factor(results), reference = factor(outcome)))
-                }
-                if (measure == "spec"){
-                        return(caret::specificity(data = factor(results), reference = factor(outcome)))
-                }
-                if (measure == "ppv"){
-                        return(caret::posPredValue(data = factor(results), reference = factor(outcome)))
-                }
+                switch(measure,
+                       accuracy = sum(ifelse( results == outcome , 1 , 0)) / length(results),
+                       sens = caret::sensitivity(data = factor(results), reference = factor(outcome)),
+                       spec = caret::specificity(data = factor(results), reference = factor(outcome)),
+                       ppv = caret::posPredValue(data = factor(results), reference = factor(outcome)))
         }
 
         warning_threshold <- 100
@@ -372,7 +367,7 @@ evolve_model <- function(data, test_data = NULL,
 
         # Scale convergence criteria by how many parameters are in the model:
         maxiter <- maxiter + ((maxiter*(nBits^2)) / maxiter)
-        #run <- run + ((run*(nBits)) / run)
+        #run <- run + ((run*(nBits)) / run) # TODO: think about how to scale run
 
         if (!boltzmann) {
                 GA <- GA::ga(type = "binary",
