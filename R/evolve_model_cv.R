@@ -102,7 +102,7 @@ evolve_model_cv <- function(data,
                 for(f in seq(k)){
                         training <- fold_ass == f
                         if(class(training) != "logical") stop("Training index not logical vector.")
-                        cat("\nTesting states ==", s, "\n\n")
+                        cat("\nCross-validated testing with states set to", s, "\n\n")
                         mat[s, f] <- evolve_model(data[training, ], data[!training, ],
                                                   measure = measure,
                                                   states = s, cv = FALSE, seed = seed,
@@ -110,7 +110,7 @@ evolve_model_cv <- function(data,
                                                   pmutation = pmutation, maxiter = maxiter, run = run,
                                                   parallel = parallel,
                                                   boltzmann =  boltzmann, alpha=alpha)@predictive
-                        cat("\nPredictive value is", mat[s, f], "\n\n")
+                        cat("\nCross-validated value of", measure, "is", mat[s, f], "\n\n")
                 }
         }
         results <- apply(mat[seq(from = 2, to = max_states, by = 1), ], 1, mean) # mean predictive accuracy for each number of states across all k folds (columns)

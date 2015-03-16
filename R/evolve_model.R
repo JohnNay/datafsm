@@ -215,7 +215,7 @@ evolve_model <- function(data, test_data = NULL,
                                           popSize, pcrossover, pmutation, maxiter, run,
                                           parallel,
                                           boltzmann, alpha)
-                cat("Cross-validation found optimal number of states to be ", states, ".\n\n", sep="")
+                cat("Cross-validation found optimal number of states on training data to be ", states, ".\n\n", sep="")
         }
 
         # change any non-logical predictor variable vectors to logical
@@ -328,11 +328,11 @@ evolve_model <- function(data, test_data = NULL,
                 output
         }
 
-        poss.state.values <- (1:states) - 1
+        poss.state.values <- seq(states) - 1
         b1 <- GA::decimal2binary(max(poss.state.values))
         l1 <- length(b1) #how many binary elements to represent one element of state matrix
 
-        poss.action.values <- (1:actions) - 1
+        poss.action.values <- seq(actions) - 1
         b2 <- GA::decimal2binary(max(poss.action.values))
         l2 <- length(b2) #how many binary elements to represent one element of action matrix
 
