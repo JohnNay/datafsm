@@ -43,6 +43,9 @@
 #'  and rest of columns are predictors, ranging from one to three predictors.
 #'  All of the (3-5 columns) should be named. Outcome variable is the decision
 #'  the decision-maker took for that period.
+#'@param drop_nzv Optional logical vector length one specifying whether
+#'  predictors variables with variance in provided data near zero should be
+#'  dropped before model building.
 #'@param measure Optional character vector that is either: "accuracy", "sens",
 #'  "spec", or "ppv". This specifies what measure of predictive performance to
 #'  use for training and evaluating the model. The default measure is
@@ -124,7 +127,7 @@
 #'@export
 
 ################################################################################
-evolve_model <- function(data, test_data = NULL,
+evolve_model <- function(data, test_data = NULL, drop_nzv = TRUE,
                          measure = c("accuracy", "sens", "spec", "ppv"),
                          states = 2, cv = TRUE, max_states = 3, k = 2,
                          actions = NULL,
@@ -152,15 +155,35 @@ evolve_model <- function(data, test_data = NULL,
         if (maxiter < 1) stop("Error: The maximum number of iterations must be at least 1.")
         if (pcrossover < 0 || pcrossover > 1) stop("Error: Probability of crossover must be between 0 and 1.")
         if (pmutation < 0 || pmutation > 1) stop("Error: Probability of mutation must be between 0 and 1.")
+
+        ## Parallel-related errors:
         if(!requireNamespace("doParallel", quietly = TRUE) & parallel == TRUE)
                 stop(paste("You asked to run this in parallel, but you don't have package doParallel installed.",
-                     "run 'install.packages(''doParallel''); library(''doParallel'')', and then try this again."))
+                     "run 'install.packages(''doParallel''); library(doParallel)', and then try this again."))
 
         ## Data-related errors:
+        if (missing(data)) stop("You must supply data. At the very least, you can supply data.")
+        if(!is.data.frame(data)) {
+                data <- as.data.frame(data)
+                warning("You did not supply a data.frame for 'data' argument of this function,
+                        so we converted it to one.")
+        }
         period <- data$period
         outcome <- data$outcome
         test_period <- test_data$period
         test_outcome <- test_data$outcome
+
+        nzvs <- caret::nearZeroVar(data[ , -which(names(data) %in% c("period", "outcome")), drop=FALSE],
+                                   freqCut = 95/5, uniqueCut=10)
+        if (length(nzvs) > 0){
+                to_drop <- colnames(data)[-which(names(data) %in% c("period", "outcome"))[nzvs]]
+                cat("We should be dropping", length(to_drop), "feature(s), which is (are):", to_drop, "\n")
+                if(drop_nzv){
+                        # just names in features[[k]] so we dont drop group, folds and training vars
+                        cat("Dropping", length(to_drop), "feature(s), which is (are):", to_drop)
+                        data <- data[ , -which(names(data) %in% to_drop), drop=FALSE]
+                }
+        }
 
         if (nrow(data)!=length(outcome)) stop(paste("Error: The predictor variables and the",
                                               "outcome variable are not the same length."))
@@ -203,7 +226,7 @@ evolve_model <- function(data, test_data = NULL,
                      "1 and, at least one 2, and at least one 3."))
         }
 
-        inputs <- 2^(ncol(data[ , -which(names(data) %in% c("period", "outcome"))]))
+        inputs <- 2^(ncol(data[ , -which(names(data) %in% c("period", "outcome")), drop = FALSE]))
 
         if (cv) {
                 states <- evolve_model_cv(data,
@@ -219,7 +242,8 @@ evolve_model <- function(data, test_data = NULL,
         }
 
         # change any non-logical predictor variable vectors to logical
-        data[ , -which(names(data) %in% c("period", "outcome"))] <- data.frame(lapply(data[ , -which(names(data) %in% c("period", "outcome"))],
+        data[ , -which(names(data) %in% c("period", "outcome"))] <-
+                data.frame(lapply(data[ , -which(names(data) %in% c("period", "outcome"))],
                                                                                       function(x) {
                                                                                               if (class(x)!="logical") {
                                                                                                       as.logical(x)
@@ -237,7 +261,7 @@ evolve_model <- function(data, test_data = NULL,
                            "You can only have missing values for predictor columns, AND these must be in rows where period==1."))
         data[is.na(data)] <- TRUE
 
-        names <- colnames(data[ , -which(names(data) %in% c("period", "outcome"))])
+        names <- colnames(data[ , -which(names(data) %in% c("period", "outcome")), drop = FALSE])
 
         if (length(names)==1){
                 form <- paste("outcome ~ 0 +", names, sep=" ")
@@ -420,10 +444,11 @@ evolve_model <- function(data, test_data = NULL,
                                    "1 and, at least one 2, and at least one 3."))
                 }
 
-                test_inputs <- 2^(ncol(test_data[ , -which(names(test_data) %in% c("period", "outcome"))]))
+                test_inputs <- 2^(ncol(test_data[ , -which(names(test_data) %in% c("period", "outcome")), drop = FALSE]))
 
                 # change any non-logical predictor variable vectors to logical
-                test_data[ , -which(names(test_data) %in% c("period", "outcome"))] <- data.frame(lapply(test_data[ , -which(names(test_data) %in% c("period", "outcome"))],
+                test_data[ , -which(names(test_data) %in% c("period", "outcome"))] <-
+                        data.frame(lapply(test_data[ , -which(names(test_data) %in% c("period", "outcome"))],
                                                                                                         function(x) {
                                                                                                                 if (class(x)!="logical") {
                                                                                                                         as.logical(x)

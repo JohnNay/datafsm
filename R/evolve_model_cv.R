@@ -104,6 +104,7 @@ evolve_model_cv <- function(data,
                         if(class(training) != "logical") stop("Training index not logical vector.")
                         cat("\nCross-validated testing with states set to", s, "\n\n")
                         mat[s, f] <- evolve_model(data[training, ], data[!training, ],
+                                                  drop_nzv = FALSE,
                                                   measure = measure,
                                                   states = s, cv = FALSE, seed = seed,
                                                   popSize = popSize, pcrossover =pcrossover,

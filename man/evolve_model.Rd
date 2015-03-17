@@ -3,11 +3,11 @@
 \alias{evolve_model}
 \title{Use a Genetic Algorithm to Estimate a Finite-state Machine Model}
 \usage{
-evolve_model(data, test_data = NULL, measure = c("accuracy", "sens", "spec",
-  "ppv"), states = 2, cv = TRUE, max_states = 3, k = 2,
-  actions = NULL, seed = NULL, popSize = 75, pcrossover = 0.8,
-  pmutation = 0.1, maxiter = 50, run = 25, parallel = FALSE,
-  priors = NULL, boltzmann = FALSE, alpha = 0.4)
+evolve_model(data, test_data = NULL, drop_nzv = TRUE,
+  measure = c("accuracy", "sens", "spec", "ppv"), states = 2, cv = TRUE,
+  max_states = 3, k = 2, actions = NULL, seed = NULL, popSize = 75,
+  pcrossover = 0.8, pmutation = 0.1, maxiter = 50, run = 25,
+  parallel = FALSE, priors = NULL, boltzmann = FALSE, alpha = 0.4)
 }
 \arguments{
 \item{data}{data.frame that has "period" and "outcome" columns and rest of
@@ -18,6 +18,10 @@ columns are predictors, ranging from one to three predictors. All of the
 and rest of columns are predictors, ranging from one to three predictors.
 All of the (3-5 columns) should be named. Outcome variable is the decision
 the decision-maker took for that period.}
+
+\item{drop_nzv}{Optional logical vector length one specifying whether
+predictors variables with variance in provided data near zero should be
+dropped before model building.}
 
 \item{measure}{Optional character vector that is either: "accuracy", "sens",
 "spec", or "ppv". This specifies what measure of predictive performance to

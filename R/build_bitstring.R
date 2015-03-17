@@ -11,6 +11,7 @@
 #' @param actions Numeric vector length one with the number of actions.
 #'
 #' @return Returns numeric vector bitstring.
+#' @export
 
 build_bitstring <- function(action_vec, state_mat, actions) {
   states <- nrow(state_mat)
