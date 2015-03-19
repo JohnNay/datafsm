@@ -39,8 +39,10 @@ setClassUnion("numericOrchar", members = c("numeric", "character"))
 #' @slot degeneracy List with message and sparse matrix.
 #' @slot varImp Numeric vector same length as number of columns of state matrix
 #'   with relative importance scores for each predictor.
+#' @slot timing Numeric vector length one with the total elapsed time it took
+#'   \code{\link{evolve_model}} to execute.
 #'
-#'   @export
+#' @export
 
 #' @importClassesFrom GA ga
 setClass("ga_fsm",
@@ -52,7 +54,8 @@ setClass("ga_fsm",
                    action_vec = "numeric",
                    predictive = "numericOrchar",
                    degeneracy = "list",
-                   varImp = "numeric"),
+                   varImp = "numeric",
+                   timing = "numeric"),
          validity = check_ga_fsm
 )
 

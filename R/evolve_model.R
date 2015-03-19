@@ -146,6 +146,8 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = TRUE,
         # values of predictors.
         #TODO: varImp to generalize to more than 2-state FSMs
 
+        start_time <- as.numeric(proc.time()[[1]])
+
         call <- match.call()
 
         measure <- match.arg(measure) # inside fitnessR(), use this arg to create measure of fitness
@@ -523,7 +525,8 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = TRUE,
                       state_mat = state_mat,
                       action_vec = action_vec,
                       predictive = predictive,
-                      varImp = varImp) #,
+                      varImp = varImp,
+                      timing = as.numeric(proc.time()[[1]]) - start_time) #,
         #degeneracy = list(message=message, dif=dif, sparse_state_mat = sparse_state_mat)))
 
         object

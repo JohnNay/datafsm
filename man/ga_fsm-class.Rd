@@ -61,6 +61,9 @@ user should provide test data for better estimate of performance.}
 \item{\code{degeneracy}}{List with message and sparse matrix.}
 
 \item{\code{varImp}}{Numeric vector same length as number of columns of state matrix
-  with relative importance scores for each predictor.}
+with relative importance scores for each predictor.}
+
+\item{\code{timing}}{Numeric vector length one with the total elapsed time it took
+  \code{\link{evolve_model}} to execute.}
 }}
 
