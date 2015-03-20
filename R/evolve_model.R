@@ -231,16 +231,19 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = TRUE,
         inputs <- 2^(ncol(data[ , -which(names(data) %in% c("period", "outcome")), drop = FALSE]))
 
         if (cv) {
-                states <- evolve_model_cv(data,
-                                          measure,
-                                          k,
-                                          actions,
-                                          max_states,
-                                          seed,
-                                          popSize, pcrossover, pmutation, maxiter, run,
-                                          parallel,
-                                          boltzmann, alpha)
-                cat("Cross-validation found optimal number of states on training data to be ", states, ".\n\n", sep="")
+                try({
+                        states <- evolve_model_cv(data,
+                                                  measure,
+                                                  k,
+                                                  actions,
+                                                  max_states,
+                                                  seed,
+                                                  popSize, pcrossover, pmutation, maxiter, run,
+                                                  parallel,
+                                                  boltzmann, alpha)
+                        cat("Cross-validation found optimal number of states on training data to be ", states, ".\n\n", sep="")
+                })
+                # wrapped this in try, so if it fails, we'll just use the default value of states, which is an arg to evolve_model()
         }
 
         # change any non-logical predictor variable vectors to logical
