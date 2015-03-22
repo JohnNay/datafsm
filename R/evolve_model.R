@@ -105,6 +105,8 @@
 #'@param boltzmann Optional logical vector length one.
 #'@param alpha Optional numeric vector length one. This is an additional
 #'  parameter to tune/set if \code{boltzmann} is set to TRUE.
+#'@param verbose Optional logical vector length one specifying whether helpful
+#'  messages should be displayed on the user's console or not.
 #'
 #'@return Returns an S4 object of class ga_fsm. See \linkS4class{ga_fsm} for the
 #'  details of the slots (objects) that this type of object will have and for
@@ -135,7 +137,8 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = TRUE,
                          popSize = 75, pcrossover = 0.8, pmutation = 0.1, maxiter = 50, run = 25,
                          parallel = FALSE,
                          priors = NULL,
-                         boltzmann = FALSE, alpha = 0.4) {
+                         boltzmann = FALSE, alpha = 0.4,
+                         verbose = TRUE) {
 
         # made it so fitnessR() can be built in here
         # without needing to pass in any fitness_func arg. you will just need to pass in a
@@ -179,10 +182,10 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = TRUE,
                                    freqCut = 95/5, uniqueCut=10)
         if (length(nzvs) > 0){
                 to_drop <- colnames(data)[-which(names(data) %in% c("period", "outcome"))[nzvs]]
-                cat("We should be dropping", length(to_drop), "feature(s), which is (are):", to_drop, "\n")
+                if(verbose) cat("We should be dropping", length(to_drop), "feature(s), which is (are):", to_drop, "\n")
                 if(drop_nzv){
                         # just names in features[[k]] so we dont drop group, folds and training vars
-                        cat("Dropping", length(to_drop), "feature(s), which is (are):", to_drop)
+                        if(verbose) cat("Dropping", length(to_drop), "feature(s), which is (are):", to_drop)
                         data <- data[ , -which(names(data) %in% to_drop), drop=FALSE]
                 }
         }
@@ -240,8 +243,9 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = TRUE,
                                                   seed,
                                                   popSize, pcrossover, pmutation, maxiter, run,
                                                   parallel,
-                                                  boltzmann, alpha)
-                        cat("Cross-validation found optimal number of states on training data to be ", states, ".\n\n", sep="")
+                                                  boltzmann, alpha,
+                                                  verbose)
+                        if(verbose) cat("Cross-validation found optimal number of states on training data to be ", states, ".\n\n", sep="")
                 })
                 # wrapped this in try, so if it fails, we'll just use the default value of states, which is an arg to evolve_model()
         }
@@ -331,7 +335,7 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = TRUE,
                         children <- output$children
                         if (! all(valid_bsl(children))) {
                                 if (iter > warning_threshold) {
-                                        cat("Invalid crossover #", iter, '\n')
+                                        warning("Invalid crossover #", iter, '\n')
                                         print(children)
                                 }
                                 output <- NULL
@@ -398,6 +402,19 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = TRUE,
         maxiter <- maxiter + ((maxiter*(nBits^2)) / maxiter)
         #run <- run + ((run*(nBits)) / run) # TODO: think about how to scale run
 
+        if(verbose){
+                Monitor <- function (object, digits = getOption("digits")) {
+                        Fit <- na.exclude(object@fitness)
+                        cat(paste("Iter =", object@iter, " | Mean =", format(mean(Fit),
+                                                                             digits = digits), " | Best =", format(max(Fit),
+                                                                                                                   digits = digits),
+                                  "\n"))
+                }
+        } else {
+                Monitor <- function (object, digits = getOption("digits")) { }
+        }
+
+
         if (!boltzmann) {
                 GA <- GA::ga(type = "binary",
                              fitness = fitnessR,
@@ -412,6 +429,7 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = TRUE,
                              maxfitness = 1,
                              parallel = parallel,
                              suggestions = priors,
+                             monitor = Monitor,
                              seed = seed)
         } else {
                 GA <- GA::ga(type = "binary",
@@ -427,6 +445,7 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = TRUE,
                              maxfitness = 1,
                              parallel = parallel,
                              suggestions = priors,
+                             monitor = Monitor,
                              seed = seed,
                              selection = function(...) BoltzmannSelection(..., alpha = alpha))
         }

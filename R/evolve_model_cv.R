@@ -62,6 +62,8 @@ add_interact_num <- function(d){
 #' @param boltzmann Logical vector length one.
 #' @param alpha Numeric vector length one. This is an additional parameter to
 #'   tune/set if \code{boltzmann} is set to TRUE.
+#' @param verbose Optional logical vector length one specifying whether helpful
+#'  messages should be displayed on the user's console or not.
 #'
 #' @return Returns the number of states that maximizes accuracy.
 #'
@@ -76,7 +78,8 @@ evolve_model_cv <- function(data,
                             seed,
                             popSize, pcrossover, pmutation, maxiter, run,
                             parallel,
-                            boltzmann, alpha) {
+                            boltzmann, alpha,
+                            verbose) {
 
         interacts <- add_interact_num(data)
 
@@ -102,7 +105,7 @@ evolve_model_cv <- function(data,
                 for(f in seq(k)){
                         training <- fold_ass == f
                         if(class(training) != "logical") stop("Training index not logical vector.")
-                        cat("\nCross-validated testing with states set to", s, "\n\n")
+                        if(verbose) cat("\nCross-validated testing with states set to", s, "\n\n")
                         mat[s, f] <- evolve_model(data[training, ], data[!training, ],
                                                   drop_nzv = FALSE,
                                                   measure = measure,
@@ -111,7 +114,7 @@ evolve_model_cv <- function(data,
                                                   pmutation = pmutation, maxiter = maxiter, run = run,
                                                   parallel = parallel,
                                                   boltzmann =  boltzmann, alpha=alpha)@predictive
-                        cat("\nCross-validated value of", measure, "is", mat[s, f], "\n\n")
+                        if(verbose) cat("\nCross-validated value of", measure, "is", mat[s, f], "\n\n")
                 }
         }
         results <- apply(mat[seq(from = 2, to = max_states, by = 1), ], 1, mean) # mean predictive accuracy for each number of states across all k folds (columns)

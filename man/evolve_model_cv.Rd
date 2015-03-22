@@ -4,7 +4,7 @@
 \title{Estimate Optimal Number of States of a Finite-state Machine Model}
 \usage{
 evolve_model_cv(data, measure, k, actions, max_states, seed, popSize,
-  pcrossover, pmutation, maxiter, run, parallel, boltzmann, alpha)
+  pcrossover, pmutation, maxiter, run, parallel, boltzmann, alpha, verbose)
 }
 \arguments{
 \item{data}{data.frame that has "period" and "outcome" columns and rest of
@@ -66,7 +66,10 @@ Unix-based machines that can fork the processes.}
 \item{boltzmann}{Logical vector length one.}
 
 \item{alpha}{Numeric vector length one. This is an additional parameter to
-  tune/set if \code{boltzmann} is set to TRUE.}
+tune/set if \code{boltzmann} is set to TRUE.}
+
+\item{verbose}{Optional logical vector length one specifying whether helpful
+ messages should be displayed on the user's console or not.}
 }
 \value{
 Returns the number of states that maximizes accuracy.

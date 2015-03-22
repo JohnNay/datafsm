@@ -7,7 +7,8 @@ evolve_model(data, test_data = NULL, drop_nzv = TRUE,
   measure = c("accuracy", "sens", "spec", "ppv"), states = 2, cv = TRUE,
   max_states = 3, k = 2, actions = NULL, seed = NULL, popSize = 75,
   pcrossover = 0.8, pmutation = 0.1, maxiter = 50, run = 25,
-  parallel = FALSE, priors = NULL, boltzmann = FALSE, alpha = 0.4)
+  parallel = FALSE, priors = NULL, boltzmann = FALSE, alpha = 0.4,
+  verbose = TRUE)
 }
 \arguments{
 \item{data}{data.frame that has "period" and "outcome" columns and rest of
@@ -96,7 +97,10 @@ then random priors are automatically created.}
 \item{boltzmann}{Optional logical vector length one.}
 
 \item{alpha}{Optional numeric vector length one. This is an additional
- parameter to tune/set if \code{boltzmann} is set to TRUE.}
+parameter to tune/set if \code{boltzmann} is set to TRUE.}
+
+\item{verbose}{Optional logical vector length one specifying whether helpful
+ messages should be displayed on the user's console or not.}
 }
 \value{
 Returns an S4 object of class ga_fsm. See \linkS4class{ga_fsm} for the
