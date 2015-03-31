@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // predictor_lookup
 int predictor_lookup(IntegerVector x);
-RcppExport SEXP fsm_predictor_lookup(SEXP xSEXP) {
+RcppExport SEXP datafsm_predictor_lookup(SEXP xSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
@@ -22,7 +22,7 @@ END_RCPP
 }
 // fitnessCPP
 IntegerVector fitnessCPP(IntegerVector action_vec, IntegerMatrix state_mat, IntegerMatrix covariates, IntegerVector period);
-RcppExport SEXP fsm_fitnessCPP(SEXP action_vecSEXP, SEXP state_matSEXP, SEXP covariatesSEXP, SEXP periodSEXP) {
+RcppExport SEXP datafsm_fitnessCPP(SEXP action_vecSEXP, SEXP state_matSEXP, SEXP covariatesSEXP, SEXP periodSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {

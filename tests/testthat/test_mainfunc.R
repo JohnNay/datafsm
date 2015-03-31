@@ -1,4 +1,4 @@
-library(fsm)
+library(datafsm)
 context("Main evolve_model function")
 
 test_that("evolve_model() returns correct objects", {

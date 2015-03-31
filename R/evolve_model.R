@@ -3,7 +3,7 @@
 #'\code{evolve_model} uses a genetic algorithm to estimate a finite-state
 #'machine model, primarily for understanding and predicting decision-making.
 #'
-#'This is the main function of the \strong{fsm} package. It takes data on
+#'This is the main function of the \strong{datafsm} package. It takes data on
 #'predictors and data on the outcome. It automatically creates a fitness
 #'function that takes the data, an action vector \code{evolve_model} generates,
 #'and a state matrix \code{evolve_model} generates as input and returns numeric

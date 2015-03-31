@@ -1,4 +1,4 @@
 library(testthat)
-library(fsm)
+library(datafsm)
 
-test_check("fsm")
+test_check("datafsm")

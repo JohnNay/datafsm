@@ -2,7 +2,7 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 predictor_lookup <- function(x) {
-    .Call('fsm_predictor_lookup', PACKAGE = 'fsm', x)
+    .Call('datafsm_predictor_lookup', PACKAGE = 'datafsm', x)
 }
 
 #' Fitness Function in C++
@@ -23,6 +23,6 @@ predictor_lookup <- function(x) {
 #' @useDynLib fsm
 #' @importFrom Rcpp sourceCpp
 fitnessCPP <- function(action_vec, state_mat, covariates, period) {
-    .Call('fsm_fitnessCPP', PACKAGE = 'fsm', action_vec, state_mat, covariates, period)
+    .Call('datafsm_fitnessCPP', PACKAGE = 'datafsm', action_vec, state_mat, covariates, period)
 }
 
