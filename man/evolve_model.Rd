@@ -114,7 +114,7 @@ Returns an S4 object of class ga_fsm. See \linkS4class{ga_fsm} for the
 machine model, primarily for understanding and predicting decision-making.
 }
 \details{
-This is the main function of the \strong{fsm} package. It takes data on
+This is the main function of the \strong{datafsm} package. It takes data on
 predictors and data on the outcome. It automatically creates a fitness
 function that takes the data, an action vector \code{evolve_model} generates,
 and a state matrix \code{evolve_model} generates as input and returns numeric
