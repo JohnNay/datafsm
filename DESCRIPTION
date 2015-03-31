@@ -1,5 +1,5 @@
 Package: datafsm
-Title: Estimating Finite State Machine Models
+Title: Estimating Finite State Machine Models from Data
 Version: 0.1.0
 Date: 2015-03-09
 Authors@R: c( person("Nay", "John", email = "john.j.nay@gmail.com", role =
@@ -37,7 +37,7 @@ Depends:
     R (>= 3.1.1),
     methods,
     stats
-License: MIT
+License: MIT + file LICENSE
 LazyData: true
 LinkingTo: Rcpp
 Suggests:
