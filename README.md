@@ -3,7 +3,7 @@
 
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![Build Status](https://travis-ci.org/JohnNay/fsm.png?branch=master)](https://travis-ci.org/JohnNay/fsm)
+[![Build Status](https://travis-ci.org/JohnNay/datafsm.png?branch=master)](https://travis-ci.org/JohnNay/datafsm)
 
 This R package -- created by John Nay, with code written by John Nay and Jonathan Gilligan -- implements our method for automatically generating models of dynamic decision-making that both have strong predictive power and are interpretable in human terms. This is useful for designing empirically grounded agent-based simulations and for gaining direct insight into observed dynamic processes. We use an efficient model representation and a genetic algorithm-based estimation process to generate simple deterministic approximations that explain most of the structure of complex stochastic processes. This method, implemented in C++ and R, scales well to large data sets. We have applied the package to empirical data, and demonstrated the method's ability to recover known data-generating processes by simulating data with agent-based models and correctly deriving the underlying decision models for multiple agent models and degrees of stochasticity. These applications of the package are described in a 2015 working paper by JN and JG: \`\`Data-driven Dynamic Decision Models''.
 
