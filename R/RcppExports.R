@@ -20,7 +20,7 @@ predictor_lookup <- function(x) {
 #' @param period Integer Vector.
 #'
 #' @export
-#' @useDynLib fsm
+#' @useDynLib datafsm
 #' @importFrom Rcpp sourceCpp
 fitnessCPP <- function(action_vec, state_mat, covariates, period) {
     .Call('datafsm_fitnessCPP', PACKAGE = 'datafsm', action_vec, state_mat, covariates, period)

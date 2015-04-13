@@ -9,32 +9,24 @@ using namespace Rcpp;
 int predictor_lookup(IntegerVector x);
 RcppExport SEXP datafsm_predictor_lookup(SEXP xSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP );
-        int __result = predictor_lookup(x);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    __result = Rcpp::wrap(predictor_lookup(x));
+    return __result;
 END_RCPP
 }
 // fitnessCPP
 IntegerVector fitnessCPP(IntegerVector action_vec, IntegerMatrix state_mat, IntegerMatrix covariates, IntegerVector period);
 RcppExport SEXP datafsm_fitnessCPP(SEXP action_vecSEXP, SEXP state_matSEXP, SEXP covariatesSEXP, SEXP periodSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< IntegerVector >::type action_vec(action_vecSEXP );
-        Rcpp::traits::input_parameter< IntegerMatrix >::type state_mat(state_matSEXP );
-        Rcpp::traits::input_parameter< IntegerMatrix >::type covariates(covariatesSEXP );
-        Rcpp::traits::input_parameter< IntegerVector >::type period(periodSEXP );
-        IntegerVector __result = fitnessCPP(action_vec, state_mat, covariates, period);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< IntegerVector >::type action_vec(action_vecSEXP);
+    Rcpp::traits::input_parameter< IntegerMatrix >::type state_mat(state_matSEXP);
+    Rcpp::traits::input_parameter< IntegerMatrix >::type covariates(covariatesSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type period(periodSEXP);
+    __result = Rcpp::wrap(fitnessCPP(action_vec, state_mat, covariates, period));
+    return __result;
 END_RCPP
 }

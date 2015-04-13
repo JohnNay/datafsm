@@ -83,12 +83,12 @@ setMethod("show", "ga_fsm",
 )
 
 ################################################################################
-#' Turns ga_fsm S4 object into list for printing
+#' Turns ga_fsm S4 object into list of summaries for printing and then prints it.
 #' @describeIn ga_fsm An S4 method for summarizing a ga_fsm S4 object
 #'
 #' @param object S4 ga_fsm object
-#' @param digits numeric vector length one for how many significant digits to
-#' print
+#' @param digits Optional numeric vector length one for how many significant digits to
+#' print, default is 3.
 #'
 #'  @export
 
@@ -149,5 +149,50 @@ setMethod("summary", "ga_fsm",
                   print(x$varImp, digits = digits)
 
                   invisible(x)
+          }
+)
+
+################################################################################
+#' Plots ga_fsm S4 object's state transition matrix
+#' @describeIn ga_fsm An S4 method for summarizing a ga_fsm S4 object
+#'
+#' @param x S4 ga_fsm object
+#' @param y not used.
+#' @param action_label optional character vector same length as action vector, where each ith element corresponds to what that ith element in the action vector represents. This will be used to fill in the states (circles) of the state transition matrix to be plotted.
+#' 
+#'  @export
+
+setMethod("plot", "ga_fsm",
+          function(x, y, action_label) {
+            actions = x@actions
+            states = x@states
+            state_mat = x@state_mat
+            action_vec = x@action_vec
+            predictive = x@predictive
+            degeneracy = x@degeneracy
+            varImp = x@varImp
+            
+            if (missing(action_label))
+              action_label <- paste0(action_vec)
+            M <- matrix(nrow = length(action_vec), ncol = length(action_vec), 
+                        byrow = TRUE, data = 0)
+            s <- t(state_mat)
+            for (i in seq(nrow(s))){
+              for (j in seq(ncol(s))){
+                if (M[s[i, j], j] == "0"){
+                  M[s[i, j], j] <- as.character(paste(i)) #row.names(s)[i]
+                } else {
+                  M[s[i, j], j] <- paste0(M[s[i, j], j], as.character(paste(i))) #paste0(M[s[i, j], j], "\n\n", row.names(s)[i])
+                }
+              }
+            }
+            p <- diagram::plotmat(M, pos = length(action_vec), curve = 0.2, 
+                                  name = action_label, 
+                                  lwd = 1, box.lwd = 2, 
+                                  cex.txt = 0.8, 
+                                  box.type = "circle", 
+                                  box.col = "lightblue",
+                                  box.prop = 1)
+            invisible(p)
           }
 )

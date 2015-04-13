@@ -42,9 +42,9 @@ LazyData: true
 LinkingTo: Rcpp
 Suggests:
     doParallel,
-    ggplot2,
     testthat
 Imports:
     caret,
+    diagram,
     GA,
     Rcpp

@@ -36,7 +36,7 @@ int predictor_lookup(IntegerVector x){
 //' @param period Integer Vector.
 //'
 //' @export
-//' @useDynLib fsm
+//' @useDynLib datafsm
 //' @importFrom Rcpp sourceCpp
 // [[Rcpp::export]]
 

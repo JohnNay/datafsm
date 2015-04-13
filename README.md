@@ -1,11 +1,7 @@
-
-
-
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![Build Status](https://travis-ci.org/JohnNay/datafsm.png?branch=master)](https://travis-ci.org/JohnNay/datafsm)
 
-This R package -- created by John Nay, with code written by John Nay and Jonathan Gilligan -- implements our method for automatically generating models of dynamic decision-making that both have strong predictive power and are interpretable in human terms. This is useful for designing empirically grounded agent-based simulations and for gaining direct insight into observed dynamic processes. We use an efficient model representation and a genetic algorithm-based estimation process to generate simple deterministic approximations that explain most of the structure of complex stochastic processes. This method, implemented in C++ and R, scales well to large data sets. We have applied the package to empirical data, and demonstrated the method's ability to recover known data-generating processes by simulating data with agent-based models and correctly deriving the underlying decision models for multiple agent models and degrees of stochasticity. These applications of the package are described in a 2015 working paper by JN and JG: \`\`Data-driven Dynamic Decision Models''.
+This R package -- created by John Nay, with code written by John Nay and Jonathan Gilligan -- implements our method for automatically generating models of dynamic decision-making that both have strong predictive power and are interpretable in human terms. This is useful for designing empirically grounded agent-based simulations and for gaining direct insight into observed dynamic processes. We use an efficient model representation and a genetic algorithm-based estimation process to generate simple deterministic approximations that explain most of the structure of complex stochastic processes. This method, implemented in C++ and R, scales well to large data sets. We have applied the package to empirical data, and demonstrated the method's ability to recover known data-generating processes by simulating data with agent-based models and correctly deriving the underlying decision models for multiple agent models and degrees of stochasticity. These applications of the package are described in a 2015 working paper by John Nay and Jonathan Gilligan: "Data-driven Dynamic Decision Models."
 
 A user of our package can estimate models by providing their data in a common "panel data" matrix format. The package is designed to estimate any time series classification model that uses a small number of binary predictor variables and moves back and forth between the values of the outcome variable over time. Larger sets of predictor variables can be reduced to smaller sets with cross-validation. Although the predictor variables must be binary, a quantitative variable can be converted into binary by division of the observed values into high/low classes. Future releases of the package may include additional estimation methods to complement GA optimization.
 
@@ -29,13 +25,13 @@ citation("datafsm")
 #> To cite package 'datafsm' in publications use:
 #> 
 #>   Nay John and Gilligan Jonathan (2015). datafsm: Estimating
-#>   Finite State Machine Models. R package version 0.1.0.
+#>   Finite State Machine Models from Data. R package version 0.1.0.
 #>   https://github.com/JohnNay/datafsm
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
 #>   @Manual{,
-#>     title = {datafsm: Estimating Finite State Machine Models},
+#>     title = {datafsm: Estimating Finite State Machine Models from Data},
 #>     author = {Nay John and Gilligan Jonathan},
 #>     year = {2015},
 #>     note = {R package version 0.1.0},
