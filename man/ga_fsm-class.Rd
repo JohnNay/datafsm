@@ -31,11 +31,16 @@ print, default is 3.}
 
 \item{y}{not used.}
 
-\item{action_label}{optional character vector same length as action vector, where each ith element corresponds to what that ith element in the action vector represents. This will be used to fill in the states (circles) of the state transition matrix to be plotted.}
+\item{action_label}{optional character vector same length as action vector,
+where each ith element corresponds to what that ith element in the action
+vector represents. This will be used to fill in the states (circles) of the
+state transition matrix to be plotted.}
 
-\item{transition_label}{optional character vector same length as number of columns of state transition matrix}
+\item{transition_label}{optional character vector same length as number of
+columns of state transition matrix}
 
-\item{curvature}{optional numeric vector specifying the curvature of the lines for a diagram of 2 or more states.}
+\item{curvature}{optional numeric vector specifying the curvature of the
+  lines for a diagram of 2 or more states.}
 }
 \description{
 An S4 class to return the results of using a GA to estimate a FSM with

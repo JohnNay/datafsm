@@ -155,13 +155,18 @@ setMethod("summary", "ga_fsm",
 ################################################################################
 #' Plots ga_fsm S4 object's state transition matrix
 #' @describeIn ga_fsm An S4 method for summarizing a ga_fsm S4 object
-#'
+#'   
 #' @param y not used.
-#' @param action_label optional character vector same length as action vector, where each ith element corresponds to what that ith element in the action vector represents. This will be used to fill in the states (circles) of the state transition matrix to be plotted.
-#' @param transition_label optional character vector same length as number of columns of state transition matrix 
-#' @param curvature optional numeric vector specifying the curvature of the lines for a diagram of 2 or more states.
-#' 
-#'  @export
+#' @param action_label optional character vector same length as action vector,
+#'   where each ith element corresponds to what that ith element in the action
+#'   vector represents. This will be used to fill in the states (circles) of the
+#'   state transition matrix to be plotted.
+#' @param transition_label optional character vector same length as number of
+#'   columns of state transition matrix
+#' @param curvature optional numeric vector specifying the curvature of the
+#'   lines for a diagram of 2 or more states.
+#'   
+#' @export
 
 setMethod("plot", "ga_fsm",
           function(x, y, 
@@ -184,15 +189,15 @@ setMethod("plot", "ga_fsm",
             if (missing(transition_label))
               transition_label <- as.character(seq(nrow(s)))
             
-            M <- matrix(nrow = length(action_vec), ncol = length(action_vec), 
-                        byrow = TRUE, data = 0)
+            M <- as.data.frame(matrix(nrow = length(action_vec), ncol = length(action_vec), 
+                                      byrow = TRUE, data = 0))
             
             for (i in seq(nrow(s))){
               for (j in seq(ncol(s))){
                 if (M[s[i, j], j] == "0"){
                   M[s[i, j], j] <- transition_label[i] #row.names(s)[i]
                 } else {
-                  M[s[i, j], j] <- as.character(paste(M[s[i, j], j], transition_label[i], sep="")) #paste0(M[s[i, j], j], "\n\n", row.names(s)[i])
+                  M[s[i, j], j] <- as.character(paste(M[s[i, j], j], transition_label[i], sep=" - ")) #paste0(M[s[i, j], j], "\n\n", row.names(s)[i])
                 }
               }
             }
