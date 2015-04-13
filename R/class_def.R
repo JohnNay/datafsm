@@ -158,35 +158,48 @@ setMethod("summary", "ga_fsm",
 #'
 #' @param y not used.
 #' @param action_label optional character vector same length as action vector, where each ith element corresponds to what that ith element in the action vector represents. This will be used to fill in the states (circles) of the state transition matrix to be plotted.
+#' @param transition_label optional character vector same length as number of columns of state transition matrix 
+#' @param curvature optional numeric vector specifying the curvature of the lines for a diagram of 2 or more states.
 #' 
 #'  @export
 
 setMethod("plot", "ga_fsm",
-          function(x, y, action_label) {
-            actions = x@actions
-            states = x@states
-            state_mat = x@state_mat
-            action_vec = x@action_vec
-            predictive = x@predictive
-            degeneracy = x@degeneracy
-            varImp = x@varImp
+          function(x, y, 
+                   action_label = NULL, 
+                   transition_label = NULL,
+                   curvature = c(0.3, 0.6, 0.8)) {
+            actions <- x@actions
+            states <- x@states
+            state_mat <- x@state_mat
+            action_vec <- x@action_vec
+            predictive <- x@predictive
+            degeneracy <- x@degeneracy
+            varImp <- x@varImp
+            
+            s <- t(state_mat)
             
             if (missing(action_label))
               action_label <- paste0(action_vec)
+            
+            if (missing(transition_label))
+              transition_label <- as.character(seq(nrow(s)))
+            
             M <- matrix(nrow = length(action_vec), ncol = length(action_vec), 
                         byrow = TRUE, data = 0)
-            s <- t(state_mat)
+            
             for (i in seq(nrow(s))){
               for (j in seq(ncol(s))){
                 if (M[s[i, j], j] == "0"){
-                  M[s[i, j], j] <- as.character(paste(i)) #row.names(s)[i]
+                  M[s[i, j], j] <- transition_label[i] #row.names(s)[i]
                 } else {
-                  M[s[i, j], j] <- paste0(M[s[i, j], j], as.character(paste(i))) #paste0(M[s[i, j], j], "\n\n", row.names(s)[i])
+                  M[s[i, j], j] <- as.character(paste(M[s[i, j], j], transition_label[i], sep="")) #paste0(M[s[i, j], j], "\n\n", row.names(s)[i])
                 }
               }
             }
-            
-            p <- diagram::plotmat(M, pos = length(action_vec), curve = 0.2, 
+              
+            p <- diagram::plotmat(M, 
+                                  pos = length(action_vec), 
+                                  curve = curvature[(length(action_vec)-1)], 
                                   name = action_label, 
                                   lwd = 1, box.lwd = 2, 
                                   cex.txt = 0.8, 

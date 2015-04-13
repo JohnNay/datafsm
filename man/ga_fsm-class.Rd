@@ -16,7 +16,8 @@
 
 \S4method{summary}{ga_fsm}(object, digits = 3)
 
-\S4method{plot}{ga_fsm}(x, y, action_label)
+\S4method{plot}{ga_fsm}(x, y, action_label = NULL, transition_label = NULL,
+  curvature = c(0.3, 0.6, 0.8))
 }
 \arguments{
 \item{x}{S4 ga_fsm object}
@@ -31,6 +32,10 @@ print, default is 3.}
 \item{y}{not used.}
 
 \item{action_label}{optional character vector same length as action vector, where each ith element corresponds to what that ith element in the action vector represents. This will be used to fill in the states (circles) of the state transition matrix to be plotted.}
+
+\item{transition_label}{optional character vector same length as number of columns of state transition matrix}
+
+\item{curvature}{optional numeric vector specifying the curvature of the lines for a diagram of 2 or more states.}
 }
 \description{
 An S4 class to return the results of using a GA to estimate a FSM with
