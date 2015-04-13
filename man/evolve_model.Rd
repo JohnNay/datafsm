@@ -156,6 +156,7 @@ cdata <- data.frame(period = rep(1:10, 1000),
                    other.decision1 = sample(1:0, 10000, TRUE))
 (result <- evolve_model(cdata, cv=FALSE))
 summary(result)
+plot(result, action_label = c("C", "D"))
 
 # In scripts, it can makes sense to set parallel to
 # 'as.logical(Sys.info()['sysname'] != 'Windows')'.

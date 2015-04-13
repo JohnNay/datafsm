@@ -18,13 +18,13 @@ knitr::opts_chunk$set(
 
 This R package -- created by John Nay, with code written by John Nay and Jonathan Gilligan -- implements our method for automatically generating models of dynamic decision-making that both have strong predictive power and are interpretable in human terms. This is useful for designing empirically grounded agent-based simulations and for gaining direct insight into observed dynamic processes. We use an efficient model representation and a genetic algorithm-based estimation process to generate simple deterministic approximations that explain most of the structure of complex stochastic processes. This method, implemented in C++ and R, scales well to large data sets. We have applied the package to empirical data, and demonstrated the method's ability to recover known data-generating processes by simulating data with agent-based models and correctly deriving the underlying decision models for multiple agent models and degrees of stochasticity. These applications of the package are described in a 2015 working paper by John Nay and Jonathan Gilligan: "Data-driven Dynamic Decision Models."
 
-A user of our package can estimate models by providing their data in a common "panel data" matrix format. The package is designed to estimate any time series classification model that uses a small number of binary predictor variables and moves back and forth between the values of the outcome variable over time. Larger sets of predictor variables can be reduced to smaller sets with cross-validation. Although the predictor variables must be binary, a quantitative variable can be converted into binary by division of the observed values into high/low classes. Future releases of the package may include additional estimation methods to complement GA optimization.
+A user of our package can estimate models by providing their data in a common "panel data" matrix format. The package is designed to estimate any time series classification model that uses a small number of binary predictor variables and moves back and forth between the values of the outcome variable over time. Larger sets of predictor variables can be reduced to smaller sets with cross-validation. Although the predictor variables must be binary, a quantitative variable can be converted into binary by division of the observed values into high/low classes. Future releases of the package may include additional estimation methods to complement genetic algorithm optimization.
 
 If you use this package, cite: "Nay John and Gilligan Jonathan (2015). datafsm: Estimating Finite State Machine Models from Data. R package version 0.1. https://github.com/JohnNay/datafsm".
 
 This work is supported by U.S. National Science Foundation grants EAR-1416964 and EAR-1204685.
 
-Install and load the latest release of the package from GitHub:
+Install and load the latest release of the package from GitHub using the `devtools` package:
 ```{r, eval=FALSE, include=TRUE}
 install.packages("devtools")
 devtools::install_github("JohnNay/datafsm")
@@ -41,25 +41,26 @@ library(printr)
 citation("datafsm")
 ```
 
-Create fake data:
-```{r, eval=FALSE, include=TRUE}
+To show how it works, create fake data:
+```{r, eval=TRUE, include=TRUE}
 cdata <- data.frame(period = rep(1:10, 1000),
                     outcome = rep(1:2, 5000),
                     my.decision1 = sample(1:0, 10000, TRUE),
                     other.decision1 = sample(1:0, 10000, TRUE))
 ```
 
-Estimate model with that data:
-```{r, eval=FALSE, include=TRUE}
+Estimate a model with that data:
+```{r, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE, results='hide'}
 result <- evolve_model(cdata)
 ```
 
-Use the summary method on the output of the evolve_model() function:
-```{r, eval=FALSE, include=TRUE}
+Use the summary and plot methods on the output of the `evolve_model()` function:
+```{r, eval=TRUE, include=TRUE}
 summary(result)
+plot(result, action_label = c("C", "D"))
 ```
 
-Check out the documentation for the main function of the package to learn about the options:
+Check out the documentation for the main function of the package to learn about all the options:
 ```{r, eval=TRUE, include=TRUE}
 ?evolve_model
 ````

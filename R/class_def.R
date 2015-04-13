@@ -156,7 +156,6 @@ setMethod("summary", "ga_fsm",
 #' Plots ga_fsm S4 object's state transition matrix
 #' @describeIn ga_fsm An S4 method for summarizing a ga_fsm S4 object
 #'
-#' @param x S4 ga_fsm object
 #' @param y not used.
 #' @param action_label optional character vector same length as action vector, where each ith element corresponds to what that ith element in the action vector represents. This will be used to fill in the states (circles) of the state transition matrix to be plotted.
 #' 
@@ -186,6 +185,7 @@ setMethod("plot", "ga_fsm",
                 }
               }
             }
+            
             p <- diagram::plotmat(M, pos = length(action_vec), curve = 0.2, 
                                   name = action_label, 
                                   lwd = 1, box.lwd = 2, 
@@ -193,6 +193,7 @@ setMethod("plot", "ga_fsm",
                                   box.type = "circle", 
                                   box.col = "lightblue",
                                   box.prop = 1)
+            
             invisible(p)
           }
 )

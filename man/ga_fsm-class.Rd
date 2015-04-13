@@ -31,8 +31,6 @@ print, default is 3.}
 \item{y}{not used.}
 
 \item{action_label}{optional character vector same length as action vector, where each ith element corresponds to what that ith element in the action vector represents. This will be used to fill in the states (circles) of the state transition matrix to be plotted.}
-
-\item{x}{S4 ga_fsm object}
 }
 \description{
 An S4 class to return the results of using a GA to estimate a FSM with

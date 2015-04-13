@@ -3,13 +3,13 @@
 
 This R package -- created by John Nay, with code written by John Nay and Jonathan Gilligan -- implements our method for automatically generating models of dynamic decision-making that both have strong predictive power and are interpretable in human terms. This is useful for designing empirically grounded agent-based simulations and for gaining direct insight into observed dynamic processes. We use an efficient model representation and a genetic algorithm-based estimation process to generate simple deterministic approximations that explain most of the structure of complex stochastic processes. This method, implemented in C++ and R, scales well to large data sets. We have applied the package to empirical data, and demonstrated the method's ability to recover known data-generating processes by simulating data with agent-based models and correctly deriving the underlying decision models for multiple agent models and degrees of stochasticity. These applications of the package are described in a 2015 working paper by John Nay and Jonathan Gilligan: "Data-driven Dynamic Decision Models."
 
-A user of our package can estimate models by providing their data in a common "panel data" matrix format. The package is designed to estimate any time series classification model that uses a small number of binary predictor variables and moves back and forth between the values of the outcome variable over time. Larger sets of predictor variables can be reduced to smaller sets with cross-validation. Although the predictor variables must be binary, a quantitative variable can be converted into binary by division of the observed values into high/low classes. Future releases of the package may include additional estimation methods to complement GA optimization.
+A user of our package can estimate models by providing their data in a common "panel data" matrix format. The package is designed to estimate any time series classification model that uses a small number of binary predictor variables and moves back and forth between the values of the outcome variable over time. Larger sets of predictor variables can be reduced to smaller sets with cross-validation. Although the predictor variables must be binary, a quantitative variable can be converted into binary by division of the observed values into high/low classes. Future releases of the package may include additional estimation methods to complement genetic algorithm optimization.
 
 If you use this package, cite: "Nay John and Gilligan Jonathan (2015). datafsm: Estimating Finite State Machine Models from Data. R package version 0.1. <https://github.com/JohnNay/datafsm>".
 
 This work is supported by U.S. National Science Foundation grants EAR-1416964 and EAR-1204685.
 
-Install and load the latest release of the package from GitHub:
+Install and load the latest release of the package from GitHub using the `devtools` package:
 
 ``` r
 install.packages("devtools")
@@ -39,7 +39,7 @@ citation("datafsm")
 #>   }
 ```
 
-Create fake data:
+To show how it works, create fake data:
 
 ``` r
 cdata <- data.frame(period = rep(1:10, 1000),
@@ -48,19 +48,80 @@ cdata <- data.frame(period = rep(1:10, 1000),
                     other.decision1 = sample(1:0, 10000, TRUE))
 ```
 
-Estimate model with that data:
+Estimate a model with that data:
 
 ``` r
 result <- evolve_model(cdata)
 ```
 
-Use the summary method on the output of the evolve\_model() function:
+Use the summary and plot methods on the output of the `evolve_model()` function:
 
 ``` r
 summary(result)
+#>                                     
+#>            GA-FSM Results:          
+#>                                     
+#> Gentic Algorithm Settings: 
+#> Population size       =  75 
+#> Number of generations =  779 
+#> Elitism               =  4 
+#> Crossover probability =  0.8 
+#> Mutation probability  =  0.1 
+#> 
+#> Finite State Machine Settings: 
+#> Actions =  2 
+#> States  =  3 
+#> 
+#> Results: 
+#> 
+#> Iterations For This Run              = 30 
+#> Training Data Fitness Function Value = 1 
+#> Test Data Fitness Function Value     = No test data provided. Provide some to get more accurate estimation of generalization power. 
+#> 
+#> (Bit String Form) of Solution: 
+#>  x1  x2  x3  x4  x5  x6  x7  x8  x9 x10 x11 x12 x13 x14 x15 x16 x17 x18 
+#>   0   0   1   1   1   1   1   0   0   1   1   1   1   0   0   1   1   0 
+#> x19 x20 x21 x22 x23 x24 x25 x26 x27 
+#>   1   1   0   1   1   1   1   0   0 
+#> 
+#> State Matrix of Solution: 
+#>      my.decision1FALSE:other.decision1FALSE
+#> [1,]                                      3
+#> [2,]                                      3
+#> [3,]                                      1
+#>      my.decision1TRUE:other.decision1FALSE
+#> [1,]                                     3
+#> [2,]                                     3
+#> [3,]                                     1
+#>      my.decision1FALSE:other.decision1TRUE
+#> [1,]                                     3
+#> [2,]                                     2
+#> [3,]                                     1
+#>      my.decision1TRUE:other.decision1TRUE
+#> [1,]                                    3
+#> [2,]                                    3
+#> [3,]                                    1
+#> 
+#> Action Vector of Solution: 
+#> [1] 1 1 2
+#> 
+#> Friendly Degeneracy Message:  
+#> 
+#> Variable Importance: 
+#> my.decision1FALSE:other.decision1FALSE 
+#>                                   98.9 
+#>  my.decision1TRUE:other.decision1FALSE 
+#>                                   97.3 
+#>  my.decision1FALSE:other.decision1TRUE 
+#>                                   95.0 
+#>   my.decision1TRUE:other.decision1TRUE 
+#>                                  100.0
+plot(result, action_label = c("C", "D"))
 ```
 
-Check out the documentation for the main function of the package to learn about the options:
+![](README-unnamed-chunk-7-1.png)
+
+Check out the documentation for the main function of the package to learn about all the options:
 
 ``` r
 ?evolve_model
