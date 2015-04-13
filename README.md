@@ -63,59 +63,53 @@ summary(result)
 #>                                     
 #> Gentic Algorithm Settings: 
 #> Population size       =  75 
-#> Number of generations =  779 
+#> Number of generations =  150 
 #> Elitism               =  4 
 #> Crossover probability =  0.8 
 #> Mutation probability  =  0.1 
 #> 
 #> Finite State Machine Settings: 
 #> Actions =  2 
-#> States  =  3 
+#> States  =  2 
 #> 
 #> Results: 
 #> 
 #> Iterations For This Run              = 30 
-#> Training Data Fitness Function Value = 1 
+#> Training Data Fitness Function Value = 0.717 
 #> Test Data Fitness Function Value     = No test data provided. Provide some to get more accurate estimation of generalization power. 
 #> 
 #> (Bit String Form) of Solution: 
-#>  x1  x2  x3  x4  x5  x6  x7  x8  x9 x10 x11 x12 x13 x14 x15 x16 x17 x18 
-#>   0   0   1   1   1   1   1   0   0   1   1   1   1   0   0   1   1   0 
-#> x19 x20 x21 x22 x23 x24 x25 x26 x27 
-#>   1   1   0   1   1   1   1   0   0 
+#>  x1  x2  x3  x4  x5  x6  x7  x8  x9 x10 
+#>   0   1   1   0   0   1   1   1   1   1 
 #> 
 #> State Matrix of Solution: 
 #>      my.decision1FALSE:other.decision1FALSE
-#> [1,]                                      3
-#> [2,]                                      3
-#> [3,]                                      1
+#> [1,]                                      2
+#> [2,]                                      2
 #>      my.decision1TRUE:other.decision1FALSE
-#> [1,]                                     3
-#> [2,]                                     3
-#> [3,]                                     1
+#> [1,]                                     2
+#> [2,]                                     1
 #>      my.decision1FALSE:other.decision1TRUE
-#> [1,]                                     3
-#> [2,]                                     2
-#> [3,]                                     1
+#> [1,]                                     2
+#> [2,]                                     1
 #>      my.decision1TRUE:other.decision1TRUE
-#> [1,]                                    3
-#> [2,]                                    3
-#> [3,]                                    1
+#> [1,]                                    2
+#> [2,]                                    1
 #> 
 #> Action Vector of Solution: 
-#> [1] 1 1 2
+#> [1] 1 2
 #> 
 #> Friendly Degeneracy Message:  
 #> 
 #> Variable Importance: 
 #> my.decision1FALSE:other.decision1FALSE 
-#>                                   98.9 
+#>                                    0.0 
 #>  my.decision1TRUE:other.decision1FALSE 
-#>                                   97.3 
+#>                                   98.0 
 #>  my.decision1FALSE:other.decision1TRUE 
-#>                                   95.0 
+#>                                  100.0 
 #>   my.decision1TRUE:other.decision1TRUE 
-#>                                  100.0
+#>                                   93.4
 plot(result, action_label = c("C", "D"))
 ```
 
@@ -303,6 +297,7 @@ Check out the documentation for the main function of the package to learn about 
 #>                         other.decision1 = sample(1:0, 10000, TRUE))
 #>      (result <- evolve_model(cdata, cv=FALSE))
 #>      summary(result)
+#>      plot(result, action_label = c("C", "D"))
 #>      
 #>      # In scripts, it can makes sense to set parallel to
 #>      # 'as.logical(Sys.info()['sysname'] != 'Windows')'.
