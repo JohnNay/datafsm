@@ -74,18 +74,18 @@ summary(result)
 #> 
 #> Results: 
 #> 
-#> Iterations For This Run              = 30 
-#> Training Data Fitness Function Value = 0.717 
+#> Iterations For This Run              = 29 
+#> Training Data Fitness Function Value = 1 
 #> Test Data Fitness Function Value     = No test data provided. Provide some to get more accurate estimation of generalization power. 
 #> 
 #> (Bit String Form) of Solution: 
 #>  x1  x2  x3  x4  x5  x6  x7  x8  x9 x10 
-#>   0   1   1   0   0   1   1   1   1   1 
+#>   0   1   1   1   1   1   1   1   1   1 
 #> 
 #> State Matrix of Solution: 
 #>      my.decision1FALSE:other.decision1FALSE
 #> [1,]                                      2
-#> [2,]                                      2
+#> [2,]                                      1
 #>      my.decision1TRUE:other.decision1FALSE
 #> [1,]                                     2
 #> [2,]                                     1
@@ -103,13 +103,13 @@ summary(result)
 #> 
 #> Variable Importance: 
 #> my.decision1FALSE:other.decision1FALSE 
-#>                                    0.0 
-#>  my.decision1TRUE:other.decision1FALSE 
-#>                                   98.0 
-#>  my.decision1FALSE:other.decision1TRUE 
 #>                                  100.0 
+#>  my.decision1TRUE:other.decision1FALSE 
+#>                                   98.6 
+#>  my.decision1FALSE:other.decision1TRUE 
+#>                                   97.5 
 #>   my.decision1TRUE:other.decision1TRUE 
-#>                                   93.4
+#>                                   96.7
 plot(result, action_label = c("C", "D"))
 ```
 
