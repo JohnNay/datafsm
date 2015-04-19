@@ -15,8 +15,6 @@ names(license) <- n
 
 The datafsm package for R is licensed under the MIT License.
 
-> The MIT License (MIT)
->
 > Copyright (c) `r license["YEAR"]`: `r license["COPYRIGHT HOLDER"]`:
 >
 > Permission is hereby granted, free of charge, to any person obtaining a copy
