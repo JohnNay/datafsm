@@ -41,6 +41,7 @@ setClassUnion("numericOrchar", members = c("numeric", "character"))
 #'   with relative importance scores for each predictor.
 #' @slot timing Numeric vector length one with the total elapsed time it took
 #'   \code{\link{evolve_model}} to execute.
+#' @slot diagnostics Character vector length one, to be printed with base::cat().
 #'
 #' @export
 
@@ -55,7 +56,8 @@ setClass("ga_fsm",
                    predictive = "numericOrchar",
                    degeneracy = "list",
                    varImp = "numeric",
-                   timing = "numeric"),
+                   timing = "numeric",
+                   diagnostics = "character"),
          validity = check_ga_fsm
 )
 

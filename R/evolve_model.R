@@ -153,6 +153,8 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = TRUE,
         start_time <- as.numeric(proc.time()[[1]])
 
         call <- match.call()
+        
+        msg <- ""
 
         measure <- match.arg(measure) # inside fitnessR(), use this arg to create measure of fitness
 
@@ -178,21 +180,25 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = TRUE,
         outcome <- data$outcome
         test_period <- test_data$period
         test_outcome <- test_data$outcome
-
+        
         nzvs <- caret::nearZeroVar(data[ , -which(names(data) %in% c("period", "outcome")), drop=FALSE],
                                    freqCut = 95/5, uniqueCut=10)
         if (length(nzvs) > 0){
-                to_drop <- colnames(data)[-which(names(data) %in% c("period", "outcome"))[nzvs]]
-                if(verbose) cat("We should be dropping", length(to_drop), "feature(s), which is (are):", to_drop, "\n")
-                if(drop_nzv){
-                        # just names in features[[k]] so we dont drop group, folds and training vars
-                        if(verbose) cat("Dropping", length(to_drop), "feature(s), which is (are):", to_drop)
-                        data <- data[ , -which(names(data) %in% to_drop), drop=FALSE]
-                }
+          to_drop <- colnames(data)[-which(names(data) %in% c("period", "outcome"))[nzvs]]
+          if(verbose) cat("We should be dropping", length(to_drop), "feature(s), which is (are):", to_drop, "\n")
+          msg <- paste0(msg, "We should be dropping ", length(to_drop), " feature(s), which is (are): ", to_drop, "\n")
+          
+          if(drop_nzv){
+            # just names in features[[k]] so we dont drop group, folds and training vars
+            if(verbose) cat("Dropping", length(to_drop), "feature(s), which is (are):", to_drop)
+            msg <- paste0(msg, "Dropping ", length(to_drop), " feature(s), which is (are): ", to_drop)
+            
+            data <- data[ , -which(names(data) %in% to_drop), drop=FALSE]
+          }
         }
-
+        
         if (nrow(data)!=length(outcome)) stop(paste("Error: The predictor variables and the",
-                                              "outcome variable are not the same length."))
+                                                    "outcome variable are not the same length."))
         if (anyNA(outcome)) stop("Error: There are missing values in the data.")
         if (length(outcome) == 0) stop("Error: The outcome is zero length.")
         if (missing(seed)) {
@@ -247,6 +253,7 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = TRUE,
                                                   boltzmann, alpha,
                                                   verbose)
                         if(verbose) cat("Cross-validation found optimal number of states on training data to be ", states, ".\n\n", sep="")
+                        msg <- paste0(msg, "Cross-validation found optimal number of states on training data to be ", states, ".\n\n")
                 })
                 # wrapped this in try, so if it fails, we'll just use the default value of states, which is an arg to evolve_model()
         }
@@ -549,7 +556,8 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = TRUE,
                       action_vec = action_vec,
                       predictive = predictive,
                       varImp = varImp,
-                      timing = as.numeric(proc.time()[[1]]) - start_time) #,
+                      timing = as.numeric(proc.time()[[1]]) - start_time,
+                      diagnostics = msg) #,
         #degeneracy = list(message=message, dif=dif, sparse_state_mat = sparse_state_mat)))
 
         object
