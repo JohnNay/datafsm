@@ -3,3 +3,7 @@
 .Rhistory
 .Rproj.user
 fsm.Rproj
+tmp
+datafsm.Rcheck
+.RData
+.Rprofile

@@ -168,6 +168,7 @@ setMethod("summary", "ga_fsm",
 #' @param curvature optional numeric vector specifying the curvature of the
 #'   lines for a diagram of 2 or more states.
 #'   
+#' @importFrom diagram plotmat
 #' @export
 
 setMethod("plot", "ga_fsm",
