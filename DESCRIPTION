@@ -33,18 +33,20 @@ Description: This R package implements our method for automatically
     EAR-1416964 and EAR-1204685.
 URL: https://github.com/JohnNay/datafsm
 BugReports: https://github.com/JohnNay/datafsm/issues
-Depends:
+Depends: 
     R (>= 3.1.1),
     methods,
     stats
 License: MIT + file LICENSE
 LazyData: true
 LinkingTo: Rcpp
-Suggests:
+Suggests: 
     doParallel,
-    testthat
-Imports:
+    testthat,
+    knitr
+Imports: 
     caret,
     diagram,
     GA,
     Rcpp
+VignetteBuilder: knitr
