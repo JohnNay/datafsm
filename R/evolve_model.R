@@ -3,7 +3,8 @@
 #'\code{evolve_model} uses a genetic algorithm to estimate a finite-state
 #'machine model, primarily for understanding and predicting decision-making.
 #'
-#'This is the main function of the \strong{datafsm} package. It takes data on
+#'This is the main function of the \strong{datafsm} package. It relies heavily 
+#'on the \strong{GA} package. \code{evolve_model} takes data on
 #'predictors and data on the outcome. It automatically creates a fitness
 #'function that takes the data, an action vector \code{evolve_model} generates,
 #'and a state matrix \code{evolve_model} generates as input and returns numeric
@@ -102,9 +103,6 @@
 #'  the initialization. User needs to use a decoder function to translate prior
 #'  decision models into bits and then provide them. If this is not specified,
 #'  then random priors are automatically created.
-#'@param boltzmann Optional logical vector length one.
-#'@param alpha Optional numeric vector length one. This is an additional
-#'  parameter to tune/set if \code{boltzmann} is set to TRUE.
 #'@param verbose Optional logical vector length one specifying whether helpful
 #'  messages should be displayed on the user's console or not.
 #'
@@ -113,6 +111,11 @@
 #'  information on the methods that can be used to summarize the calling and
 #'  execution of \code{evolve_model()}, including \code{\link{summary}} and
 #'  print.
+#'  
+#'@references 
+#'  Luca Scrucca (2013). GA: A Package for Genetic Algorithms in R. 
+#'  Journal of Statistical Software, 53(4), 1-37. 
+#'  URL http://www.jstatsoft.org/v53/i04/.
 #'
 #' @examples
 #' # Create data:
@@ -138,7 +141,6 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = TRUE,
                          popSize = 75, pcrossover = 0.8, pmutation = 0.1, maxiter = 50, run = 25,
                          parallel = FALSE,
                          priors = NULL,
-                         boltzmann = FALSE, alpha = 0.4,
                          verbose = TRUE) {
 
         # made it so fitnessR() can be built in here
@@ -250,7 +252,6 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = TRUE,
                                                   seed,
                                                   popSize, pcrossover, pmutation, maxiter, run,
                                                   parallel,
-                                                  boltzmann, alpha,
                                                   verbose)
                         if(verbose) cat("Cross-validation found optimal number of states on training data to be ", states, ".\n\n", sep="")
                         msg <- paste0(msg, "Cross-validation found optimal number of states on training data to be ", states, ".\n\n")
@@ -423,7 +424,6 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = TRUE,
         }
 
 
-        if (!boltzmann) {
                 GA <- GA::ga(type = "binary",
                              fitness = fitnessR,
                              nBits = nBits,
@@ -439,24 +439,6 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = TRUE,
                              suggestions = priors,
                              monitor = Monitor,
                              seed = seed)
-        } else {
-                GA <- GA::ga(type = "binary",
-                             fitness =  fitnessR,
-                             nBits = nBits,
-                             crossover = spCrossover,
-                             mutation = raMutation,
-                             popSize = popSize,
-                             pcrossover = pcrossover,
-                             pmutation = pmutation,
-                             maxiter = maxiter,
-                             run = run,
-                             maxfitness = 1,
-                             parallel = parallel,
-                             suggestions = priors,
-                             monitor = Monitor,
-                             seed = seed,
-                             selection = function(...) BoltzmannSelection(..., alpha = alpha))
-        }
 
         state_mat <- decode_state_mat(GA@solution[1, ],  states, inputs, actions)
         colnames(state_mat) <- cols

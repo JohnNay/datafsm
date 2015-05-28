@@ -5,7 +5,7 @@
 \title{Estimate Optimal Number of States of a Finite-state Machine Model}
 \usage{
 evolve_model_cv(data, measure, k, actions, max_states, seed, popSize,
-  pcrossover, pmutation, maxiter, run, parallel, boltzmann, alpha, verbose)
+  pcrossover, pmutation, maxiter, run, parallel, verbose)
 }
 \arguments{
 \item{data}{data.frame that has "period" and "outcome" columns and rest of
@@ -64,11 +64,6 @@ parallel. Depending on the number of cores registered and the memory on
 your machine, this can make the process much faster, but only works for
 Unix-based machines that can fork the processes.}
 
-\item{boltzmann}{Logical vector length one.}
-
-\item{alpha}{Numeric vector length one. This is an additional parameter to
-tune/set if \code{boltzmann} is set to TRUE.}
-
 \item{verbose}{Optional logical vector length one specifying whether helpful
  messages should be displayed on the user's console or not.}
 }
@@ -77,6 +72,7 @@ Returns the number of states that maximizes accuracy.
 }
 \description{
 \code{evolve_model_cv} calls \code{evolve_model} with varied numbers of
-states and compares their performance with cross-validation.
+states and compares their performance with cross-validation. \code{evolve_model}
+relies heavily on the \strong{GA} package.
 }
 

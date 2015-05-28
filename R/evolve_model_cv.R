@@ -13,7 +13,8 @@ add_interact_num <- function(d){
 #' Estimate Optimal Number of States of a Finite-state Machine Model
 #'
 #' \code{evolve_model_cv} calls \code{evolve_model} with varied numbers of
-#' states and compares their performance with cross-validation.
+#' states and compares their performance with cross-validation. \code{evolve_model} 
+#' relies heavily on the \strong{GA} package.
 #'
 #' @param data data.frame that has "period" and "outcome" columns and rest of
 #'   columns are predictors, ranging from one to three predictors. All of the
@@ -59,9 +60,6 @@ add_interact_num <- function(d){
 #'   parallel. Depending on the number of cores registered and the memory on
 #'   your machine, this can make the process much faster, but only works for
 #'   Unix-based machines that can fork the processes.
-#' @param boltzmann Logical vector length one.
-#' @param alpha Numeric vector length one. This is an additional parameter to
-#'   tune/set if \code{boltzmann} is set to TRUE.
 #' @param verbose Optional logical vector length one specifying whether helpful
 #'  messages should be displayed on the user's console or not.
 #'
@@ -78,7 +76,6 @@ evolve_model_cv <- function(data,
                             seed,
                             popSize, pcrossover, pmutation, maxiter, run,
                             parallel,
-                            boltzmann, alpha,
                             verbose) {
 
         interacts <- add_interact_num(data)
@@ -112,8 +109,7 @@ evolve_model_cv <- function(data,
                                                   states = s, cv = FALSE, seed = seed,
                                                   popSize = popSize, pcrossover =pcrossover,
                                                   pmutation = pmutation, maxiter = maxiter, run = run,
-                                                  parallel = parallel,
-                                                  boltzmann =  boltzmann, alpha=alpha)@predictive
+                                                  parallel = parallel)@predictive
                         if(verbose) cat("\nCross-validated value of", measure, "is", mat[s, f], "\n\n")
                 }
         }
@@ -125,4 +121,4 @@ evolve_model_cv <- function(data,
 }
 
 # data = cdata; k=2; actions=2; max_states=4; seed=1; popSize = 75; pcrossover = 0.8; pmutation = 0.1;
-# maxiter = 55; run = 25; parallel = FALSE; boltzmann = FALSE; alpha=0.4
+# maxiter = 55; run = 25; parallel = FALSE

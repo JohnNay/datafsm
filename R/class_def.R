@@ -1,24 +1,5 @@
 ################################################################################
-#' A function to check for errors
-#'
-#' @param object S4 ga_fsm object
-#'
-
-check_ga_fsm <- function(object){
-  errors <- character()
-  #         timeSteps <- times(object)
-  #         if (timeSteps[1] > timeSteps[2]) {
-  #                 msg <- paste("Initial time is ", timeSteps[1],
-  #                              ".  Ending time is ", timeSteps[2], ".", sep = "")
-  #                 errors <- c(errors, msg)
-  #         }
-
-  # TODO: add checks here.
-
-  if (length(errors) == 0) TRUE else errors
-}
-
-################################################################################
+# from GA package:
 setClassUnion("numericOrchar", members = c("numeric", "character"))
 
 
@@ -57,8 +38,7 @@ setClass("ga_fsm",
                    degeneracy = "list",
                    varImp = "numeric",
                    timing = "numeric",
-                   diagnostics = "character"),
-         validity = check_ga_fsm
+                   diagnostics = "character")
 )
 
 ################################################################################
@@ -116,9 +96,6 @@ setMethod("summary", "ga_fsm",
                           varImp = object@varImp
                   )
                   cat("                                    \n")
-                  cat("           GA-FSM Results:          \n")
-                  cat("                                    \n")
-
                   cat("Gentic Algorithm Settings: \n")
                   cat(paste("Population size       = ", x$popSize, "\n"))
                   cat(paste("Number of generations = ", x$maxiter, "\n"))

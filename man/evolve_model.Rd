@@ -8,8 +8,7 @@ evolve_model(data, test_data = NULL, drop_nzv = TRUE,
   measure = c("accuracy", "sens", "spec", "ppv"), states = 2, cv = TRUE,
   max_states = 3, k = 2, actions = NULL, seed = NULL, popSize = 75,
   pcrossover = 0.8, pmutation = 0.1, maxiter = 50, run = 25,
-  parallel = FALSE, priors = NULL, boltzmann = FALSE, alpha = 0.4,
-  verbose = TRUE)
+  parallel = FALSE, priors = NULL, verbose = TRUE)
 }
 \arguments{
 \item{data}{data.frame that has "period" and "outcome" columns and rest of
@@ -95,11 +94,6 @@ the initialization. User needs to use a decoder function to translate prior
 decision models into bits and then provide them. If this is not specified,
 then random priors are automatically created.}
 
-\item{boltzmann}{Optional logical vector length one.}
-
-\item{alpha}{Optional numeric vector length one. This is an additional
-parameter to tune/set if \code{boltzmann} is set to TRUE.}
-
 \item{verbose}{Optional logical vector length one specifying whether helpful
  messages should be displayed on the user's console or not.}
 }
@@ -115,7 +109,8 @@ Returns an S4 object of class ga_fsm. See \linkS4class{ga_fsm} for the
 machine model, primarily for understanding and predicting decision-making.
 }
 \details{
-This is the main function of the \strong{datafsm} package. It takes data on
+This is the main function of the \strong{datafsm} package. It relies heavily
+on the \strong{GA} package. \code{evolve_model} takes data on
 predictors and data on the outcome. It automatically creates a fitness
 function that takes the data, an action vector \code{evolve_model} generates,
 and a state matrix \code{evolve_model} generates as input and returns numeric
@@ -160,5 +155,10 @@ plot(result, action_label = c("C", "D"))
 
 # In scripts, it can makes sense to set parallel to
 # 'as.logical(Sys.info()['sysname'] != 'Windows')'.
+}
+\references{
+Luca Scrucca (2013). GA: A Package for Genetic Algorithms in R.
+ Journal of Statistical Software, 53(4), 1-37.
+ URL http://www.jstatsoft.org/v53/i04/.
 }
 
