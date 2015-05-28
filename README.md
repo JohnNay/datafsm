@@ -1,7 +1,7 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![Build Status](https://travis-ci.org/JohnNay/datafsm.png?branch=master)](https://travis-ci.org/JohnNay/datafsm)
 
-This R package -- created by John Nay, with code written by John Nay and Jonathan Gilligan -- implements our method for automatically generating models of dynamic decision-making that both have strong predictive power and are interpretable in human terms. This is useful for designing empirically grounded agent-based simulations and for gaining direct insight into observed dynamic processes. We use an efficient model representation and a genetic algorithm-based estimation process to generate simple deterministic approximations that explain most of the structure of complex stochastic processes. This method, implemented in C++ and R, scales well to large data sets. We have applied the package to empirical data, and demonstrated the method's ability to recover known data-generating processes by simulating data with agent-based models and correctly deriving the underlying decision models for multiple agent models and degrees of stochasticity. These applications of the package are described in a 2015 working paper by John Nay and Jonathan Gilligan: "Data-driven Dynamic Decision Models."
+This R package -- created by John Nay, with code written by John Nay and Jonathan Gilligan -- implements our method for automatically generating models of dynamic decision-making that both have strong predictive power and are interpretable in human terms. This is useful for designing empirically grounded agent-based simulations and for gaining direct insight into observed dynamic processes. We use an efficient model representation and a genetic algorithm-based estimation process to generate simple deterministic approximations that explain most of the structure of complex stochastic processes. The GA is implemented with the GA package ([Scrucca 2013](http://www.jstatsoft.org/v53/i04/)). Our method, implemented in C++ and R, scales well to large data sets. We have applied the package to empirical data, and demonstrated the method's ability to recover known data-generating processes by simulating data with agent-based models and correctly deriving the underlying decision models for multiple agent models and degrees of stochasticity.
 
 A user of our package can estimate models by providing their data in a common "panel data" matrix format. The package is designed to estimate any time series classification model that uses a small number of binary predictor variables and moves back and forth between the values of the outcome variable over time. Larger sets of predictor variables can be reduced to smaller sets with cross-validation. Although the predictor variables must be binary, a quantitative variable can be converted into binary by division of the observed values into high/low classes. Future releases of the package may include additional estimation methods to complement genetic algorithm optimization.
 
@@ -59,8 +59,6 @@ Use the summary and plot methods on the output of the `evolve_model()` function:
 ``` r
 summary(result)
 #>                                     
-#>            GA-FSM Results:          
-#>                                     
 #> Gentic Algorithm Settings: 
 #> Population size       =  75 
 #> Number of generations =  150 
@@ -74,7 +72,7 @@ summary(result)
 #> 
 #> Results: 
 #> 
-#> Iterations For This Run              = 29 
+#> Iterations For This Run              = 6 
 #> Training Data Fitness Function Value = 1 
 #> Test Data Fitness Function Value     = No test data provided. Provide some to get more accurate estimation of generalization power. 
 #> 
@@ -103,13 +101,13 @@ summary(result)
 #> 
 #> Variable Importance: 
 #> my.decision1FALSE:other.decision1FALSE 
-#>                                  100.0 
+#>                                   99.6 
 #>  my.decision1TRUE:other.decision1FALSE 
-#>                                   98.6 
+#>                                  100.0 
 #>  my.decision1FALSE:other.decision1TRUE 
-#>                                   97.5 
+#>                                   99.9 
 #>   my.decision1TRUE:other.decision1TRUE 
-#>                                   96.7
+#>                                   97.2
 plot(result, action_label = c("C", "D"))
 ```
 
@@ -133,8 +131,7 @@ Check out the documentation for the main function of the package to learn about 
 #>        measure = c("accuracy", "sens", "spec", "ppv"), states = 2, cv = TRUE,
 #>        max_states = 3, k = 2, actions = NULL, seed = NULL, popSize = 75,
 #>        pcrossover = 0.8, pmutation = 0.1, maxiter = 50, run = 25,
-#>        parallel = FALSE, priors = NULL, boltzmann = FALSE, alpha = 0.4,
-#>        verbose = TRUE)
+#>        parallel = FALSE, priors = NULL, verbose = TRUE)
 #>      
 #> Arguments:
 #> 
@@ -232,18 +229,14 @@ Check out the documentation for the main function of the package to learn about 
 #>           them. If this is not specified, then random priors are
 #>           automatically created.
 #> 
-#> boltzmann: Optional logical vector length one.
-#> 
-#>    alpha: Optional numeric vector length one. This is an additional
-#>           parameter to tune/set if 'boltzmann' is set to TRUE.
-#> 
 #>  verbose: Optional logical vector length one specifying whether helpful
 #>           messages should be displayed on the user's console or not.
 #> 
 #> Details:
 #> 
-#>      This is the main function of the *datafsm* package. It takes data
-#>      on predictors and data on the outcome. It automatically creates a
+#>      This is the main function of the *datafsm* package. It relies
+#>      heavily on the *GA* package. 'evolve_model' takes data on
+#>      predictors and data on the outcome. It automatically creates a
 #>      fitness function that takes the data, an action vector
 #>      'evolve_model' generates, and a state matrix 'evolve_model'
 #>      generates as input and returns numeric vector of the same length
@@ -287,6 +280,12 @@ Check out the documentation for the main function of the package to learn about 
 #>      information on the methods that can be used to summarize the
 #>      calling and execution of 'evolve_model()', including 'summary' and
 #>      print.
+#> 
+#> References:
+#> 
+#>      Luca Scrucca (2013). GA: A Package for Genetic Algorithms in R.
+#>      Journal of Statistical Software, 53(4), 1-37.  URL
+#>      http://www.jstatsoft.org/v53/i04/.
 #> 
 #> Examples:
 #> 
