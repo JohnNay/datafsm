@@ -4,8 +4,8 @@
 \alias{evolve_model}
 \title{Use a Genetic Algorithm to Estimate a Finite-state Machine Model}
 \usage{
-evolve_model(data, test_data = NULL, drop_nzv = TRUE,
-  measure = c("accuracy", "sens", "spec", "ppv"), states = 2, cv = TRUE,
+evolve_model(data, test_data = NULL, drop_nzv = FALSE,
+  measure = c("accuracy", "sens", "spec", "ppv"), states = 2, cv = FALSE,
   max_states = 3, k = 2, actions = NULL, seed = NULL, popSize = 75,
   pcrossover = 0.8, pmutation = 0.1, maxiter = 50, run = 25,
   parallel = FALSE, priors = NULL, verbose = TRUE)
@@ -22,12 +22,12 @@ the decision-maker took for that period.}
 
 \item{drop_nzv}{Optional logical vector length one specifying whether
 predictors variables with variance in provided data near zero should be
-dropped before model building.}
+dropped before model building. Default is \code{FALSE}.}
 
 \item{measure}{Optional character vector that is either: "accuracy", "sens",
 "spec", or "ppv". This specifies what measure of predictive performance to
 use for training and evaluating the model. The default measure is
-"accuracy". However, accuracy can be a problematic measure when the classes
+\code{"accuracy"}. However, accuracy can be a problematic measure when the classes
 are imbalanced in the samples, i.e. if a class the model is trying to
 predict is very rare. Alternatives to accuracy are available that illuminate
 different aspects of predictive power. Sensitivity answers the question, ``
@@ -37,17 +37,18 @@ that a result is truly not an event, what is the probability that the model
 will predict a negative?'' Positive predictive value answers, ``what is the
 percent of predicted positives that are actually positive?''}
 
-\item{states}{Optional numeric vector with the number of states.}
+\item{states}{Optional numeric vector with the number of states. Default is
+\code{2}.}
 
 \item{cv}{Optional logical vector length one for whether cross-validation
 should be conducted on training data to select optimal number of states.
-This can drastically increase computation time because if TRUE, it will run
+This can drastically increase computation time because if \code{TRUE}, it will run
 evolve_model k*max_states times to estimate optimal value for states. Ties
-are broken by choosing the smaller number of states.}
+are broken by choosing the smaller number of states. Default is \code{FALSE}.}
 
 \item{max_states}{Optional numeric vector length one only relevant if
-cv==TRUE. It specifies how up to how many states that cross-validation
-should search through.}
+\code{cv==TRUE}. It specifies how up to how many states that cross-validation
+should search through. Default is \code{3}.}
 
 \item{k}{Optional numeric vector length one only relevant if cv==TRUE,
 specifying number of folds for cross-validation.}
