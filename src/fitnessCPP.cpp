@@ -16,7 +16,8 @@ int predictor_lookup(IntegerVector x){
                   num_ones = num_ones + 1;
           }
   }
-  if (num_ones > 1) Rprintf("There are %d 1s in this row, but there can only be one 1 in each row.\n", num_ones);
+  if (num_ones > 1)
+    Rcpp::stop("There are %d 1s in this row, but there can only be one 1 in each row.\n", num_ones);
 
   return result;
 }

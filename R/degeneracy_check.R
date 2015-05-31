@@ -9,7 +9,7 @@
 #'   predictors.
 #' @param action_vec Numeric vector indicating what action to take for each
 #'   state.
-#' @param cols Optional numeric vector same length as number of columns of the
+#' @param cols Numeric vector same length as number of columns of the
 #'   state matrix (\code{state_mat}) with the action that each column of the
 #'   state matrix corresponds to the decision model taking in the previous
 #'   period. This is only relevant when the predictor variables of the FSM are

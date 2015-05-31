@@ -36,16 +36,17 @@ var_imp <- function(state_mat, action_vec, data, outcome, period){
     }
   }
 
-  if (nrow(state_mat)*ncol(state_mat)!=length(indices)){
-    stop("Error: Numbers of elements of state matrix does not equal
-                     length of list to hold indices for each of those elements.")
+  if (nrow(state_mat)*ncol(state_mat) != length(indices)){
+    stop("Error in var_imp computation: 
+         Numbers of elements of state matrix does not equal length of list to hold indices for each of those elements.")
   }
 
   fitness_mat <- state_mat
 
   results1 <- fitnessCPP(action_vec, state_mat, data, period)
   if (anyNA(results1) | length(results1)==0){
-    stop("Error: Results from initial fitness evaluation have missing values.")
+    stop("Error in var_imp computation: 
+         Results from initial fitness evaluation have missing values or are wrong length.")
   }
   results1 <- sum(ifelse( results1 == outcome , 1 , 0)) / length(results1)
 
@@ -57,7 +58,8 @@ var_imp <- function(state_mat, action_vec, data, outcome, period){
     results2 <- fitnessCPP(action_vec, state_mat_flipped, data, period)
 
     if (anyNA(results2) | length(results2)==0){
-      stop("Results from subsequent fitness evaluation have missing values.")
+      stop("Error in var_imp computation: 
+           Results from subsequent fitness evaluation have missing values.")
     }
 
     results2 <- sum(ifelse( results2 == outcome , 1 , 0)) / length(results2)
