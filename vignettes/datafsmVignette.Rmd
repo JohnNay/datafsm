@@ -23,7 +23,7 @@ A user of our package can estimate models by providing their data in a common "p
 
 # Installation
 
-Install and load the latest release of the package from GitHub using the `devtools` package:
+Install and load the latest release of the package from [GitHub](https://github.com/JohnNay) using the `devtools` package:
 ```{r, eval=FALSE, include=TRUE}
 install.packages("devtools")
 devtools::install_github("JohnNay/datafsm")
