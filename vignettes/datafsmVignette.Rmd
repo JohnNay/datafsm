@@ -1,33 +1,27 @@
 ---
-title: "The datafsm Package"
+title: "Introduction to datafsm"
 author: "John J. Nay and Jonathan M. Gilligan"
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
     fig_caption: yes
 vignette: >
-  %\VignetteIndexEntry{The datafsm Package}
+  %\VignetteIndexEntry{Introduction to datafsm}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 # Abstract
 
-This paper outlines a method for automatically generating models of dynamic processes that both have strong predictive power and are interpretable in human terms. This is useful for designing empirically grounded agent-based simulations and for gaining direct insight into observed dynamic processes. We use an efficient model representation and a genetic algorithm-based estimation process to generate simple approximations that explain most of the structure of complex stochastic processes. This method scales well to large data sets.
+The **datafsm** package implements a method for automatically generating models of dynamic processes that both have strong predictive power and are interpretable in human terms. This is useful for gaining insight into observed dynamic processes. We use an efficient model representation and a genetic algorithm-based estimation process. This paper offers a brief overview of the package and demonstrates how to use it.
 
 # Introduction
 
-This R package implements our method for automatically generating models of dynamic decision-making that both have strong predictive power and are interpretable in human terms. This is useful for designing empirically grounded agent-based simulations and for gaining direct insight into observed dynamic processes. We use an efficient model representation and a genetic algorithm-based estimation process to generate simple deterministic approximations that explain most of the structure of complex stochastic processes. The genetic algorithm is implemented with the GA package ([Scrucca 2013](http://www.jstatsoft.org/v53/i04/)). Our method, implemented in C++ and R, scales well to large data sets. We have applied the package to empirical data, and demonstrated the method's ability to recover known data-generating processes by simulating data with agent-based models and correctly deriving the underlying decision models for multiple agent models and degrees of stochasticity.
+This R package implements our method for automatically generating models of dynamic decision-making that both have strong predictive power and are interpretable in human terms. We use an efficient model representation and a genetic algorithm-based estimation process to generate simple deterministic approximations that explain most of the structure of complex stochastic processes. The genetic algorithm is implemented with the **GA** package ([Scrucca 2013](http://www.jstatsoft.org/v53/i04/)). Our method, implemented in C++ and R, scales well to large data sets. We have applied the package to empirical data, and demonstrated the method's ability to recover known data-generating processes by simulating data with agent-based models and correctly deriving the underlying decision models for multiple agent models and degrees of stochasticity.
 
-A user of our package can estimate models by providing their data in a common "panel data" matrix format. The package is designed to estimate any time series classification model that uses a small number of binary predictor variables and moves back and forth between the values of the outcome variable over time. Larger sets of predictor variables can be reduced to smaller sets with cross-validation. Although the predictor variables must be binary, a quantitative variable can be converted into binary by division of the observed values into high/low classes. Future releases of the package may include additional estimation methods to complement genetic algorithm optimization.
+A user of our package can estimate models by providing their data in a common "panel data" format. The package is designed to estimate time series classification models that use a small number of binary predictor variables and move back and forth between the values of the outcome variable over time. Larger sets of predictor variables can be reduced to smaller sets with cross-validation. Although the predictor variables must be binary, a quantitative variable can be converted into binary by division of the observed values into high/low classes. Future releases of the package may include additional estimation methods to complement genetic algorithm optimization.
 
-# Model Representation
-
-# Model Estimation
-
-# Applications
-
-## Installation and Introduction
+# Installation
 
 Install and load the latest release of the package from GitHub using the `devtools` package:
 ```{r, eval=FALSE, include=TRUE}
@@ -51,7 +45,7 @@ library(printr)
 citation("datafsm")
 ```
 
-To show how it works, create fake data:
+To show it works, we can create fake data:
 ```{r, eval=TRUE, include=TRUE}
 cdata <- data.frame(period = rep(1:10, 1000),
                     outcome = rep(1:2, 5000),

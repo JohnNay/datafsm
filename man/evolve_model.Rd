@@ -11,9 +11,13 @@ evolve_model(data, test_data = NULL, drop_nzv = FALSE,
   parallel = FALSE, priors = NULL, verbose = TRUE)
 }
 \arguments{
-\item{data}{data.frame that has "period" and "outcome" columns and rest of
+\item{data}{data.frame that has columns named "period" and "outcome" (period
+is the time period that the outcome action was taken), and the rest of the
 columns are predictors, ranging from one to three predictors. All of the
-(3-5 columns) should be named.}
+(3-5 columns) should be named. The period and outcome columns should be
+integer vectors and the columns with the predictor variable data should be
+logical vectors (\code{TRUE, FALSE}). If the predictor variable data is not
+logical, it will coerced to logical with \code{as.logical()}.}
 
 \item{test_data}{Optional data.frame that has "period" and "outcome" columns
 and rest of columns are predictors, ranging from one to three predictors.
@@ -27,28 +31,29 @@ dropped before model building. Default is \code{FALSE}.}
 \item{measure}{Optional character vector that is either: "accuracy", "sens",
 "spec", or "ppv". This specifies what measure of predictive performance to
 use for training and evaluating the model. The default measure is
-\code{"accuracy"}. However, accuracy can be a problematic measure when the classes
-are imbalanced in the samples, i.e. if a class the model is trying to
-predict is very rare. Alternatives to accuracy are available that illuminate
-different aspects of predictive power. Sensitivity answers the question, ``
-given that a result is truly an event, what is the probability that the
-model will predict an event?'' Specificity answers the question, ``given
-that a result is truly not an event, what is the probability that the model
-will predict a negative?'' Positive predictive value answers, ``what is the
-percent of predicted positives that are actually positive?''}
+\code{"accuracy"}. However, accuracy can be a problematic measure when the
+classes are imbalanced in the samples, i.e. if a class the model is trying
+to predict is very rare. Alternatives to accuracy are available that
+illuminate different aspects of predictive power. Sensitivity answers the
+question, `` given that a result is truly an event, what is the probability
+that the model will predict an event?'' Specificity answers the question,
+``given that a result is truly not an event, what is the probability that
+the model will predict a negative?'' Positive predictive value answers,
+``what is the percent of predicted positives that are actually positive?''}
 
 \item{states}{Optional numeric vector with the number of states. Default is
 \code{2}.}
 
 \item{cv}{Optional logical vector length one for whether cross-validation
 should be conducted on training data to select optimal number of states.
-This can drastically increase computation time because if \code{TRUE}, it will run
-evolve_model k*max_states times to estimate optimal value for states. Ties
-are broken by choosing the smaller number of states. Default is \code{FALSE}.}
+This can drastically increase computation time because if \code{TRUE}, it
+will run evolve_model k*max_states times to estimate optimal value for
+states. Ties are broken by choosing the smaller number of states. Default is
+\code{FALSE}.}
 
 \item{max_states}{Optional numeric vector length one only relevant if
-\code{cv==TRUE}. It specifies how up to how many states that cross-validation
-should search through. Default is \code{3}.}
+\code{cv==TRUE}. It specifies how up to how many states that
+cross-validation should search through. Default is \code{3}.}
 
 \item{k}{Optional numeric vector length one only relevant if cv==TRUE,
 specifying number of folds for cross-validation.}
@@ -110,18 +115,18 @@ Returns an S4 object of class ga_fsm. See \linkS4class{ga_fsm} for the
 machine model, primarily for understanding and predicting decision-making.
 }
 \details{
-This is the main function of the \strong{datafsm} package. It relies heavily
-on the \strong{GA} package. \code{evolve_model} takes data on
-predictors and data on the outcome. It automatically creates a fitness
-function that takes the data, an action vector \code{evolve_model} generates,
-and a state matrix \code{evolve_model} generates as input and returns numeric
-vector of the same length as the \code{outcome}. \code{evolve_model} then
-computes a fitness score for that potential solution FSM by comparing it to
-the provided \code{outcome}. This is repeated for every FSM in the population
-and then the probability of selection for the next generation is proportional
-to the fitness scores. The default is also for the function to call itself
-recursively while varying the number of states inside a cross-validation loop
-in order to estimate the optimal number of states.
+This is the main function of the \strong{datafsm} package. It relies on the
+\strong{GA} package for genetic algorithm optimization. \code{evolve_model}
+takes data on predictors and data on the outcome. It automatically creates a
+fitness function that takes the data, an action vector \code{evolve_model}
+generates, and a state matrix \code{evolve_model} generates as input and
+returns numeric vector of the same length as the \code{outcome}.
+\code{evolve_model} then computes a fitness score for that potential solution
+FSM by comparing it to the provided \code{outcome}. This is repeated for every
+FSM in the population and then the probability of selection for the next
+generation is proportional to the fitness scores. The default is also for the
+function to call itself recursively while varying the number of states inside
+a cross-validation loop in order to estimate the optimal number of states.
 
 If parallel is set to TRUE, then these evaluations are distributed across the
 available processors of the computer using the \strong{doParallel} package,
@@ -159,7 +164,7 @@ plot(result, action_label = c("C", "D"))
 }
 \references{
 Luca Scrucca (2013). GA: A Package for Genetic Algorithms in R.
- Journal of Statistical Software, 53(4), 1-37.
- URL http://www.jstatsoft.org/v53/i04/.
+ Journal of Statistical Software, 53(4), 1-37. URL
+ http://www.jstatsoft.org/v53/i04/.
 }
 

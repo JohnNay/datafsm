@@ -65,14 +65,25 @@ your machine, this can make the process much faster, but only works for
 Unix-based machines that can fork the processes.}
 
 \item{verbose}{Optional logical vector length one specifying whether helpful
- messages should be displayed on the user's console or not.}
+  messages should be displayed on the user's console or not.}
 }
 \value{
-Returns the number of states that maximizes accuracy.
+Returns the number of states that maximizes the \code{measure}, e.g.
+  accuracy.
 }
 \description{
 \code{evolve_model_cv} calls \code{evolve_model} with varied numbers of
-states and compares their performance with cross-validation. \code{evolve_model}
-relies heavily on the \strong{GA} package.
+states and compares their performance with cross-validation.
+\code{evolve_model} relies on the \strong{GA} package for genetic algorithm
+optimization.
+}
+\references{
+Luca Scrucca (2013). GA: A Package for Genetic Algorithms in R.
+  Journal of Statistical Software, 53(4), 1-37. URL
+  http://www.jstatsoft.org/v53/i04/.
+
+  Hastie, T., R. Tibshirani, and J. Friedman. (2009). The Elements of
+  Statistical Learning: Data Mining, Inference, and Prediction, Second
+  Edition. 2nd ed. New York, NY: Springer.
 }
 
