@@ -2,6 +2,7 @@
 % Please edit documentation in R/class_def.R
 \docType{class}
 \name{ga_fsm-class}
+\alias{estimation_details,ga_fsm-method}
 \alias{ga_fsm-class}
 \alias{plot,ga_fsm-method}
 \alias{print,ga_fsm-method}
@@ -18,6 +19,8 @@
 
 \S4method{plot}{ga_fsm}(x, y, action_label = NULL, transition_label = NULL,
   curvature = c(0.3, 0.6, 0.8))
+
+\S4method{estimation_details}{ga_fsm}(x)
 }
 \arguments{
 \item{x}{S4 ga_fsm object}
@@ -49,6 +52,8 @@ An S4 class to return the results of using a GA to estimate a FSM with
 Turns ga_fsm S4 object into list of summaries for printing and then prints it.
 
 Plots ga_fsm S4 object's state transition matrix
+
+Extracts slot relevant to estimating the fsm
 }
 \section{Methods (by generic)}{
 \itemize{
@@ -59,6 +64,8 @@ Plots ga_fsm S4 object's state transition matrix
 \item \code{summary}: An S4 method for summarizing a ga_fsm S4 object
 
 \item \code{plot}: An S4 method for summarizing a ga_fsm S4 object
+
+\item \code{estimation_details}: 
 }}
 \section{Slots}{
 
@@ -79,8 +86,6 @@ state.}
 \item{\code{predictive}}{Numeric vector of length one with test data accuracy if test
 data was supplied; otherwise, a character vector with a message that the
 user should provide test data for better estimate of performance.}
-
-\item{\code{degeneracy}}{List with message and sparse matrix.}
 
 \item{\code{varImp}}{Numeric vector same length as number of columns of state matrix
 with relative importance scores for each predictor.}

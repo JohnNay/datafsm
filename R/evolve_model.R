@@ -128,9 +128,10 @@
 #'                    outcome = rep(1:2, 5000),
 #'                    my.decision1 = sample(1:0, 10000, TRUE),
 #'                    other.decision1 = sample(1:0, 10000, TRUE))
-#' (result <- evolve_model(cdata, cv=FALSE))
-#' summary(result)
-#' plot(result, action_label = c("C", "D"))
+#' (res <- evolve_model(cdata, cv=FALSE))
+#' summary(res)
+#' plot(res, action_label = c("C", "D"))
+#' plot(estimation_details(res))
 #'
 #' # In scripts, it can makes sense to set parallel to
 #' # 'as.logical(Sys.info()['sysname'] != 'Windows')'.
@@ -147,397 +148,377 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
                          parallel = FALSE,
                          priors = NULL,
                          verbose = TRUE) {
-        # TODO: varImp to generalize to more than 2-state FSMs
-
-        start_time <- as.numeric(proc.time()[[1]])
-
-        call <- match.call()
-        
-        msg <- ""
-
-        measure <- match.arg(measure) # inside fitnessR(), use this arg to create measure of fitness
-
-        ## GA-related errors:
-        if (popSize < 10) warning("The population size is less than 10. Consider using a larger size.")
-        if (maxiter < 1) stop("Error: The maximum number of iterations must be at least 1.")
-        if (pcrossover < 0 || pcrossover > 1) stop("Error: Probability of crossover must be between 0 and 1.")
-        if (pmutation < 0 || pmutation > 1) stop("Error: Probability of mutation must be between 0 and 1.")
-
-        ## Parallel-related errors:
-        if(!requireNamespace("doParallel", quietly = TRUE) & parallel == TRUE)
-                stop(paste("You asked to run this in parallel, but you don't have package doParallel installed.",
-                     "run 'install.packages(''doParallel''); library(doParallel)', and then try this again."))
-
-        ## Data-related errors:
-        if (missing(data)) stop("You must supply data. At the very least, you can supply data.")
-        if(!is.data.frame(data)) {
-                data <- as.data.frame(data)
-                warning("You did not supply a data.frame for 'data' argument of this function,
+  # TODO: varImp to generalize to more than 2-state FSMs
+  
+  start_time <- as.numeric(proc.time()[[1]])
+  
+  call <- match.call()
+  
+  msg <- "\n\n"
+  
+  measure <- match.arg(measure) # inside fitnessR(), use this arg to create measure of fitness
+  
+  ## GA-related errors:
+  if (popSize < 10) warning("The population size is less than 10. Consider using a larger size.")
+  if (maxiter < 1) stop("Error: The maximum number of iterations must be at least 1.")
+  if (pcrossover < 0 || pcrossover > 1) stop("Error: Probability of crossover must be between 0 and 1.")
+  if (pmutation < 0 || pmutation > 1) stop("Error: Probability of mutation must be between 0 and 1.")
+  
+  ## Parallel-related errors:
+  if(!requireNamespace("doParallel", quietly = TRUE) & parallel == TRUE)
+    stop(paste("You asked to run this in parallel, but you don't have package doParallel installed.",
+               "run 'install.packages(''doParallel''); library(doParallel)', and then try this again."))
+  
+  ## Data-related errors:
+  if (missing(data)) stop("You must supply data. At the very least, you can supply data.")
+  if(!is.data.frame(data)) {
+    data <- as.data.frame(data)
+    warning("You did not supply a data.frame for 'data' argument of this function,
                         so we converted it to one.")
+  }
+  period <- data$period
+  outcome <- data$outcome
+  test_period <- test_data$period
+  test_outcome <- test_data$outcome
+  
+  nzvs <- caret::nearZeroVar(data[ , -which(names(data) %in% c("period", "outcome")), drop=FALSE],
+                             freqCut = 95/5, uniqueCut=10)
+  if (length(nzvs) > 0){
+    to_drop <- colnames(data)[-which(names(data) %in% c("period", "outcome"))[nzvs]]
+    if(verbose) cat("We should be dropping", length(to_drop), "feature(s), which is (are):", to_drop, "\n")
+    msg <- paste0(msg, "We should be dropping ", length(to_drop), " feature(s), which is (are): ", to_drop, "\n")
+    
+    if(drop_nzv){
+      # just names in features[[k]] so we dont drop group, folds and training vars
+      if(verbose) cat("Dropping", length(to_drop), "feature(s), which is (are):", to_drop)
+      msg <- paste0(msg, "Dropping ", length(to_drop), " feature(s), which is (are): ", to_drop)
+      
+      data <- data[ , -which(names(data) %in% to_drop), drop=FALSE]
+    }
+  }
+  
+  if (nrow(data)!=length(outcome)) stop(paste("Error: The predictor variables and the",
+                                              "outcome variable are not the same length."))
+  if (anyNA(outcome)) stop("Error: There are missing values in the data.")
+  if (length(outcome) == 0) stop("Error: The outcome is zero length.")
+  if (missing(seed)) {
+    seed <- floor(runif(1, 1,101))
+    message(paste("We set a seed for you to make this reproducible. It is ", seed, ".",
+                  " If you want the same results, next time you run this with the same settings,",
+                  " also set the seed argument of this function to ", seed, ".", sep=""))
+  }
+  if (missing(actions)) {
+    if(length(unique(outcome))==1){
+      stop(paste("Error: There is only one unique value in the",
+                 "outcome vector you supplied."))
+    } else {
+      actions <- length(unique(outcome))
+    }
+  } else {
+    if (length(unique(outcome)) != actions) {warning(paste("The number of unique values in the",
+                                                           "outcome vector you supplied does not",
+                                                           "equal the value of actions you supplied.",
+                                                           "The outcome vector should be a vector of",
+                                                           "observed actions. We are going to use the",
+                                                           "number of unique values in the outcome",
+                                                           "vector you supplied as the value of actions."))
+      actions <- length(unique(outcome))
+    }
+  }
+  
+  # So we are assured that the action vec will just need to be comprised of the possible
+  # number of actions in the data:
+  if (!all.equal(unique(outcome), as.numeric(unique(seq(length(unique(outcome))))),
+                 ignore.environment = TRUE)){
+    stop(paste("Error: The actions in the outcome column of the data are not the right values.",
+               "There should be actions sequenced from 1 to however many actions that are feasible.",
+               "E.g., if there are two feasible actions, then the outcome column should be comprised",
+               "of only 1s and 2s, with at least one 1 and and at least one 2. If there are three feasible",
+               "actions, the outcome column should be comprised of only 1s, 2s, and 3s, with at least one",
+               "1 and, at least one 2, and at least one 3."))
+  }
+  
+  inputs <- 2^(ncol(data[ , -which(names(data) %in% c("period", "outcome")), drop = FALSE]))
+  
+  if (cv) {
+    try({
+      states <- evolve_model_cv(data,
+                                measure,
+                                k,
+                                actions,
+                                max_states,
+                                seed,
+                                popSize, pcrossover, pmutation, maxiter, run,
+                                parallel,
+                                verbose)
+      if(verbose) cat("Cross-validation found optimal number of states on training data to be ", states, ".\n\n", sep="")
+      msg <- paste0(msg, "Cross-validation found optimal number of states on training data to be ", states, ".\n\n")
+    })
+    # wrapped this in try, so if it fails, we'll just use the default value of states, which is an arg to evolve_model()
+  }
+  
+  # change any non-logical predictor variable vectors to logical
+  data[ , -which(names(data) %in% c("period", "outcome"))] <-
+    data.frame(lapply(data[ , -which(names(data) %in% c("period", "outcome"))],
+                      function(x) {
+                        if (class(x)!="logical") {
+                          as.logical(x)
+                        } else {
+                          x
+                        }}))
+  # replace all NA's with 0 or 1 so these rows are not dropped
+  # this works fine if the NAs are only for the first period play bc
+  # then the predictor columns dont make a difference bc the FSM will initialize
+  # with the same action regardless of the predictors at that time
+  # but this would bias the results if NA's are occuring in predictors in other periods
+  # so return an error for that:
+  if (any(!complete.cases(data) & !data$period == 1))
+    stop(paste("Error: You have missing values in your training data somewhere other than the first period interactions.",
+               "You can only have missing values for predictor columns, AND these must be in rows where period==1."))
+  data[is.na(data)] <- TRUE
+  
+  names <- colnames(data[ , -which(names(data) %in% c("period", "outcome")), drop = FALSE])
+  
+  if (length(names)==1){
+    form <- paste("outcome ~ 0 +", names, sep=" ")
+    data <- model.matrix(eval(parse(text=form)), data)
+  } else {
+    predictors <- paste(names, collapse=":")
+    form <- paste("outcome ~ 0 +", predictors, sep=" ")
+    data <- model.matrix(eval(parse(text=form)), data)
+  }
+  
+  if (length(names) > 3) stop(paste("Error: You have more than 3 predictors.",
+                                    "Your model will be too complicated.",
+                                    "Do some type of feature selection to choose less",
+                                    "than 4 predictors and then use the data.frame",
+                                    "with just those features next time."))
+  
+  if (ncol(data) != inputs)
+    stop("Error: At least one of your predictor variables does not have exactly 2 levels.")
+  
+  cols <- colnames(data)
+  # numeric vector same length as number of columns of the
+  # state matrix (\code{state_mat}) with the action that each column of the
+  # state matrix corresponds to the decision model taking in the previous
+  # period. This is only relevant when the predictor variables of the FSM are
+  # lagged outcomes that include the previous actions taken by that decision model.
+  
+  fitnessR <- function(s){ # functions defined elsewhere: decode_action_vec, decode_state_mat
+    action_vec <- decode_action_vec(s, states, inputs, actions)
+    state_mat <- decode_state_mat(s, states, inputs, actions)
+    results <- fitnessCPP(action_vec, state_mat, data, period)
+    
+    if (anyNA(results) | length(results)==0){
+      stop("Error: Results from fitness evaluation have missing values.")
+    }
+    
+    switch(measure,
+           accuracy = sum(ifelse( results == outcome , 1 , 0)) / length(results),
+           sens = caret::sensitivity(data = factor(results), reference = factor(outcome)),
+           spec = caret::specificity(data = factor(results), reference = factor(outcome)),
+           ppv = caret::posPredValue(data = factor(results), reference = factor(outcome)))
+  }
+  
+  warning_threshold <- 100
+  
+  valid_bs <- function(bs) {
+    a <- decode_action_vec(bs, states, inputs, actions )
+    sm <- decode_state_mat(bs, states, inputs, actions )
+    all(a <= actions) && all(sm <= states)
+  }
+  
+  valid_bsl <- function(x) {
+    vbs <- function(i) valid_bs(x[i,])
+    as.logical(lapply(1:nrow(x), vbs))
+  }
+  
+  spCrossover <- function(object, parents, ...) {
+    iter <- 0
+    output <- NULL
+    while(is.null(output)) {
+      iter <- iter + 1
+      output <- GA::gabin_spCrossover(object, parents, ...)
+      children <- output$children
+      if (! all(valid_bsl(children))) {
+        if (iter > warning_threshold) {
+          warning("Invalid crossover #", iter, '\n')
+          print(children)
         }
-        period <- data$period
-        outcome <- data$outcome
-        test_period <- test_data$period
-        test_outcome <- test_data$outcome
-        
-        nzvs <- caret::nearZeroVar(data[ , -which(names(data) %in% c("period", "outcome")), drop=FALSE],
-                                   freqCut = 95/5, uniqueCut=10)
-        if (length(nzvs) > 0){
-          to_drop <- colnames(data)[-which(names(data) %in% c("period", "outcome"))[nzvs]]
-          if(verbose) cat("We should be dropping", length(to_drop), "feature(s), which is (are):", to_drop, "\n")
-          msg <- paste0(msg, "We should be dropping ", length(to_drop), " feature(s), which is (are): ", to_drop, "\n")
-          
-          if(drop_nzv){
-            # just names in features[[k]] so we dont drop group, folds and training vars
-            if(verbose) cat("Dropping", length(to_drop), "feature(s), which is (are):", to_drop)
-            msg <- paste0(msg, "Dropping ", length(to_drop), " feature(s), which is (are): ", to_drop)
-            
-            data <- data[ , -which(names(data) %in% to_drop), drop=FALSE]
-          }
+        output <- NULL
+      }
+    }
+    output
+  }
+  
+  raMutation <- function(object, parent, ...) {
+    iter <- 0
+    output <- NULL
+    while(is.null(output)) {
+      iter <- iter + 1
+      output <- GA::gabin_raMutation(object, parent, ...)
+      if (! valid_bs(output)) {
+        if (iter > warning_threshold) {
+          cat("Invalid mutation #", iter, '\n')
+          print(output)
         }
-        
-        if (nrow(data)!=length(outcome)) stop(paste("Error: The predictor variables and the",
-                                                    "outcome variable are not the same length."))
-        if (anyNA(outcome)) stop("Error: There are missing values in the data.")
-        if (length(outcome) == 0) stop("Error: The outcome is zero length.")
-        if (missing(seed)) {
-                seed <- floor(runif(1, 1,101))
-                message(paste("We set a seed for you to make this reproducible. It is ", seed, ".",
-                              " If you want the same results, next time you run this with the same settings,",
-                              " also set the seed argument of this function to ", seed, ".", sep=""))
-        }
-        if (missing(actions)) {
-                if(length(unique(outcome))==1){
-                        stop(paste("Error: There is only one unique value in the",
-                                                  "outcome vector you supplied."))
-                } else {
-                        actions <- length(unique(outcome))
-                }
-        } else {
-                if (length(unique(outcome)) != actions) {warning(paste("The number of unique values in the",
-                                                  "outcome vector you supplied does not",
-                                                  "equal the value of actions you supplied.",
-                                                  "The outcome vector should be a vector of",
-                                                  "observed actions. We are going to use the",
-                                                  "number of unique values in the outcome",
-                                                  "vector you supplied as the value of actions."))
-                                                         actions <- length(unique(outcome))
-                }
-        }
-
-        # So we are assured that the action vec will just need to be comprised of the possible
-        # number of actions in the data:
-        if (!all.equal(unique(outcome), as.numeric(unique(seq(length(unique(outcome))))),
-                       ignore.environment = TRUE)){
-                stop(paste("Error: The actions in the outcome column of the data are not the right values.",
-                     "There should be actions sequenced from 1 to however many actions that are feasible.",
-                     "E.g., if there are two feasible actions, then the outcome column should be comprised",
-                     "of only 1s and 2s, with at least one 1 and and at least one 2. If there are three feasible",
-                     "actions, the outcome column should be comprised of only 1s, 2s, and 3s, with at least one",
-                     "1 and, at least one 2, and at least one 3."))
-        }
-
-        inputs <- 2^(ncol(data[ , -which(names(data) %in% c("period", "outcome")), drop = FALSE]))
-
-        if (cv) {
-                try({
-                        states <- evolve_model_cv(data,
-                                                  measure,
-                                                  k,
-                                                  actions,
-                                                  max_states,
-                                                  seed,
-                                                  popSize, pcrossover, pmutation, maxiter, run,
-                                                  parallel,
-                                                  verbose)
-                        if(verbose) cat("Cross-validation found optimal number of states on training data to be ", states, ".\n\n", sep="")
-                        msg <- paste0(msg, "Cross-validation found optimal number of states on training data to be ", states, ".\n\n")
-                })
-                # wrapped this in try, so if it fails, we'll just use the default value of states, which is an arg to evolve_model()
-        }
-
-        # change any non-logical predictor variable vectors to logical
-        data[ , -which(names(data) %in% c("period", "outcome"))] <-
-                data.frame(lapply(data[ , -which(names(data) %in% c("period", "outcome"))],
-                                                                                      function(x) {
-                                                                                              if (class(x)!="logical") {
-                                                                                                      as.logical(x)
-                                                                                              } else {
-                                                                                                      x
-                                                                                              }}))
-        # replace all NA's with 0 or 1 so these rows are not dropped
-        # this works fine if the NAs are only for the first period play bc
-        # then the predictor columns dont make a difference bc the FSM will initialize
-        # with the same action regardless of the predictors at that time
-        # but this would bias the results if NA's are occuring in predictors in other periods
-        # so return an error for that:
-        if (any(!complete.cases(data) & !data$period == 1))
-                stop(paste("Error: You have missing values in your training data somewhere other than the first period interactions.",
-                           "You can only have missing values for predictor columns, AND these must be in rows where period==1."))
-        data[is.na(data)] <- TRUE
-
-        names <- colnames(data[ , -which(names(data) %in% c("period", "outcome")), drop = FALSE])
-
-        if (length(names)==1){
-                form <- paste("outcome ~ 0 +", names, sep=" ")
-                data <- model.matrix(eval(parse(text=form)), data)
-        } else {
-                predictors <- paste(names, collapse=":")
-                form <- paste("outcome ~ 0 +", predictors, sep=" ")
-                data <- model.matrix(eval(parse(text=form)), data)
-        }
-
-        if (length(names) > 3) stop(paste("Error: You have more than 3 predictors.",
-                                  "Your model will be too complicated.",
-                                  "Do some type of feature selection to choose less",
-                                  "than 4 predictors and then use the data.frame",
-                                  "with just those features next time."))
-
-        if (ncol(data) != inputs)
-                stop("Error: At least one of your predictor variables does not have exactly 2 levels.")
-
-        cols <- colnames(data)
-        # numeric vector same length as number of columns of the
-        # state matrix (\code{state_mat}) with the action that each column of the
-        # state matrix corresponds to the decision model taking in the previous
-        # period. This is only relevant when the predictor variables of the FSM are
-        # lagged outcomes that include the previous actions taken by that decision model.
-
-        fitnessR <- function(s){ # functions defined elsewhere: decode_action_vec, decode_state_mat
-                action_vec <- decode_action_vec(s, states, inputs, actions)
-                state_mat <- decode_state_mat(s, states, inputs, actions)
-                results <- fitnessCPP(action_vec, state_mat, data, period)
-
-                if (anyNA(results) | length(results)==0){
-                        stop("Error: Results from fitness evaluation have missing values.")
-                }
-
-                switch(measure,
-                       accuracy = sum(ifelse( results == outcome , 1 , 0)) / length(results),
-                       sens = caret::sensitivity(data = factor(results), reference = factor(outcome)),
-                       spec = caret::specificity(data = factor(results), reference = factor(outcome)),
-                       ppv = caret::posPredValue(data = factor(results), reference = factor(outcome)))
-        }
-
-        warning_threshold <- 100
-
-        valid_bs <- function(bs) {
-                a <- decode_action_vec(bs, states, inputs, actions )
-                sm <- decode_state_mat(bs, states, inputs, actions )
-                all(a <= actions) && all(sm <= states)
-        }
-
-        valid_bsl <- function(x) {
-                vbs <- function(i) valid_bs(x[i,])
-                as.logical(lapply(1:nrow(x), vbs))
-        }
-
-        spCrossover <- function(object, parents, ...) {
-                iter <- 0
-                output <- NULL
-                while(is.null(output)) {
-                        iter <- iter + 1
-                        output <- GA::gabin_spCrossover(object, parents, ...)
-                        children <- output$children
-                        if (! all(valid_bsl(children))) {
-                                if (iter > warning_threshold) {
-                                        warning("Invalid crossover #", iter, '\n')
-                                        print(children)
-                                }
-                                output <- NULL
-                        }
-                }
-                output
-        }
-
-        raMutation <- function(object, parent, ...) {
-                iter <- 0
-                output <- NULL
-                while(is.null(output)) {
-                        iter <- iter + 1
-                        output <- GA::gabin_raMutation(object, parent, ...)
-                        if (! valid_bs(output)) {
-                                if (iter > warning_threshold) {
-                                        cat("Invalid mutation #", iter, '\n')
-                                        print(output)
-                                }
-                                output <- NULL
-                        }
-                }
-                output
-        }
-
-        poss.state.values <- seq(states) - 1
-        b1 <- GA::decimal2binary(max(poss.state.values))
-        l1 <- length(b1) #how many binary elements to represent one element of state matrix
-
-        poss.action.values <- seq(actions) - 1
-        b2 <- GA::decimal2binary(max(poss.action.values))
-        l2 <- length(b2) #how many binary elements to represent one element of action matrix
-
-        nBits <- (states*inputs*l1 + states*l2)
-
-        build_priors <- function(popSize, nBits, states, inputs, actions) {
-                priors <- matrix(nrow = popSize, ncol = nBits)
-                for(i in 1:popSize) {
-                        av <- sample(actions,states,TRUE)
-                        sm <- matrix(sample(states,states * inputs,TRUE), nrow=states)
-                        priors[i,] <- build_bitstring(av,sm, actions)
-                }
-                #    prior_fitness <- unlist(lapply(1:popSize, function(i) fitnessR(priors[i,])))
-                priors
-        }
-
-        if (missing(priors)) {
-                priors <- build_priors(popSize, nBits, states, inputs, actions)
-        } else {
-                if (is.vector(priors)) {
-                        if (nBits > 1){
-                                priors <- matrix(priors, nrow = 1)
-                        } else  {
-                                priors <- matrix(priors, ncol = 1)
-                        }
-                } else {
-                        priors <- as.matrix(priors)
-                }
-                if (nBits != ncol(priors)) stop(paste("Error: Priors do not match number of variables.",
-                                                "Remember that you need to provide a decoded bitstring for the priors."))
-        }
-
-        # Scale convergence criteria by how many parameters are in the model:
-        maxiter <- maxiter + ((maxiter*(nBits^2)) / maxiter)
-        #run <- run + ((run*(nBits)) / run) # TODO: think about how to scale run
-
-        if(verbose){
-                Monitor <- function (object, digits = getOption("digits")) {
-                        Fit <- na.exclude(object@fitness)
-                        cat(paste("Iter =", object@iter, " | Mean =", format(mean(Fit),
-                                                                             digits = digits), " | Best =", format(max(Fit),
-                                                                                                                   digits = digits),
-                                  "\n"))
-                }
-        } else {
-                Monitor <- function (object, digits = getOption("digits")) { }
-        }
-
-
-                GA <- GA::ga(type = "binary",
-                             fitness = fitnessR,
-                             nBits = nBits,
-                             crossover = spCrossover,
-                             mutation = raMutation,
-                             popSize = popSize,
-                             pcrossover = pcrossover,
-                             pmutation = pmutation,
-                             maxiter = maxiter,
-                             run = run,
-                             maxfitness = 1,
-                             parallel = parallel,
-                             suggestions = priors,
-                             monitor = Monitor,
-                             seed = seed)
-
-        state_mat <- decode_state_mat(GA@solution[1, ],  states, inputs, actions)
-        colnames(state_mat) <- cols
-
-        action_vec <- decode_action_vec(GA@solution[1, ],  states, inputs, actions)
-
-        if (missing(test_data)){
-                predictive <- "No test data provided. Provide some to get more accurate estimation of generalization power."
-        } else {
-                if (!all.equal(unique(test_outcome), as.numeric(unique(seq(length(unique(test_outcome))))),
-                               ignore.environment = TRUE)){
-                        stop(paste("Error: The actions in the outcome column of the test data are not the right values.",
-                                   "There should be actions sequenced from 1 to however many actions that are feasible.",
-                                   "E.g., if there are two feasible actions, then the outcome column should be comprised",
-                                   "of only 1s and 2s, with at least one 1 and and at least one 2. If there are three feasible",
-                                   "actions, the outcome column should be comprised of only 1s, 2s, and 3s, with at least one",
-                                   "1 and, at least one 2, and at least one 3."))
-                }
-
-                test_inputs <- 2^(ncol(test_data[ , -which(names(test_data) %in% c("period", "outcome")), drop = FALSE]))
-
-                # change any non-logical predictor variable vectors to logical
-                test_data[ , -which(names(test_data) %in% c("period", "outcome"))] <-
-                        data.frame(lapply(test_data[ , -which(names(test_data) %in% c("period", "outcome"))],
-                                                                                                        function(x) {
-                                                                                                                if (class(x)!="logical") {
-                                                                                                                        as.logical(x)
-                                                                                                                } else {
-                                                                                                                        x
-                                                                                                                }}))
-
-                # replace all NA's with 0 or 1 so these rows are not dropped
-                # this works fine if the NAs are only for the first period play bc
-                # then the predictor columns dont make a difference bc the FSM will initialize
-                # with the same action regardless of the predictors at that time
-                # but this would bias the results if NA's are occuring in predictors in other periods
-                # so return an error for that:
-                if (any(!complete.cases(test_data) & !test_data$period == 1))
-                        stop("Error: You have missing values in your test data somewhere other than the first period interactions. You can only have missing values for predictor columns, AND these must be in rows where period==1.")
-                test_data[is.na(test_data)] <- TRUE
-
-                names <- colnames(test_data[ , -which(names(test_data) %in% c("period", "outcome"))])
-
-                if (length(names)==1){
-                        form <- paste("outcome ~ 0 +", names, sep=" ")
-                        test_data <- model.matrix(eval(parse(text=form)), test_data)
-                } else {
-                        predictors <- paste(names, collapse=":")
-                        form <- paste("outcome ~ 0 +", predictors, sep=" ")
-                        test_data <- model.matrix(eval(parse(text=form)), test_data)
-                }
-
-                if (length(names) > 3) stop(paste("Error: You have more than 3 predictors in your test data.",
-                                                  "Your model will be too complicated.",
-                                                  "Do some type of feature selection to choose less",
-                                                  "than 4 predictors and then use the data.frame",
-                                                  "with just those features next time."))
-
-                if (ncol(test_data) != test_inputs)
-                        stop(paste("Error: At least one of your predictor variables in your test data",
-                             "does not have exactly 2 levels."))
-
-                test_cols <- colnames(test_data)
-
-                results <- fitnessCPP(action_vec, state_mat, test_data, test_period)
-                if (anyNA(results) | length(results)==0){
-                        stop("Error: Results from fitness evaluation have missing values.")
-                }
-                predictive <-  sum(ifelse( results == test_outcome , 1 , 0)) / length(results)
-        }
-
-        # degeneracy_check
-        #             d_check <- degeneracy_check(state_mat, action_vec, cols, data, outcome, period)
-        #             dif <- d_check$dif
-        #             sparse_state_mat <- d_check$sparse_state_mat
-        #             corrected_state_mat <- d_check$corrected_state_mat
-        #
-        #             if (any(dif >= 0)) {
-        #               message <- ifelse(any(dif == 0), "See the sparse matrix returned. The elements in that matrix with a 0 are unidentifiable. Their value makes no difference to the fit of the strategy to the provided data.",
-        #                                 "You have not found an optimal strategy, by randomly flipping values of some components, we improved it.")
-        #             } else {
-        #               message <- ifelse(all(dif < 0), "Your strategy is a deterministic approximation of a stochastic process. All of the elements of the state matrix can be identified.",
-        #                                 "You could improve your strategy by changing at least one component to its opposite value.")
-        #             }
-        # if the model is fine, then corrected_state_mat should be equal to state_mat
-
-        # Variable Importance:
-        #varImp <- var_imp(corrected_state_mat, action_vec, fitness_func, data, outcome, cols)
-        varImp <- var_imp(state_mat, action_vec, data, outcome, period)
-
-        object <- new("ga_fsm",
-                      call = call,
-                      actions = actions,
-                      states = states,
-                      GA = GA,
-                      state_mat = state_mat,
-                      action_vec = action_vec,
-                      predictive = predictive,
-                      varImp = varImp,
-                      timing = as.numeric(proc.time()[[1]]) - start_time,
-                      diagnostics = msg) #,
-        #degeneracy = list(message=message, dif=dif, sparse_state_mat = sparse_state_mat)))
-
-        object
+        output <- NULL
+      }
+    }
+    output
+  }
+  
+  poss.state.values <- seq(states) - 1
+  b1 <- GA::decimal2binary(max(poss.state.values))
+  l1 <- length(b1) #how many binary elements to represent one element of state matrix
+  
+  poss.action.values <- seq(actions) - 1
+  b2 <- GA::decimal2binary(max(poss.action.values))
+  l2 <- length(b2) #how many binary elements to represent one element of action matrix
+  
+  nBits <- (states*inputs*l1 + states*l2)
+  
+  build_priors <- function(popSize, nBits, states, inputs, actions) {
+    priors <- matrix(nrow = popSize, ncol = nBits)
+    for(i in 1:popSize) {
+      av <- sample(actions,states,TRUE)
+      sm <- matrix(sample(states,states * inputs,TRUE), nrow=states)
+      priors[i,] <- build_bitstring(av,sm, actions)
+    }
+    #    prior_fitness <- unlist(lapply(1:popSize, function(i) fitnessR(priors[i,])))
+    priors
+  }
+  
+  if (missing(priors)) {
+    priors <- build_priors(popSize, nBits, states, inputs, actions)
+  } else {
+    if (is.vector(priors)) {
+      if (nBits > 1){
+        priors <- matrix(priors, nrow = 1)
+      } else  {
+        priors <- matrix(priors, ncol = 1)
+      }
+    } else {
+      priors <- as.matrix(priors)
+    }
+    if (nBits != ncol(priors)) stop(paste("Error: Priors do not match number of variables.",
+                                          "Remember that you need to provide a decoded bitstring for the priors."))
+  }
+  
+  # Scale convergence criteria by how many parameters are in the model:
+  maxiter <- maxiter + ((maxiter*(nBits^2)) / maxiter)
+  #run <- run + ((run*(nBits)) / run) # TODO: think about how to scale run
+  
+  if(verbose){
+    Monitor <- function (object, digits = getOption("digits")) {
+      Fit <- na.exclude(object@fitness)
+      cat(paste("Iter =", object@iter, " | Mean =", format(mean(Fit),
+                                                           digits = digits), " | Best =", format(max(Fit),
+                                                                                                 digits = digits),
+                "\n"))
+    }
+  } else {
+    Monitor <- function (object, digits = getOption("digits")) { }
+  }
+  
+  
+  GA <- GA::ga(type = "binary",
+               fitness = fitnessR,
+               nBits = nBits,
+               crossover = spCrossover,
+               mutation = raMutation,
+               popSize = popSize,
+               pcrossover = pcrossover,
+               pmutation = pmutation,
+               maxiter = maxiter,
+               run = run,
+               maxfitness = 1,
+               parallel = parallel,
+               suggestions = priors,
+               monitor = Monitor,
+               seed = seed)
+  
+  state_mat <- decode_state_mat(GA@solution[1, ],  states, inputs, actions)
+  colnames(state_mat) <- cols
+  
+  action_vec <- decode_action_vec(GA@solution[1, ],  states, inputs, actions)
+  
+  if (missing(test_data)){
+    predictive <- "No test data provided. Provide some to get more accurate estimation of generalization power."
+  } else {
+    if (!all.equal(unique(test_outcome), as.numeric(unique(seq(length(unique(test_outcome))))),
+                   ignore.environment = TRUE)){
+      stop(paste("Error: The actions in the outcome column of the test data are not the right values.",
+                 "There should be actions sequenced from 1 to however many actions that are feasible.",
+                 "E.g., if there are two feasible actions, then the outcome column should be comprised",
+                 "of only 1s and 2s, with at least one 1 and and at least one 2. If there are three feasible",
+                 "actions, the outcome column should be comprised of only 1s, 2s, and 3s, with at least one",
+                 "1 and, at least one 2, and at least one 3."))
+    }
+    
+    test_inputs <- 2^(ncol(test_data[ , -which(names(test_data) %in% c("period", "outcome")), drop = FALSE]))
+    
+    # change any non-logical predictor variable vectors to logical
+    test_data[ , -which(names(test_data) %in% c("period", "outcome"))] <-
+      data.frame(lapply(test_data[ , -which(names(test_data) %in% c("period", "outcome"))],
+                        function(x) {
+                          if (class(x)!="logical") {
+                            as.logical(x)
+                          } else {
+                            x
+                          }}))
+    
+    # replace all NA's with 0 or 1 so these rows are not dropped
+    # this works fine if the NAs are only for the first period play bc
+    # then the predictor columns dont make a difference bc the FSM will initialize
+    # with the same action regardless of the predictors at that time
+    # but this would bias the results if NA's are occuring in predictors in other periods
+    # so return an error for that:
+    if (any(!complete.cases(test_data) & !test_data$period == 1))
+      stop("Error: You have missing values in your test data somewhere other than the first period interactions. You can only have missing values for predictor columns, AND these must be in rows where period==1.")
+    test_data[is.na(test_data)] <- TRUE
+    
+    names <- colnames(test_data[ , -which(names(test_data) %in% c("period", "outcome"))])
+    
+    if (length(names)==1){
+      form <- paste("outcome ~ 0 +", names, sep=" ")
+      test_data <- model.matrix(eval(parse(text=form)), test_data)
+    } else {
+      predictors <- paste(names, collapse=":")
+      form <- paste("outcome ~ 0 +", predictors, sep=" ")
+      test_data <- model.matrix(eval(parse(text=form)), test_data)
+    }
+    
+    if (length(names) > 3) stop(paste("Error: You have more than 3 predictors in your test data.",
+                                      "Your model will be too complicated.",
+                                      "Do some type of feature selection to choose less",
+                                      "than 4 predictors and then use the data.frame",
+                                      "with just those features next time."))
+    
+    if (ncol(test_data) != test_inputs)
+      stop(paste("Error: At least one of your predictor variables in your test data",
+                 "does not have exactly 2 levels."))
+    
+    test_cols <- colnames(test_data)
+    
+    results <- fitnessCPP(action_vec, state_mat, test_data, test_period)
+    if (anyNA(results) | length(results)==0){
+      stop("Error: Results from fitness evaluation have missing values.")
+    }
+    predictive <-  sum(ifelse( results == test_outcome , 1 , 0)) / length(results)
+  }
+  
+  varImp <- var_imp(state_mat, action_vec, data, outcome, period)
+  
+  new("ga_fsm",
+      call = call,
+      actions = actions,
+      states = states,
+      GA = GA,
+      state_mat = state_mat,
+      action_vec = action_vec,
+      predictive = predictive,
+      varImp = varImp,
+      timing = as.numeric(proc.time()[[1]]) - start_time,
+      diagnostics = msg)
 }

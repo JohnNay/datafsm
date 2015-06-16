@@ -155,9 +155,10 @@ cdata <- data.frame(period = rep(1:10, 1000),
                    outcome = rep(1:2, 5000),
                    my.decision1 = sample(1:0, 10000, TRUE),
                    other.decision1 = sample(1:0, 10000, TRUE))
-(result <- evolve_model(cdata, cv=FALSE))
-summary(result)
-plot(result, action_label = c("C", "D"))
+(res <- evolve_model(cdata, cv=FALSE))
+summary(res)
+plot(res, action_label = c("C", "D"))
+plot(estimation_details(res))
 
 # In scripts, it can makes sense to set parallel to
 # 'as.logical(Sys.info()['sysname'] != 'Windows')'.

@@ -17,7 +17,6 @@ setClassUnion("numericOrchar", members = c("numeric", "character"))
 #' @slot predictive Numeric vector of length one with test data accuracy if test
 #'   data was supplied; otherwise, a character vector with a message that the
 #'   user should provide test data for better estimate of performance.
-#' @slot degeneracy List with message and sparse matrix.
 #' @slot varImp Numeric vector same length as number of columns of state matrix
 #'   with relative importance scores for each predictor.
 #' @slot timing Numeric vector length one with the total elapsed time it took
@@ -35,7 +34,6 @@ setClass("ga_fsm",
                    state_mat = "matrix",
                    action_vec = "numeric",
                    predictive = "numericOrchar",
-                   degeneracy = "list",
                    varImp = "numeric",
                    timing = "numeric",
                    diagnostics = "character")
@@ -92,7 +90,6 @@ setMethod("summary", "ga_fsm",
                           state_mat = object@state_mat,
                           action_vec = object@action_vec,
                           predictive = object@predictive,
-                          degeneracy = object@degeneracy,
                           varImp = object@varImp
                   )
                   cat("                                    \n")
@@ -120,9 +117,6 @@ setMethod("summary", "ga_fsm",
 
                   cat("\nAction Vector of Solution: \n")
                   print(x$action_vec, digits = digits)
-
-                  cat(paste("\nFriendly Degeneracy Message:", x$degeneracy$message, "\n"))
-                  #         TODO: degeneracy$diff TODO: degeneracy$sparse_state_mat
 
                   cat("\nVariable Importance: \n")
                   print(x$varImp, digits = digits)
@@ -158,7 +152,6 @@ setMethod("plot", "ga_fsm",
             state_mat <- x@state_mat
             action_vec <- x@action_vec
             predictive <- x@predictive
-            degeneracy <- x@degeneracy
             varImp <- x@varImp
             
             s <- t(state_mat)
@@ -194,4 +187,22 @@ setMethod("plot", "ga_fsm",
             
             invisible(p)
           }
+)
+
+################################################################################
+#' Extracts slot relevant to estimating the fsm
+#' @param x S4 ga_fsm object
+#' @export
+
+setGeneric("estimation_details", function(x){
+  standardGeneric("estimation_details")
+})
+
+################################################################################
+#' Extracts slot relevant to estimating the fsm
+#' @describeIn ga_fsm
+#'  @export
+
+setMethod("estimation_details", "ga_fsm",
+          function(x) slot(x, "GA")
 )
