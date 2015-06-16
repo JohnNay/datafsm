@@ -131,6 +131,7 @@
 #' (res <- evolve_model(cdata, cv=FALSE))
 #' summary(res)
 #' plot(res, action_label = c("C", "D"))
+#' library(GA)
 #' plot(estimation_details(res))
 #'
 #' # In scripts, it can makes sense to set parallel to
