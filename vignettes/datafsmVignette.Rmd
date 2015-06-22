@@ -45,6 +45,8 @@ library(printr)
 citation("datafsm")
 ```
 
+# Fake Data Example
+
 To show it works, we can create fake data:
 ```{r, eval=TRUE, include=TRUE}
 cdata <- data.frame(period = rep(1:10, 1000),
@@ -53,22 +55,29 @@ cdata <- data.frame(period = rep(1:10, 1000),
                     other.decision1 = sample(1:0, 10000, TRUE))
 ```
 
+Here are the first eleven rows of this fake data:
+```{r, eval=TRUE, echo=FALSE, results='asis'}
+pander::pandoc.table(head(cdata, 11))
+```
+
 Estimate a model with that data:
 ```{r, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE, results='hide'}
 res <- evolve_model(cdata)
 ```
 
 Use the summary and plot methods on the output of the `evolve_model()` function:
-```{r, eval=TRUE, include=TRUE, fig.width=5, fig.height=5}
+```{r, eval=TRUE, include=TRUE, fig.width=5, fig.height=5, fig.cap="Result of `plot()` method call on `ga_fsm` object."}
 summary(res)
 plot(res, action_label = c("C", "D"))
 ```
 
 Use the `estimation_details` method on the output of the `evolve_model()` function:
-```{r, eval=TRUE, include=TRUE, fig.width=8, fig.height=6}
+```{r, eval=TRUE, include=TRUE, fig.width=8, fig.height=6, fig.cap="Result of `plot()` method call on ga object, which is obtained by calling `estimation_details()` on `ga_fsm` object."}
 suppressMessages(library(GA))
 plot(estimation_details(res))
 ```
+
+# Documentation for `evolve_model`
 
 Check out the documentation for the main function of the package to learn about all the options:
 ```{r, eval=TRUE, include=TRUE}
