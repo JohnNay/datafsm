@@ -57,7 +57,7 @@ cdata <- data.frame(period = rep(1:10, 1000),
 
 Here are the first eleven rows of this fake data:
 ```{r, eval=TRUE, echo=FALSE, results='asis'}
-pander::pandoc.table(head(cdata, 11))
+knitr::kable(head(cdata, 11))
 ```
 
 Estimate a model with that data:
