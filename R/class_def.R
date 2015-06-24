@@ -19,7 +19,7 @@ setClassUnion("numericOrchar", members = c("numeric", "character"))
 #'   user should provide test data for better estimate of performance.
 #' @slot varImp Numeric vector same length as number of columns of state matrix
 #'   with relative importance scores for each predictor.
-#' @slot timing Numeric vector length one with the total elapsed time it took
+#' @slot timing Numeric vector length one with the total elapsed seconds it took
 #'   \code{\link{evolve_model}} to execute.
 #' @slot diagnostics Character vector length one, to be printed with base::cat().
 #'

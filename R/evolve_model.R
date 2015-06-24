@@ -116,7 +116,7 @@
 #'  details of the slots (objects) that this type of object will have and for 
 #'  information on the methods that can be used to summarize the calling and 
 #'  execution of \code{evolve_model()}, including \code{\link{summary}} and 
-#'  print.
+#'  print. Timing measurement is in seconds.
 #'  
 #'@references Luca Scrucca (2013). GA: A Package for Genetic Algorithms in R. 
 #'  Journal of Statistical Software, 53(4), 1-37. URL 
@@ -151,7 +151,7 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
                          verbose = TRUE) {
   # TODO: varImp to generalize to more than 2-state FSMs
   
-  start_time <- as.numeric(proc.time()[[1]])
+  start_time <- as.numeric(proc.time()[[3]])
   
   call <- match.call()
   
@@ -520,6 +520,6 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
       action_vec = action_vec,
       predictive = predictive,
       varImp = varImp,
-      timing = as.numeric(proc.time()[[1]]) - start_time,
+      timing = as.numeric(proc.time()[[3]]) - start_time,
       diagnostics = msg)
 }

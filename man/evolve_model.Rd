@@ -108,7 +108,7 @@ Returns an S4 object of class ga_fsm. See \linkS4class{ga_fsm} for the
  details of the slots (objects) that this type of object will have and for
  information on the methods that can be used to summarize the calling and
  execution of \code{evolve_model()}, including \code{\link{summary}} and
- print.
+ print. Timing measurement is in seconds.
 }
 \description{
 \code{evolve_model} uses a genetic algorithm to estimate a finite-state

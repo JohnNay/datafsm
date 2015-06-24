@@ -90,7 +90,7 @@ user should provide test data for better estimate of performance.}
 \item{\code{varImp}}{Numeric vector same length as number of columns of state matrix
 with relative importance scores for each predictor.}
 
-\item{\code{timing}}{Numeric vector length one with the total elapsed time it took
+\item{\code{timing}}{Numeric vector length one with the total elapsed seconds it took
 \code{\link{evolve_model}} to execute.}
 
 \item{\code{diagnostics}}{Character vector length one, to be printed with base::cat().}
