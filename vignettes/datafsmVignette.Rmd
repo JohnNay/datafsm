@@ -64,7 +64,7 @@ cdata <- data.frame(period = rep(1:10, 1000),
                     other.decision1 = sample(1:0, 10000, TRUE))
 ```
 
-The only required argument of the main function of the package, `evolve_model`, is a `data.frame` object, which must have columns named "period" and "outcome" (period is the time period that the outcome action was taken), and the rest of the columns are predictors, ranging from one to three predictors. All of the (3-5 columns) should be named. The period and outcome columns should be integer vectors -- e.g. `c(1,2,1)` -- and the columns with the predictor variable data should be logical vectors -- e.g. `c(TRUE, FALSE, FALSE)`. If the predictor variable data is not a logical valued vector, it will coerced to logical with `as.logical()`.
+The only required argument of the main function of the package, `evolve_model`, is a `data.frame` object, which must have columns named "period" and "outcome" (period is the time period that the outcome action was taken), and the rest of the columns are predictors, ranging from one to three predictors. Each row of the `data.frame` is an observational unit, an action taken at a particular time and any relevant variables for that time. All of the (3-5 columns) should be named. The period and outcome columns should be integer vectors -- e.g. `c(1,2,1)` -- and the columns with the predictor variable data should be logical vectors -- e.g. `c(TRUE, FALSE, FALSE)`. If the predictor variable data is not a logical valued vector, it will coerced to logical with `as.logical()`.
 
 Here are the first eleven rows of this fake data:
 
