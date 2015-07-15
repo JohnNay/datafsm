@@ -66,12 +66,19 @@ var_imp <- function(state_mat, action_vec, data, outcome, period, measure){
 
   for (i in seq(length(indices))) {
     state_mat_flipped <- state_mat
-    state_mat_flipped[indices[[i]][1],
-                      indices[[i]][2]] <- ifelse(state_mat[indices[[i]][1],
-                                                           indices[[i]][2]]==1, 2, 1)
+    if(nrow(state_mat)==2){
+      # If 2 rows in state matrix then just flip each value:
+      state_mat_flipped[indices[[i]][1],
+                        indices[[i]][2]] <- ifelse(state_mat[indices[[i]][1],
+                                                             indices[[i]][2]]==1, 2, 1)
+    } else {
+      # Sample from all possible values of states besides the one you're in now:
+      state_mat_flipped[indices[[i]][1],
+                        indices[[i]][2]] <- sample(seq(nrow(state_mat))[-i], 1)
+    }
     
     results2 <- fitnessCPP(action_vec, state_mat_flipped, data, period)
-
+    
     if (anyNA(results2) | length(results2)==0){
       stop("Error in var_imp computation: 
            Results from subsequent fitness evaluation have missing values.")
