@@ -37,32 +37,36 @@
 #'in the population. See \linkS4class{ga_fsm} for the details of the slots 
 #'(objects) that this type of object will have.
 #'
-#'@param data data.frame that has columns named "period" and "outcome" (period
+#'@param data data.frame that has columns named "period" and "outcome" (period 
 #'  is the time period that the outcome action was taken), and the rest of the 
 #'  columns are predictors, ranging from one to three predictors. All of the 
-#'  (3-5 columns) should be named. The period and outcome columns should be
-#'  integer vectors and the columns with the predictor variable data should be
-#'  logical vectors (\code{TRUE, FALSE}). If the predictor variable data is not
-#'  logical, it will coerced to logical with \code{as.logical()}.
+#'  (3-5 columns) should be named. The period and outcome columns should be 
+#'  integer vectors and the columns with the predictor variable data should be 
+#'  logical vectors (\code{TRUE, FALSE}). If the predictor variable data is not 
+#'  logical, it will coerced to logical with \code{base::as.logical()}.
 #'@param test_data Optional data.frame that has "period" and "outcome" columns 
 #'  and rest of columns are predictors, ranging from one to three predictors. 
 #'  All of the (3-5 columns) should be named. Outcome variable is the decision 
-#'  the decision-maker took for that period.
+#'  the decision-maker took for that period. This data.frame should be in the
+#'  same format and have the same order of columns as the data.frame passed to
+#'  the required \code{data} argument.
 #'@param drop_nzv Optional logical vector length one specifying whether 
 #'  predictors variables with variance in provided data near zero should be 
-#'  dropped before model building. Default is \code{FALSE}.
-#'@param measure Optional character vector that is either: "accuracy", "sens", 
-#'  "spec", or "ppv". This specifies what measure of predictive performance to 
-#'  use for training and evaluating the model. The default measure is 
-#'  \code{"accuracy"}. However, accuracy can be a problematic measure when the 
-#'  classes are imbalanced in the samples, i.e. if a class the model is trying 
-#'  to predict is very rare. Alternatives to accuracy are available that 
-#'  illuminate different aspects of predictive power. Sensitivity answers the 
-#'  question, `` given that a result is truly an event, what is the probability 
-#'  that the model will predict an event?'' Specificity answers the question, 
-#'  ``given that a result is truly not an event, what is the probability that 
-#'  the model will predict a negative?'' Positive predictive value answers, 
-#'  ``what is the percent of predicted positives that are actually positive?''
+#'  dropped before model building. Default is \code{FALSE}. See
+#'  \code{caret::nearZeroVar()}, which calls: \code{caret::nzv()}.
+#'@param measure Optional length one character vector that is either:
+#'  "accuracy", "sens", "spec", or "ppv". This specifies what measure of
+#'  predictive performance to use for training and evaluating the model. The
+#'  default measure is \code{"accuracy"}. However, accuracy can be a problematic
+#'  measure when the classes are imbalanced in the samples, i.e. if a class the
+#'  model is trying to predict is very rare. Alternatives to accuracy are
+#'  available that illuminate different aspects of predictive power. Sensitivity
+#'  answers the question, `` given that a result is truly an event, what is the
+#'  probability that the model will predict an event?'' Specificity answers the
+#'  question, ``given that a result is truly not an event, what is the
+#'  probability that the model will predict a negative?'' Positive predictive
+#'  value answers, ``what is the percent of predicted positives that are
+#'  actually positive?''
 #'@param states Optional numeric vector with the number of states. Default is 
 #'  \code{2}.
 #'@param cv Optional logical vector length one for whether cross-validation 
@@ -115,8 +119,8 @@
 #'@return Returns an S4 object of class ga_fsm. See \linkS4class{ga_fsm} for the
 #'  details of the slots (objects) that this type of object will have and for 
 #'  information on the methods that can be used to summarize the calling and 
-#'  execution of \code{evolve_model()}, including \code{\link{summary}} and 
-#'  print. Timing measurement is in seconds.
+#'  execution of \code{evolve_model()}, including \code{summary}, 
+#'  \code{print}, and \code{plot}. Timing measurement is in seconds.
 #'  
 #'@references Luca Scrucca (2013). GA: A Package for Genetic Algorithms in R. 
 #'  Journal of Statistical Software, 53(4), 1-37. URL 
@@ -171,11 +175,24 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
                "run 'install.packages(''doParallel''); library(doParallel)', and then try this again."))
   
   ## Data-related errors:
-  if (missing(data)) stop("You must supply data. At the very least, you can supply data.")
+  if (missing(data)) 
+    stop(paste("You must supply data. At the very least, you can supply data.",
+               "This should be a data.frame that has columns named 'period' and 'outcome' (period",
+               "is the time period that the outcome action was taken), and the rest of the",
+               "columns are predictors, ranging from one to three predictors. All of the",
+               "(3-5 columns) should be named. The period and outcome columns should be",
+               "integer vectors and the columns with the predictor variable data should be",
+               "logical vectors."))
   if(!is.data.frame(data)) {
     data <- as.data.frame(data)
-    warning("You did not supply a data.frame for 'data' argument of this function,
-                        so we converted it to one.")
+    warning(paste("You did not supply a data.frame for 'data' argument of this function",
+                  "so we converted it to one. To ensure this works right, run this again with a",
+                  "data.frame that has columns named 'period' and 'outcome' (period",
+                  "is the time period that the outcome action was taken), and the rest of the",
+                  "columns are predictors, ranging from one to three predictors. All of the",
+                  "(3-5 columns) should be named. The period and outcome columns should be",
+                  "integer vectors and the columns with the predictor variable data should be",
+                  "logical vectors."))
   }
   period <- data$period
   outcome <- data$outcome
