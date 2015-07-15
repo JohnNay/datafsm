@@ -18,6 +18,19 @@
 #'   columns) should be named.
 #' @param outcome Numeric vector same length as the number of rows as data.
 #' @param period Numeric vector same length as the number of rows as data.
+#' @param measure Optional length one character vector that is either:
+#'  "accuracy", "sens", "spec", or "ppv". This specifies what measure of
+#'  predictive performance to use for training and evaluating the model. The
+#'  default measure is \code{"accuracy"}. However, accuracy can be a problematic
+#'  measure when the classes are imbalanced in the samples, i.e. if a class the
+#'  model is trying to predict is very rare. Alternatives to accuracy are
+#'  available that illuminate different aspects of predictive power. Sensitivity
+#'  answers the question, `` given that a result is truly an event, what is the
+#'  probability that the model will predict an event?'' Specificity answers the
+#'  question, ``given that a result is truly not an event, what is the
+#'  probability that the model will predict a negative?'' Positive predictive
+#'  value answers, ``what is the percent of predicted positives that are
+#'  actually positive?''
 #'
 #' @return Numeric vector the same length as the number of columns of the
 #'   provided state matrix (the number of predictors in the model) with relative
@@ -25,7 +38,7 @@
 #'
 #' @export
 
-var_imp <- function(state_mat, action_vec, data, outcome, period){
+var_imp <- function(state_mat, action_vec, data, outcome, period, measure){
 
   counter <- 1
   indices <- as.list(rep(NA, length(as.vector(state_mat))))
@@ -48,13 +61,15 @@ var_imp <- function(state_mat, action_vec, data, outcome, period){
     stop("Error in var_imp computation: 
          Results from initial fitness evaluation have missing values or are wrong length.")
   }
-  results1 <- sum(ifelse( results1 == outcome , 1 , 0)) / length(results1)
+  
+  results1 <- performance(results = results1, outcome = outcome, measure = measure)
 
   for (i in seq(length(indices))) {
     state_mat_flipped <- state_mat
     state_mat_flipped[indices[[i]][1],
                       indices[[i]][2]] <- ifelse(state_mat[indices[[i]][1],
                                                            indices[[i]][2]]==1, 2, 1)
+    
     results2 <- fitnessCPP(action_vec, state_mat_flipped, data, period)
 
     if (anyNA(results2) | length(results2)==0){
@@ -62,7 +77,7 @@ var_imp <- function(state_mat, action_vec, data, outcome, period){
            Results from subsequent fitness evaluation have missing values.")
     }
 
-    results2 <- sum(ifelse( results2 == outcome , 1 , 0)) / length(results2)
+    results2 <- performance(results = results2, outcome = outcome, measure = measure)
 
     dif <- results1 - results2
 
@@ -70,7 +85,7 @@ var_imp <- function(state_mat, action_vec, data, outcome, period){
                 indices[[i]][2]] <- dif
   }
 
-  varImp <- as.vector(apply(fitness_mat, MARGIN=2, sum)) # sum each col
+  varImp <- colSums(fitness_mat) # same as: as.vector(apply(fitness_mat, MARGIN=2, sum))
   varImp <- (varImp/ifelse(max(varImp)==0, 0.001, max(varImp)))*100 # make the best be 100
   varImp <- ifelse(varImp < 0, 0, varImp)
   names(varImp) <- colnames(state_mat)

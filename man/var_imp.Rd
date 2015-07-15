@@ -4,7 +4,7 @@
 \alias{var_imp}
 \title{Variable Importance Measure for A FSM Model}
 \usage{
-var_imp(state_mat, action_vec, data, outcome, period)
+var_imp(state_mat, action_vec, data, outcome, period, measure)
 }
 \arguments{
 \item{state_mat}{Numeric matrix with rows as states and columns as
@@ -20,6 +20,20 @@ columns) should be named.}
 \item{outcome}{Numeric vector same length as the number of rows as data.}
 
 \item{period}{Numeric vector same length as the number of rows as data.}
+
+\item{measure}{Optional length one character vector that is either:
+ "accuracy", "sens", "spec", or "ppv". This specifies what measure of
+ predictive performance to use for training and evaluating the model. The
+ default measure is \code{"accuracy"}. However, accuracy can be a problematic
+ measure when the classes are imbalanced in the samples, i.e. if a class the
+ model is trying to predict is very rare. Alternatives to accuracy are
+ available that illuminate different aspects of predictive power. Sensitivity
+ answers the question, `` given that a result is truly an event, what is the
+ probability that the model will predict an event?'' Specificity answers the
+ question, ``given that a result is truly not an event, what is the
+ probability that the model will predict a negative?'' Positive predictive
+ value answers, ``what is the percent of predicted positives that are
+ actually positive?''}
 }
 \value{
 Numeric vector the same length as the number of columns of the

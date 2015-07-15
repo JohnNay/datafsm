@@ -1,3 +1,11 @@
+performance <- function(results, outcome, measure){
+  switch(measure,
+         accuracy = sum(ifelse( results == outcome , 1 , 0)) / length(results),
+         sens = caret::sensitivity(data = factor(results), reference = factor(outcome)),
+         spec = caret::specificity(data = factor(results), reference = factor(outcome)),
+         ppv = caret::posPredValue(data = factor(results), reference = factor(outcome)))
+}
+
 #'Use a Genetic Algorithm to Estimate a Finite-state Machine Model
 #'
 #'\code{evolve_model} uses a genetic algorithm to estimate a finite-state 
@@ -322,7 +330,7 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
   # period. This is only relevant when the predictor variables of the FSM are
   # lagged outcomes that include the previous actions taken by that decision model.
   
-  fitnessR <- function(s){ # functions defined elsewhere: decode_action_vec, decode_state_mat
+  fitnessR <- function(s){ # Functions defined elsewhere in datafsm pkg: decode_action_vec, decode_state_mat, fitnessCPP
     action_vec <- decode_action_vec(s, states, inputs, actions)
     state_mat <- decode_state_mat(s, states, inputs, actions)
     results <- fitnessCPP(action_vec, state_mat, data, period)
@@ -331,11 +339,8 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
       stop("Error: Results from fitness evaluation have missing values.")
     }
     
-    switch(measure,
-           accuracy = sum(ifelse( results == outcome , 1 , 0)) / length(results),
-           sens = caret::sensitivity(data = factor(results), reference = factor(outcome)),
-           spec = caret::specificity(data = factor(results), reference = factor(outcome)),
-           ppv = caret::posPredValue(data = factor(results), reference = factor(outcome)))
+    performance(results = results, outcome = outcome, 
+                measure = measure)
   }
   
   warning_threshold <- 100
@@ -526,7 +531,7 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
     predictive <-  sum(ifelse( results == test_outcome , 1 , 0)) / length(results)
   }
   
-  varImp <- var_imp(state_mat, action_vec, data, outcome, period)
+  varImp <- var_imp(state_mat, action_vec, data, outcome, period, measure)
   
   new("ga_fsm",
       call = call,
