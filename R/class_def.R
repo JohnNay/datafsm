@@ -126,8 +126,8 @@ setMethod("summary", "ga_fsm",
 
 ################################################################################
 #' Plots ga_fsm S4 object's state transition matrix
-#' @describeIn ga_fsm An S4 method for summarizing a ga_fsm S4 object
-#'   
+#' @describeIn ga_fsm
+#'
 #' @param y not used.
 #' @param action_label optional character vector same length as action vector,
 #'   where each ith element corresponds to what that ith element in the action
@@ -139,6 +139,7 @@ setMethod("summary", "ga_fsm",
 #'   lines for a diagram of 2 or more states.
 #'   
 #' @export
+
 setMethod("plot", "ga_fsm",
           function(x, y, 
                    action_label = NULL, 
@@ -236,6 +237,8 @@ setMethod("predict", "ga_fsm",
                             "integer vectors and the columns with the predictor variable data should be",
                             "logical vectors."))
             }
+            
+            ## Data preparation:
             period <- data$period
             
             inputs <- 2^(ncol(data[ , -which(names(data) %in% c("period", "outcome")), drop = FALSE]))
@@ -282,7 +285,7 @@ setMethod("predict", "ga_fsm",
             
             ##########
             if (anyNA(results) | length(results)==0){
-              stop("Error: Results from fitness evaluation have missing values.")
+              warning("Error: Results from fitness evaluation have missing values.")
             }
             
             results

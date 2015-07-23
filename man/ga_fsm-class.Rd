@@ -79,7 +79,7 @@ Extracts slot relevant to estimating the fsm
 
 \item \code{summary}: An S4 method for summarizing a ga_fsm S4 object
 
-\item \code{plot}: An S4 method for summarizing a ga_fsm S4 object
+\item \code{plot}: 
 
 \item \code{estimation_details}: 
 
