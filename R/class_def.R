@@ -41,8 +41,7 @@ setClass("ga_fsm",
 
 ################################################################################
 #' @describeIn ga_fsm An S4 method for printing a ga_fsm S4 object
-#' @param x S4 ga_fsm object
-#' @param ... ignored
+#' @param x S4 ga_fsm object.
 #'  @export
 
 setMethod("print", "ga_fsm",
@@ -135,12 +134,11 @@ setMethod("summary", "ga_fsm",
 #'   vector represents. This will be used to fill in the states (circles) of the
 #'   state transition matrix to be plotted.
 #' @param transition_label optional character vector same length as number of
-#'   columns of state transition matrix
+#'   columns of state transition matrix.
 #' @param curvature optional numeric vector specifying the curvature of the
 #'   lines for a diagram of 2 or more states.
 #'   
 #' @export
-
 setMethod("plot", "ga_fsm",
           function(x, y, 
                    action_label = NULL, 

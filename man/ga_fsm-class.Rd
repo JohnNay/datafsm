@@ -27,9 +27,9 @@
   ...)
 }
 \arguments{
-\item{x}{S4 ga_fsm object}
+\item{x}{S4 ga_fsm object.}
 
-\item{...}{ignored}
+\item{...}{Not currently used.}
 
 \item{object}{S4 ga_fsm object}
 
@@ -44,7 +44,7 @@ vector represents. This will be used to fill in the states (circles) of the
 state transition matrix to be plotted.}
 
 \item{transition_label}{optional character vector same length as number of
-columns of state transition matrix}
+columns of state transition matrix.}
 
 \item{curvature}{optional numeric vector specifying the curvature of the
   lines for a diagram of 2 or more states.}
@@ -60,8 +60,6 @@ logical, it will coerced to logical with \code{base::as.logical()}.}
 \item{type}{Not currently used.}
 
 \item{na.action}{Optional function.}
-
-\item{...}{Not currently used.}
 }
 \description{
 An S4 class to return the results of using a GA to estimate a FSM with
