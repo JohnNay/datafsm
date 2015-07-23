@@ -4,7 +4,8 @@
 \name{ga_fsm-class}
 \alias{estimation_details,ga_fsm-method}
 \alias{ga_fsm-class}
-\alias{plot,ga_fsm-method}
+\alias{plot,ga_fsm,ANY-method}
+\alias{predict,ga_fsm-method}
 \alias{print,ga_fsm-method}
 \alias{show,ga_fsm-method}
 \alias{summary,ga_fsm-method}
@@ -17,10 +18,13 @@
 
 \S4method{summary}{ga_fsm}(object, digits = 3)
 
-\S4method{plot}{ga_fsm}(x, y, action_label = NULL, transition_label = NULL,
-  curvature = c(0.3, 0.6, 0.8))
+\S4method{plot}{ga_fsm,ANY}(x, y, action_label = NULL,
+  transition_label = NULL, curvature = c(0.3, 0.6, 0.8))
 
 \S4method{estimation_details}{ga_fsm}(x)
+
+\S4method{predict}{ga_fsm}(object, data, type = "prob", na.action = na.omit,
+  ...)
 }
 \arguments{
 \item{x}{S4 ga_fsm object}
@@ -44,6 +48,20 @@ columns of state transition matrix}
 
 \item{curvature}{optional numeric vector specifying the curvature of the
   lines for a diagram of 2 or more states.}
+
+\item{data}{data.frame that has columns named "period" and "outcome" (period
+is the time period that the outcome action was taken), and the rest of the
+columns are predictors, ranging from one to three predictors. All of the
+(3-5 columns) should be named. The period and outcome columns should be
+integer vectors and the columns with the predictor variable data should be
+logical vectors (\code{TRUE, FALSE}). If the predictor variable data is not
+logical, it will coerced to logical with \code{base::as.logical()}.}
+
+\item{type}{Not currently used.}
+
+\item{na.action}{Optional function.}
+
+\item{...}{Not currently used.}
 }
 \description{
 An S4 class to return the results of using a GA to estimate a FSM with
@@ -66,6 +84,8 @@ Extracts slot relevant to estimating the fsm
 \item \code{plot}: An S4 method for summarizing a ga_fsm S4 object
 
 \item \code{estimation_details}: 
+
+\item \code{predict}: 
 }}
 \section{Slots}{
 

@@ -23,21 +23,22 @@ int predictor_lookup(IntegerVector x){
 }
 
 //' Fitness Function in C++
-//'
-//' A generated action vector and state matrix are input and this function
+//' 
+//' A generated action vector and state matrix are input and this function 
 //' returns a numeric vector of the same length as the \code{outcome}. 
-//' \code{evolve_model} then computes a fitness score for that potential
-//' solution FSM by comparing it to the provided \code{outcome}. This is
-//' repeated for every FSM in the population and then the probability of
-//' selection for the next generation is set to be proportional to the fitness
-//' scores. The function aborts the user aborts in R, checking every 1000
-//' iterations.
+//' \code{evolve_model} then computes a fitness score for that potential 
+//' solution FSM by comparing it to the provided \code{outcome}. This is 
+//' repeated for every FSM in the population and then the probability of 
+//' selection for the next generation is set to be proportional to the fitness 
+//' scores. This function is also used in the predict method for the resulting
+//' final model that is returned. The function aborts the user aborts in R,
+//' checking every 1000 iterations.
 //' 
 //' @param action_vec Integer Vector.
 //' @param state_mat Integer Matrix.
 //' @param covariates Integer Matrix.
 //' @param period Integer Vector.
-//'
+//'   
 //' @export
 //' @useDynLib datafsm
 //' @importFrom Rcpp sourceCpp
@@ -67,7 +68,7 @@ IntegerVector fitnessCPP(IntegerVector action_vec, IntegerMatrix state_mat, Inte
       int history = predictor_lookup(these_covariates);
       
       if (history > covariates.ncol() || history < 0) 
-        Rprintf("Illegal value for history: %d.\n", history);
+        Rcpp::stop("Illegal value for history: %d.\n", history);
       // Not using R indexing convention for history anymore, just for state
       
       old_state = state;

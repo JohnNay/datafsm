@@ -205,3 +205,88 @@ setGeneric("estimation_details", function(x){
 setMethod("estimation_details", "ga_fsm",
           function(x) slot(x, "GA")
 )
+
+################################################################################
+#' @describeIn ga_fsm
+#' @param type Not currently used.
+#' @param na.action Optional function.
+#' @param ... Not currently used.
+#' @inheritParams evolve_model
+#' 
+#' @export
+setMethod("predict", "ga_fsm",
+          function(object, data,
+                   type = "prob", na.action = na.omit, ...){
+            
+            ## Data-related errors:
+            if (missing(data)) 
+              stop(paste("You must supply data. At the very least, you can supply data.",
+                         "This should be a data.frame that has columns named 'period' and 'outcome' (period",
+                         "is the time period that the outcome action was taken), and the rest of the",
+                         "columns are predictors, ranging from one to three predictors. All of the",
+                         "(3-5 columns) should be named. The period and outcome columns should be",
+                         "integer vectors and the columns with the predictor variable data should be",
+                         "logical vectors."))
+            if(!is.data.frame(data)) {
+              data <- as.data.frame(data)
+              warning(paste("You did not supply a data.frame for 'data' argument of this function",
+                            "so we converted it to one. To ensure this works right, run this again with a",
+                            "data.frame that has columns named 'period' and 'outcome' (period",
+                            "is the time period that the outcome action was taken), and the rest of the",
+                            "columns are predictors, ranging from one to three predictors. All of the",
+                            "(3-5 columns) should be named. The period and outcome columns should be",
+                            "integer vectors and the columns with the predictor variable data should be",
+                            "logical vectors."))
+            }
+            period <- data$period
+            
+            inputs <- 2^(ncol(data[ , -which(names(data) %in% c("period", "outcome")), drop = FALSE]))
+            
+            # change any non-logical predictor variable vectors to logical
+            data[ , -which(names(data) %in% c("period", "outcome"))] <-
+              data.frame(lapply(data[ , -which(names(data) %in% c("period", "outcome"))],
+                                function(x) {
+                                  if (class(x)!="logical") {
+                                    as.logical(x)
+                                  } else {
+                                    x
+                                  }}))
+            # replace all NA's with 0 or 1 so these rows are not dropped
+            # this works fine if the NAs are only for the first period play bc
+            # then the predictor columns dont make a difference bc the FSM will initialize
+            # with the same action regardless of the predictors at that time
+            # but this would bias the results if NA's are occuring in predictors in other periods
+            # so return an error for that:
+            if (any(!complete.cases(data) & !data$period == 1))
+              stop(paste("Error: You have missing values in your training data somewhere other than the first period interactions.",
+                         "You can only have missing values for predictor columns, AND these must be in rows where period==1."))
+            data[is.na(data)] <- TRUE
+            
+            names <- colnames(data[ , -which(names(data) %in% c("period", "outcome")), drop = FALSE])
+            
+            if (length(names)==1){
+              form <- paste("outcome ~ 0 +", names, sep=" ")
+              data <- model.matrix(eval(parse(text=form)), data)
+            } else {
+              predictors <- paste(names, collapse=":")
+              form <- paste("outcome ~ 0 +", predictors, sep=" ")
+              data <- model.matrix(eval(parse(text=form)), data)
+            }
+            
+            if (ncol(data) != inputs)
+              stop(paste("Error: At least one of your predictor variables in your data",
+                         "does not have exactly 2 levels."))
+            
+            ##########
+            state_mat <- object@state_mat
+            action_vec <-  object@action_vec
+            results <- fitnessCPP(action_vec, state_mat, data, period)
+            
+            ##########
+            if (anyNA(results) | length(results)==0){
+              stop("Error: Results from fitness evaluation have missing values.")
+            }
+            
+            results
+          }
+)

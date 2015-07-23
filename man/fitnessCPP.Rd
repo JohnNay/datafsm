@@ -22,7 +22,8 @@ returns a numeric vector of the same length as the \code{outcome}.
 solution FSM by comparing it to the provided \code{outcome}. This is
 repeated for every FSM in the population and then the probability of
 selection for the next generation is set to be proportional to the fitness
-scores. The function aborts the user aborts in R, checking every 1000
-iterations.
+scores. This function is also used in the predict method for the resulting
+final model that is returned. The function aborts the user aborts in R,
+checking every 1000 iterations.
 }
 
