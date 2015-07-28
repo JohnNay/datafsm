@@ -204,8 +204,6 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
   }
   period <- data$period
   outcome <- data$outcome
-  test_period <- test_data$period
-  test_outcome <- test_data$outcome
   
   nzvs <- caret::nearZeroVar(data[ , -which(names(data) %in% c("period", "outcome")), drop=FALSE],
                              freqCut = 95/5, uniqueCut=10)
@@ -229,6 +227,9 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
   if (length(outcome) == 0) stop("Error: The outcome is zero length.")
   if (missing(seed)) {
     seed <- floor(runif(1, 1,101))
+    if(verbose) cat(paste("We set a seed for you to make this reproducible. It is ", seed, ".",
+                          " If you want the same results, next time you run this with the same settings,",
+                          " also set the seed argument of this function to ", seed, ".", sep=""))
     message(paste("We set a seed for you to make this reproducible. It is ", seed, ".",
                   " If you want the same results, next time you run this with the same settings,",
                   " also set the seed argument of this function to ", seed, ".", sep=""))
@@ -469,9 +470,13 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
   if (missing(test_data)){
     predictive <- "No test data provided. Provide some to get more accurate estimation of generalization power."
   } else {
+    
+    test_period <- test_data$period
+    test_outcome <- test_data$outcome
+    
     if (!all.equal(unique(test_outcome), as.numeric(unique(seq(length(unique(test_outcome))))),
                    ignore.environment = TRUE)){
-      stop(paste("Error: The actions in the outcome column of the test data are not the right values.",
+      warning(paste("Error: The actions in the outcome column of the test data are not the right values.",
                  "There should be actions sequenced from 1 to however many actions that are feasible.",
                  "E.g., if there are two feasible actions, then the outcome column should be comprised",
                  "of only 1s and 2s, with at least one 1 and and at least one 2. If there are three feasible",
@@ -498,7 +503,7 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
     # but this would bias the results if NA's are occuring in predictors in other periods
     # so return an error for that:
     if (any(!complete.cases(test_data) & !test_data$period == 1))
-      stop("Error: You have missing values in your test data somewhere other than the first period interactions. You can only have missing values for predictor columns, AND these must be in rows where period==1.")
+      warning("Error: You have missing values in your test data somewhere other than the first period interactions. You can only have missing values for predictor columns, AND these must be in rows where period==1.")
     test_data[is.na(test_data)] <- TRUE
     
     names <- colnames(test_data[ , -which(names(test_data) %in% c("period", "outcome"))])
@@ -512,23 +517,26 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
       test_data <- model.matrix(eval(parse(text=form)), test_data)
     }
     
-    if (length(names) > 3) stop(paste("Error: You have more than 3 predictors in your test data.",
+    if (length(names) > 3) warning(paste("Error: You have more than 3 predictors in your test data.",
                                       "Your model will be too complicated.",
                                       "Do some type of feature selection to choose less",
                                       "than 4 predictors and then use the data.frame",
                                       "with just those features next time."))
     
     if (ncol(test_data) != test_inputs)
-      stop(paste("Error: At least one of your predictor variables in your test data",
+      warning(paste("Error: At least one of your predictor variables in your test data",
                  "does not have exactly 2 levels."))
     
-    test_cols <- colnames(test_data)
+    if(colnames(test_data) != colnames(data))
+      warning("colnames(test_data) != colnames(data) and therefore test results will not be useful.")
     
     results <- fitnessCPP(action_vec, state_mat, test_data, test_period)
     if (anyNA(results) | length(results)==0){
-      stop("Error: Results from fitness evaluation have missing values.")
+      warning("Error: Results from fitness evaluation have missing values.")
     }
-    predictive <-  sum(ifelse( results == test_outcome , 1 , 0)) / length(results)
+    
+    predictive <- performance(results = results, outcome = test_outcome, 
+                              measure = measure)
   }
   
   varImp <- var_imp(state_mat, action_vec, data, outcome, period, measure)
