@@ -229,10 +229,10 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
     seed <- floor(runif(1, 1,101))
     if(verbose) cat(paste("We set a seed for you to make this reproducible. It is ", seed, ".",
                           " If you want the same results, next time you run this with the same settings,",
-                          " also set the seed argument of this function to ", seed, ".", sep=""))
-    message(paste("We set a seed for you to make this reproducible. It is ", seed, ".",
-                  " If you want the same results, next time you run this with the same settings,",
-                  " also set the seed argument of this function to ", seed, ".", sep=""))
+                          " also set the seed argument of this function to ", seed, ".\n", sep=""))
+    msg <- paste0(msg, paste("We set a seed for you to make this reproducible. It is ", seed, ".",
+                             " If you want the same results, next time you run this with the same settings,",
+                             " also set the seed argument of this function to ", seed, ".\n", sep=""))
   }
   if (missing(actions)) {
     if(length(unique(outcome))==1){
@@ -527,7 +527,7 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
       warning(paste("Error: At least one of your predictor variables in your test data",
                  "does not have exactly 2 levels."))
     
-    if(colnames(test_data) != colnames(data))
+    if(!all(colnames(test_data) == colnames(data)))
       warning("colnames(test_data) != colnames(data) and therefore test results will not be useful.")
     
     results <- fitnessCPP(action_vec, state_mat, test_data, test_period)
