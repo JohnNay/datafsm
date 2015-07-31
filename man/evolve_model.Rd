@@ -85,8 +85,8 @@ package.}
 iterations for stopping the GA evolution. A larger number will increase the
 probability of finding a very good solution but will also increase the
 computation time. This is passed to the GA::ga() function of the \strong{GA}
-package. maxiter scaled by how many parameters are in the model: maxiter +
-((maxiter*(nBits^2)) / maxiter).}
+package. \code{maxiter} is scaled by how many parameters are in the model:
+\code{maxiter <- maxiter + ((maxiter*(nBits^2)) / maxiter)}.}
 
 \item{run}{Optional numeric vector length one specifying max number of
 consecutive iterations without improvement in best fitness score for
