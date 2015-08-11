@@ -39,7 +39,7 @@ plot(res, action_label = c("C", "D"))
 suppressMessages(library(GA))
 plot(estimation_details(res))
 
-## ---- eval=TRUE, include=TRUE--------------------------------------------
+## ---- eval=TRUE, include=TRUE, render.args = list(help = list(sections = list("usage", "arguments", "details", "references")))----
 ?evolve_model
 
 ## ---- eval=TRUE, include=TRUE--------------------------------------------

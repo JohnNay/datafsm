@@ -113,7 +113,7 @@ plot(estimation_details(res))
 # Documentation for `evolve_model`
 
 Check out the documentation for the main function of the package to learn about all the options:
-```{r, eval=TRUE, include=TRUE}
+```{r, eval=TRUE, include=TRUE, render.args = list(help = list(sections = list("usage", "arguments", "details", "references")))}
 ?evolve_model
 ````
 
