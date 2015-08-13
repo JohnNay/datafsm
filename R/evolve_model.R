@@ -254,7 +254,8 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
   
   # So we are assured that the action vec will just need to be comprised of the possible
   # number of actions in the data:
-  if (!all.equal(unique(outcome), as.numeric(unique(seq(length(unique(outcome))))),
+  if (!all.equal(as.integer(unique(outcome)), 
+                 as.integer(unique(seq(length(unique(outcome))))),
                  ignore.environment = TRUE)){
     stop(paste("Error: The actions in the outcome column of the data are not the right values.",
                "There should be actions sequenced from 1 to however many actions that are feasible.",
