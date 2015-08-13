@@ -18,8 +18,9 @@
 
 \S4method{summary}{ga_fsm}(object, digits = 3)
 
-\S4method{plot}{ga_fsm,ANY}(x, y, action_label = NULL,
-  transition_label = NULL, curvature = c(0.3, 0.6, 0.8))
+\S4method{plot}{ga_fsm,ANY}(x, y, maintitle = "Transition Diagram",
+  action_label = NULL, transition_label = NULL, curvature = c(0.3, 0.6,
+  0.8))
 
 \S4method{estimation_details}{ga_fsm}(x)
 
@@ -37,6 +38,8 @@
 print, default is 3.}
 
 \item{y}{not used.}
+
+\item{maintitle}{optional character vector}
 
 \item{action_label}{optional character vector same length as action vector,
 where each ith element corresponds to what that ith element in the action

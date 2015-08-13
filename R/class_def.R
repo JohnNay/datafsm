@@ -129,6 +129,7 @@ setMethod("summary", "ga_fsm",
 #' @describeIn ga_fsm
 #'
 #' @param y not used.
+#' @param maintitle optional character vector 
 #' @param action_label optional character vector same length as action vector,
 #'   where each ith element corresponds to what that ith element in the action
 #'   vector represents. This will be used to fill in the states (circles) of the
@@ -141,7 +142,7 @@ setMethod("summary", "ga_fsm",
 #' @export
 
 setMethod("plot", "ga_fsm",
-          function(x, y, 
+          function(x, y, maintitle = "Transition Diagram",
                    action_label = NULL, 
                    transition_label = NULL,
                    curvature = c(0.3, 0.6, 0.8)) {
@@ -172,18 +173,18 @@ setMethod("plot", "ga_fsm",
                 }
               }
             }
-              
-            p <- diagram::plotmat(M, 
-                                  pos = length(action_vec), 
-                                  curve = curvature[(length(action_vec)-1)], 
-                                  name = action_label, 
-                                  lwd = 1, box.lwd = 2, 
-                                  cex.txt = 0.8, 
-                                  box.type = "circle", 
-                                  box.col = "lightblue",
-                                  box.prop = 1)
             
-            invisible(p)
+            diagram::plotmat(M, 
+                             pos = length(action_vec), 
+                             curve = curvature[(length(action_vec)-1)], 
+                             name = action_label, 
+                             lwd = 1, box.lwd = 2, 
+                             cex.txt = 0.8, 
+                             box.type = "circle", 
+                             box.col = "lightblue",
+                             box.prop = 1,
+                             add = FALSE,
+                             main  = maintitle)
           }
 )
 
