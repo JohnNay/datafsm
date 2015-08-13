@@ -474,7 +474,9 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
     test_period <- test_data$period
     test_outcome <- test_data$outcome
     
-    if (!all.equal(unique(test_outcome), as.numeric(unique(seq(length(unique(test_outcome))))),
+    
+    if (!identical(sort(as.integer(unique(test_outcome))), 
+                   sort(as.integer(unique(seq(length(unique(test_outcome)))))),
                    ignore.environment = TRUE)){
       warning(paste("Error: The actions in the outcome column of the test data are not the right values.",
                  "There should be actions sequenced from 1 to however many actions that are feasible.",
