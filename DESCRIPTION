@@ -38,7 +38,8 @@ LinkingTo: Rcpp
 Suggests: 
     doParallel,
     testthat,
-    knitr
+    knitr,
+    printr
 Imports: 
     caret,
     diagram,
