@@ -6,9 +6,16 @@ citEntry(entry = "InProceedings",
                                    as.person("Jonathan M. Gilligan")),
          booktitle      = "Proceedings of the 2015 Winter Simulation Conference",
          year         = "2015",
-         
+         editor       = personList(as.person("L. Yilmaz"),
+                                   as.person("W.K.V. Chan"),
+                                   as.person("I. Moon"),
+                                   as.person("T.M.K. Roeder"),
+                                   as.person("C. Macal"),
+                                   as.person("M. Rosetti")),
          textVersion  =
-           paste("John J. Nay, Jonathan M. Gilligan (2015).",
-                 "Data-Driven Dynamic Decision Models.",
-                 "Proceedings of the 2015 Winter Simulation Conference.")
+             paste("John J. Nay, Jonathan M. Gilligan (2015)",
+                   '"Data-Driven Dynamic Decision Models,"',
+                   "in",
+                   "L. Yilmaz et al. (eds.),",
+                   "Proc. 2015 Winter Simulation Conf.")
 )

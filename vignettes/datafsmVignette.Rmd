@@ -1,7 +1,7 @@
 ---
 title: "Introduction to datafsm"
 author: "John J. Nay and Jonathan M. Gilligan"
-date: "`r Sys.Date()`"
+date: "August 14, 2015"
 output:
   rmarkdown::html_vignette:
     fig_caption: yes
