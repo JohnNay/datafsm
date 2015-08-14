@@ -1,0 +1,14 @@
+citHeader("To cite datafsm in publications use:")
+
+citEntry(entry = "InProceedings",
+         title        = "Data-Driven Dynamic Decision Models",
+         author       = personList(as.person("John J. Nay"),
+                                   as.person("Jonathan M. Gilligan")),
+         booktitle      = "Proceedings of the 2015 Winter Simulation Conference",
+         year         = "2015",
+         
+         textVersion  =
+           paste("John J. Nay, Jonathan M. Gilligan (2015).",
+                 "Data-Driven Dynamic Decision Models.",
+                 "Proceedings of the 2015 Winter Simulation Conference.")
+)
