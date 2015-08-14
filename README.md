@@ -1,23 +1,40 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![Build Status](https://travis-ci.org/JohnNay/datafsm.png?branch=master)](https://travis-ci.org/JohnNay/datafsm)
 
-This R package implements our method for automatically generating models of dynamic decision-making that both have strong predictive power and are interpretable in human terms. This is useful for designing empirically grounded agent-based simulations and for gaining direct insight into observed dynamic processes. We use an efficient model representation and a genetic algorithm-based estimation process to generate simple deterministic approximations that explain most of the structure of complex stochastic processes. The GA is implemented with the GA package ([Scrucca 2013](http://www.jstatsoft.org/v53/i04/)). Our method, implemented in C++ and R, scales well to large data sets. We have applied the package to empirical data, and demonstrated the method's ability to recover known data-generating processes by simulating data with agent-based models and correctly deriving the underlying decision models for multiple agent models and degrees of stochasticity.
+Overview
+========
 
-A user of our package can estimate models by providing their data in a common "panel data" matrix format. The package is designed to estimate any time series classification model that uses a small number of binary predictor variables and moves back and forth between the values of the outcome variable over time. Larger sets of predictor variables can be reduced to smaller sets with cross-validation. Although the predictor variables must be binary, a quantitative variable can be converted into binary by division of the observed values into high/low classes. Future releases of the package may include additional estimation methods to complement genetic algorithm optimization.
+The **datafsm** package implements a method for automatically generating models of dynamic processes that both have strong predictive power and are interpretable in human terms. We use an efficient model representation and a genetic algorithm-based estimation process. This paper offers a brief overview of the software and demonstrates how to use it.
 
-If you use this package, cite: "Nay, J., Gilligan, J. 2015. Data-Driven Dynamic Decision Models. Proceedings of the 2015 Winter Simulation Conference".
+Introduction
+============
 
-This work is supported by U.S. National Science Foundation grants EAR-1416964 and EAR-1204685.
+This package implements our method for automatically generating models of dynamic decision-making that both have strong predictive power and are interpretable in human terms. We use an efficient model representation and a genetic algorithm-based estimation process to generate simple deterministic approximations that explain most of the structure of complex stochastic processes. The genetic algorithm is implemented with the **GA** package ([Scrucca 2013](http://www.jstatsoft.org/v53/i04/)). Our method, implemented in C++ and R, scales well to large data sets. We have applied the package to empirical data, and demonstrated the method's ability to recover known data-generating processes by simulating data with agent-based models and correctly deriving the underlying decision models for multiple agent models and degrees of stochasticity.
 
-Install and load the latest release of the package from GitHub using the `devtools` package:
+A user of our package can estimate models by providing their data in a common "panel data" format. The package is designed to estimate time series classification models that use a small number of binary predictor variables and move back and forth between the values of the outcome variable over time. Larger sets of predictor variables can be reduced to smaller sets with cross-validation. Although the predictor variables must be binary, a quantitative variable can be converted into binary by division of the observed values into high/low classes. Future releases of the package may include additional estimation methods to complement genetic algorithm optimization.
+
+Installation
+============
+
+Install and load the latest release of the package from [GitHub](https://github.com/JohnNay) using the `devtools` package:
 
 ``` r
+# If not already installed, install devtools:
 install.packages("devtools")
+# Use devtools to install datafsm:
 devtools::install_github("JohnNay/datafsm")
+# Load and attach datafsm into your R session, making its functions available:
 library(datafsm)
 ```
 
-To show how it works, create fake data:
+If you use this package, cite:
+
+> "Nay, J., Gilligan, J. 2015. Data-Driven Dynamic Decision Models. Proceedings of the 2015 Winter Simulation Conference"
+
+Fake Data Example
+=================
+
+To quickly show it works, we can create fake data:
 
 ``` r
 cdata <- data.frame(period = rep(1:10, 1000),
@@ -26,16 +43,51 @@ cdata <- data.frame(period = rep(1:10, 1000),
                     other.decision1 = sample(1:0, 10000, TRUE))
 ```
 
-Estimate a model with that data:
+The only required argument of the main function of the package, `evolve_model`, is a `data.frame` object, which must have columns named "period" and "outcome" (period is the time period that the outcome action was taken), and the rest of the columns are predictors, ranging from one to three predictors. Each row of the `data.frame` is an observational unit, an action taken at a particular time and any relevant variables for that time. All of the (3-5 columns) should be named. The period and outcome columns should be integer vectors -- e.g. `c(1,2,1)` -- and the columns with the predictor variable data should be logical vectors -- e.g. `c(TRUE, FALSE, FALSE)`. If the predictor variable data is not a logical valued vector, it will coerced to logical with `as.logical()`.
+
+Here are the first eleven rows of this fake data:
+
+|  period|  outcome|  my.decision1|  other.decision1|
+|-------:|--------:|-------------:|----------------:|
+|       1|        1|             0|                0|
+|       2|        2|             1|                0|
+|       3|        1|             0|                0|
+|       4|        2|             1|                1|
+|       5|        1|             0|                0|
+|       6|        2|             0|                0|
+|       7|        1|             0|                1|
+|       8|        2|             1|                0|
+|       9|        1|             0|                0|
+|      10|        2|             0|                1|
+|       1|        1|             0|                0|
+
+We can estimate a model with that data. `evolve_model` uses a genetic algorithm to estimate a finite-state machine (FSM) model, primarily for understanding and predicting decision-making. This is the main function of the `datafsm` package. It relies on the `GA` package for genetic algorithm optimization. We chose to use a GA because GAs perform well in rugged search spaces to solve integer optimization problems, are a natural complement to our binary representation of FSMs, and are easily parallelized.
+
+`evolve_model` takes data on predictors and data on the outcome and automatically creates a fitness function that takes training data, an action vector that `evolve_model` generates, and a state matrix `evolve_model` generates as input and returns numeric vector of the same length as the `outcome` column of the training data. `evolve_model` then computes a fitness score for that potential solution FSM by comparing it to the provided `outcome` in the real training data. This is repeated for every FSM in the population and then the probability of selection for the next generation is proportional to the fitness scores. The default is also for the function to call itself recursively while varying the number of states inside a cross-validation loop in order to estimate the optimal number of states.
+
+If the argument `parallel` is set to `TRUE`, then these evaluations are distributed across the available processors of the computer using the `doParallel` functions; otherwise, the evalulations of fitness are conducted sequentially. Because this fitness function that `evolve_model` creates must loop through all the training data everytime it is evaluated and we need to evaluate many possible solution FSMs, the fitness function is implemented in C++ so it is very fast.
 
 ``` r
-result <- evolve_model(cdata)
+res <- evolve_model(cdata)
 ```
+
+`evolve_model` evolves the models on training data and then, if a test set is provided, uses the best solution to make predictions on test data. Finally, the function returns the GA object and the decoded version of the best string in the population. Formally, the function return an `S4` object with slots for:
+
+-   `call` Language from the call of the function.
+-   `actions` Numeric vector with the number of actions.
+-   `states` Numeric vector with the number of states.
+-   `GA` S4 object created by `ga()` from the `GA` package.
+-   `state_mat` Numeric matrix with rows as states and columns as predictors.
+-   `action_vec` Numeric vector indicating what action to take for each state.
+-   `predictive` Numeric vector of length one with test data accuracy if test data was supplied; otherwise, a character vector with a message that the user should provide test data for better estimate of generalizable performance.
+-   `varImp` Numeric vector same length as number of columns of state matrix with relative importance scores for each predictor.
+-   `timing` Numeric vector length one with the total elapsed time it took `evolve_model` to execute.
+-   `diagnostics` Character vector length one, designed to be printed with `base::cat()`.
 
 Use the summary and plot methods on the output of the `evolve_model()` function:
 
 ``` r
-summary(result)
+summary(res)
 #>                                     
 #> Gentic Algorithm Settings: 
 #> Population size       =  75 
@@ -77,29 +129,35 @@ summary(result)
 #> 
 #> Variable Importance: 
 #> my.decision1FALSE:other.decision1FALSE 
-#>                                   96.9 
+#>                                   95.1 
 #>  my.decision1TRUE:other.decision1FALSE 
-#>                                   98.3 
-#>  my.decision1FALSE:other.decision1TRUE 
 #>                                  100.0 
+#>  my.decision1FALSE:other.decision1TRUE 
+#>                                   96.1 
 #>   my.decision1TRUE:other.decision1TRUE 
-#>                                   96.3
-plot(result, action_label = c("C", "D"))
+#>                                   96.7
+plot(res, action_label = c("C", "D"))
 ```
 
-![](README-unnamed-chunk-6-1.png)
+![Result of `plot()` method call on `ga_fsm` object.](README-unnamed-chunk-7-1.png)
+
+Use the `estimation_details` method on the output of the `evolve_model()` function:
+
+``` r
+suppressMessages(library(GA))
+plot(estimation_details(res))
+```
+
+![Result of `plot()` method call on ga object, which is obtained by calling `estimation_details()` on `ga_fsm` object.](README-unnamed-chunk-8-1.png)
+
+Documentation for `evolve_model`
+================================
 
 Check out the documentation for the main function of the package to learn about all the options:
 
 ``` r
 ?evolve_model
 #> Use a Genetic Algorithm to Estimate a Finite-state Machine Model
-#> 
-#> Description:
-#> 
-#>      'evolve_model' uses a genetic algorithm to estimate a finite-state
-#>      machine model, primarily for understanding and predicting
-#>      decision-making.
 #> 
 #> Usage:
 #> 
@@ -192,9 +250,9 @@ Check out the documentation for the main function of the package to learn about 
 #>           iterations for stopping the GA evolution. A larger number
 #>           will increase the probability of finding a very good solution
 #>           but will also increase the computation time. This is passed
-#>           to the GA::ga() function of the *GA* package. maxiter scaled
-#>           by how many parameters are in the model: maxiter +
-#>           ((maxiter*(nBits^2)) / maxiter).
+#>           to the GA::ga() function of the *GA* package. 'maxiter' is
+#>           scaled by how many parameters are in the model: 'maxiter <-
+#>           maxiter + ((maxiter*(nBits^2)) / maxiter)'.
 #> 
 #>      run: Optional numeric vector length one specifying max number of
 #>           consecutive iterations without improvement in best fitness
@@ -259,34 +317,14 @@ Check out the documentation for the main function of the package to learn about 
 #>      for the details of the slots (objects) that this type of object
 #>      will have.
 #> 
-#> Value:
-#> 
-#>      Returns an S4 object of class ga_fsm. See ga_fsm for the details
-#>      of the slots (objects) that this type of object will have and for
-#>      information on the methods that can be used to summarize the
-#>      calling and execution of 'evolve_model()', including 'summary',
-#>      'print', and 'plot'. Timing measurement is in seconds.
-#> 
 #> References:
 #> 
 #>      Luca Scrucca (2013). GA: A Package for Genetic Algorithms in R.
 #>      Journal of Statistical Software, 53(4), 1-37. URL
 #>      http://www.jstatsoft.org/v53/i04/.
-#> 
-#> Examples:
-#> 
-#>      # Create data:
-#>      cdata <- data.frame(period = rep(1:10, 1000),
-#>                         outcome = rep(1:2, 5000),
-#>                         my.decision1 = sample(1:0, 10000, TRUE),
-#>                         other.decision1 = sample(1:0, 10000, TRUE))
-#>      (res <- evolve_model(cdata, cv=FALSE))
-#>      summary(res)
-#>      plot(res, action_label = c("C", "D"))
-#>      library(GA)
-#>      plot(estimation_details(res))
-#>      
-#>      # In scripts, it can makes sense to set parallel to
-#>      # 'as.logical(Sys.info()['sysname'] != 'Windows')'.
-#> 
 ```
+
+Acknowledgements
+================
+
+This work is supported by U.S. National Science Foundation grants EAR-1416964 and EAR-1204685.
