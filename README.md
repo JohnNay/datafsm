@@ -29,7 +29,7 @@ library(datafsm)
 
 If you use this package, cite:
 
-> "Nay, J., Gilligan, J. 2015. Data-Driven Dynamic Decision Models. Proceedings of the 2015 Winter Simulation Conference"
+> John J. Nay, Jonathan M. Gilligan (2015) "Data-Driven Dynamic Decision Models," in L. Yilmaz et al. (eds.), Proc. 2015 Winter Simulation Conf.
 
 Fake Data Example
 =================
@@ -49,17 +49,17 @@ Here are the first eleven rows of this fake data:
 
 |  period|  outcome|  my.decision1|  other.decision1|
 |-------:|--------:|-------------:|----------------:|
-|       1|        1|             0|                0|
-|       2|        2|             1|                0|
+|       1|        1|             1|                1|
+|       2|        2|             0|                0|
 |       3|        1|             0|                0|
 |       4|        2|             1|                1|
-|       5|        1|             0|                0|
-|       6|        2|             0|                0|
-|       7|        1|             0|                1|
+|       5|        1|             1|                0|
+|       6|        2|             1|                0|
+|       7|        1|             1|                0|
 |       8|        2|             1|                0|
 |       9|        1|             0|                0|
-|      10|        2|             0|                1|
-|       1|        1|             0|                0|
+|      10|        2|             0|                0|
+|       1|        1|             0|                1|
 
 We can estimate a model with that data. `evolve_model` uses a genetic algorithm to estimate a finite-state machine (FSM) model, primarily for understanding and predicting decision-making. This is the main function of the `datafsm` package. It relies on the `GA` package for genetic algorithm optimization. We chose to use a GA because GAs perform well in rugged search spaces to solve integer optimization problems, are a natural complement to our binary representation of FSMs, and are easily parallelized.
 
@@ -102,7 +102,7 @@ summary(res)
 #> 
 #> Results: 
 #> 
-#> Iterations For This Run              = 6 
+#> Iterations For This Run              = 9 
 #> Training Data Fitness Function Value = 1 
 #> Test Data Fitness Function Value     = No test data provided. Provide some to get more accurate estimation of generalization power. 
 #> 
@@ -129,13 +129,13 @@ summary(res)
 #> 
 #> Variable Importance: 
 #> my.decision1FALSE:other.decision1FALSE 
-#>                                   95.1 
+#>                                   97.9 
 #>  my.decision1TRUE:other.decision1FALSE 
-#>                                  100.0 
+#>                                   99.4 
 #>  my.decision1FALSE:other.decision1TRUE 
-#>                                   96.1 
+#>                                  100.0 
 #>   my.decision1TRUE:other.decision1TRUE 
-#>                                   96.7
+#>                                   98.8
 plot(res, action_label = c("C", "D"))
 ```
 

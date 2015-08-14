@@ -54,8 +54,7 @@ library(printr)
 
 If you use this package, cite: 
 
-> "Nay, J., Gilligan, J. 2015. Data-Driven Dynamic Decision Models. 
-> Proceedings of the 2015 Winter Simulation Conference"
+> John J. Nay, Jonathan M. Gilligan (2015) "Data-Driven Dynamic Decision Models," in L. Yilmaz et al. (eds.), Proc. 2015 Winter Simulation Conf.
 
 # Fake Data Example
 
