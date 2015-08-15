@@ -1,7 +1,7 @@
 ---
 title: "Introduction to datafsm"
 author: "John J. Nay and Jonathan M. Gilligan"
-date: "August 14, 2015"
+date: "August 15, 2015"
 output:
   rmarkdown::html_vignette:
     fig_caption: yes
@@ -57,7 +57,7 @@ knitr::kable(head(cdata, 11))
 
 We can estimate a model with that data. `evolve_model` uses a genetic algorithm to estimate a finite-state machine (FSM) model, primarily for understanding and predicting decision-making. This is the main function of the `datafsm` package. It relies on the `GA` package for genetic algorithm optimization. We chose to use a GA because GAs perform well in rugged search spaces to solve integer optimization problems, are a natural complement to our binary representation of FSMs, and are easily parallelized. 
 
-`evolve_model` takes data on predictors and data on the outcome and automatically creates a fitness function that takes training data, an action vector that `evolve_model` generates, and a state matrix `evolve_model` generates as input and returns numeric vector of the same length as the `outcome` column of the training data. `evolve_model` then computes a fitness score for that potential solution FSM by comparing it to the provided `outcome` in the real training data. This is repeated for every FSM in the population and then the probability of selection for the next generation is proportional to the fitness scores. The default is also for the function to call itself recursively while varying the number of states inside a cross-validation loop in order to estimate the optimal number of states.
+`evolve_model` takes data on predictors and data on the outcome and automatically creates a fitness function that takes training data, an action vector that `evolve_model` generates, and a state matrix `evolve_model` generates as input and returns numeric vector of the same length as the `outcome` column of the training data. `evolve_model` then computes a fitness score for that potential solution FSM by comparing it to the provided `outcome` in the real training data. This is repeated for every FSM in the population and then the probability of selection for the next generation is proportional to the fitness scores. If the argument `cv` is set to `TRUE` the function will call itself recursively while varying the number of states inside a cross-validation loop in order to estimate the optimal number of states, then it will set the number of states to that optimal number and estimate the model on the full training set.
 
 If the argument `parallel` is set to `TRUE`, then these evaluations are distributed across the available processors of the computer using the `doParallel` functions; otherwise, the evalulations of fitness are conducted sequentially. Because this fitness function that `evolve_model` creates must loop through all the training data everytime it is evaluated and we need to evaluate many possible solution FSMs, the fitness function is implemented in C++ so it is very fast.
 

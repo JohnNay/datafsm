@@ -1,9 +1,9 @@
 Package: datafsm
 Title: Estimating Finite State Machine Models from Data
 Version: 0.1.0
-Date: 2015-08-14
-Authors@R: c( person("Nay", "John", email = "john.j.nay@gmail.com", role =
-    c("cre", "aut")), person("Gilligan", "Jonathan", email =
+Date: 2015-08-15
+Authors@R: c( person("Nay", "John J.", email = "john.j.nay@gmail.com", role =
+    c("cre", "aut")), person("Gilligan", "Jonathan M.", email =
     "jonathan.gilligan@vanderbilt.edu", role = "aut") )
 Description: This package implements our method for automatically
     generating models of dynamic decision-making that both have strong
@@ -20,11 +20,7 @@ Description: This package implements our method for automatically
     common "panel data" format. The package is designed to estimate
     time series classification models that use a small number of binary
     predictor variables and move back and forth between the values of the
-    outcome variable over time. Larger sets of predictor variables can be
-    reduced to smaller sets with cross-validation. Although the predictor
-    variables must be binary, a quantitative variable can be converted into
-    binary by division of the observed values into high/low classes.
-    This work was supported by NSF grants
+    outcome variable over time. This work was supported by NSF grants
     EAR-1416964 and EAR-1204685.
 URL: http://johnnay.github.io/datafsm/
 BugReports: https://github.com/JohnNay/datafsm/issues
