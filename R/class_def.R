@@ -206,6 +206,26 @@ setMethod("estimation_details", "ga_fsm",
           function(x) slot(x, "GA")
 )
 
+
+
+################################################################################
+#' Extracts slot of variable importances
+#' @param x S4 ga_fsm object
+#' @export
+
+setGeneric(name = "varImp", function(x){
+  standardGeneric("varImp")
+})
+
+################################################################################
+#' Extracts slot of variable importances
+#' @describeIn ga_fsm
+#'  @export
+
+setMethod("varImp", "ga_fsm",
+          function(x) slot(x, "varImp")
+)
+
 ################################################################################
 #' @describeIn ga_fsm
 #' @param type Not currently used.

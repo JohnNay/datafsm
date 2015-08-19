@@ -9,6 +9,7 @@
 \alias{print,ga_fsm-method}
 \alias{show,ga_fsm-method}
 \alias{summary,ga_fsm-method}
+\alias{varImp,ga_fsm-method}
 \title{An S4 class to return the results of using a GA to estimate a FSM with
 \code{\link{evolve_model}}.}
 \usage{
@@ -23,6 +24,8 @@
   0.8))
 
 \S4method{estimation_details}{ga_fsm}(x)
+
+\S4method{varImp}{ga_fsm}(x)
 
 \S4method{predict}{ga_fsm}(object, data, type = "prob", na.action = na.omit,
   ...)
@@ -73,6 +76,8 @@ Turns ga_fsm S4 object into list of summaries for printing and then prints it.
 Plots ga_fsm S4 object's state transition matrix
 
 Extracts slot relevant to estimating the fsm
+
+Extracts slot of variable importances
 }
 \section{Methods (by generic)}{
 \itemize{
@@ -85,6 +90,8 @@ Extracts slot relevant to estimating the fsm
 \item \code{plot}: 
 
 \item \code{estimation_details}: 
+
+\item \code{varImp}: 
 
 \item \code{predict}: 
 }}
