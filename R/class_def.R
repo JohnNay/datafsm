@@ -274,6 +274,24 @@ setMethod("varImp", "ga_fsm",
 )
 
 ################################################################################
+#' Extracts slot of action_vec
+#' @param x S4 ga_fsm object
+#' @export
+
+setGeneric(name = "action_vec", function(x){
+  standardGeneric("action_vec")
+})
+
+################################################################################
+#' Extracts slot of action_vec
+#' @describeIn ga_fsm
+#'  @export
+
+setMethod("action_vec", "ga_fsm",
+          function(x) slot(x, "action_vec")
+)
+
+################################################################################
 #' Extracts number of states
 #' @export
 

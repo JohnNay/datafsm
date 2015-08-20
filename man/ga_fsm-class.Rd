@@ -2,6 +2,7 @@
 % Please edit documentation in R/class_def.R
 \docType{class}
 \name{ga_fsm-class}
+\alias{action_vec,ga_fsm-method}
 \alias{barplot,ga_fsm-method}
 \alias{best_performance,ga_fsm-method}
 \alias{dotchart,ga_fsm-method}
@@ -36,6 +37,8 @@
 \S4method{best_performance}{ga_fsm}(x)
 
 \S4method{varImp}{ga_fsm}(x)
+
+\S4method{action_vec}{ga_fsm}(x)
 
 \S4method{states}{ga_fsm}(x)
 
@@ -102,6 +105,8 @@ Extracts performance
 
 Extracts slot of variable importances
 
+Extracts slot of action_vec
+
 Extracts number of states
 }
 \section{Methods (by generic)}{
@@ -123,6 +128,8 @@ Extracts number of states
 \item \code{best_performance}: 
 
 \item \code{varImp}: 
+
+\item \code{action_vec}: 
 
 \item \code{states}: 
 
