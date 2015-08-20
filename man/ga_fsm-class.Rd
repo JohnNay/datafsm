@@ -3,6 +3,7 @@
 \docType{class}
 \name{ga_fsm-class}
 \alias{barplot,ga_fsm-method}
+\alias{best_performance,ga_fsm-method}
 \alias{dotchart,ga_fsm-method}
 \alias{estimation_details,ga_fsm-method}
 \alias{ga_fsm-class}
@@ -31,6 +32,8 @@
 \S4method{dotchart}{ga_fsm}(x, labels)
 
 \S4method{estimation_details}{ga_fsm}(x)
+
+\S4method{best_performance}{ga_fsm}(x)
 
 \S4method{varImp}{ga_fsm}(x)
 
@@ -95,6 +98,8 @@ Plots ga_fsm S4 object's variable importances
 
 Extracts slot relevant to estimating the fsm
 
+Extracts performance
+
 Extracts slot of variable importances
 
 Extracts number of states
@@ -114,6 +119,8 @@ Extracts number of states
 \item \code{dotchart}: 
 
 \item \code{estimation_details}: 
+
+\item \code{best_performance}: 
 
 \item \code{varImp}: 
 

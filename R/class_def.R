@@ -237,7 +237,23 @@ setMethod("estimation_details", "ga_fsm",
           function(x) slot(x, "GA")
 )
 
+################################################################################
+#' Extracts performance
+#' @param x S4 ga_fsm object
+#' @export
 
+setGeneric("best_performance", function(x){
+  standardGeneric("best_performance")
+})
+
+################################################################################
+#' Extracts performance
+#' @describeIn ga_fsm
+#'  @export
+
+setMethod("best_performance", "ga_fsm",
+          function(x) estimation_details(x)@fitnessValue
+)
 
 ################################################################################
 #' Extracts slot of variable importances
