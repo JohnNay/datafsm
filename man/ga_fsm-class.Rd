@@ -10,6 +10,7 @@
 \alias{predict,ga_fsm-method}
 \alias{print,ga_fsm-method}
 \alias{show,ga_fsm-method}
+\alias{states,ga_fsm-method}
 \alias{summary,ga_fsm-method}
 \alias{varImp,ga_fsm-method}
 \title{An S4 class to return the results of using a GA to estimate a FSM with
@@ -32,6 +33,8 @@
 \S4method{estimation_details}{ga_fsm}(x)
 
 \S4method{varImp}{ga_fsm}(x)
+
+\S4method{states}{ga_fsm}(x)
 
 \S4method{predict}{ga_fsm}(object, data, type = "prob", na.action = na.omit,
   ...)
@@ -93,6 +96,8 @@ Plots ga_fsm S4 object's variable importances
 Extracts slot relevant to estimating the fsm
 
 Extracts slot of variable importances
+
+Extracts number of states
 }
 \section{Methods (by generic)}{
 \itemize{
@@ -111,6 +116,8 @@ Extracts slot of variable importances
 \item \code{estimation_details}: 
 
 \item \code{varImp}: 
+
+\item \code{states}: 
 
 \item \code{predict}: 
 }}

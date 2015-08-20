@@ -258,6 +258,23 @@ setMethod("varImp", "ga_fsm",
 )
 
 ################################################################################
+#' Extracts number of states
+#' @export
+
+setGeneric(name = "states", function(x){
+  standardGeneric("states")
+})
+
+################################################################################
+#' Extracts number of states
+#' @describeIn ga_fsm
+#'  @export
+
+setMethod("states", "ga_fsm",
+          function(x) slot(x, "states")
+)
+
+################################################################################
 #' @describeIn ga_fsm
 #' @param type Not currently used.
 #' @param na.action Optional function.
