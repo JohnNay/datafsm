@@ -189,6 +189,37 @@ setMethod("plot", "ga_fsm",
 )
 
 ################################################################################
+#' Plots ga_fsm S4 object's variable importances
+#' @describeIn ga_fsm
+#'
+#' @param height ga_fsm S4 object
+#' @param ... arguments to be passed to/from other methods.
+#'   
+#' @export
+
+setMethod("barplot", "ga_fsm",
+          function(height, ...) {
+            height <- varImp(height)
+            barplot(height, ...)
+          }
+)
+
+################################################################################
+#' Plots ga_fsm S4 object's variable importances
+#' @describeIn ga_fsm
+#' @param labels  vector of labels for each point. For vectors the default is to
+#'   use names(x) and for matrices the row labels dimnames(x)[[1]].
+#' @export
+
+setMethod("dotchart", "ga_fsm",
+          function(x, labels) {
+            x <- varImp(x)
+            if (missing(labels)) return(dotchart(x))
+            if (!missing(labels)) return(dotchart(x, labels))
+          }
+)
+
+################################################################################
 #' Extracts slot relevant to estimating the fsm
 #' @param x S4 ga_fsm object
 #' @export
@@ -230,7 +261,6 @@ setMethod("varImp", "ga_fsm",
 #' @describeIn ga_fsm
 #' @param type Not currently used.
 #' @param na.action Optional function.
-#' @param ... Not currently used.
 #' @inheritParams evolve_model
 #' 
 #' @export

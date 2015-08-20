@@ -2,6 +2,8 @@
 % Please edit documentation in R/class_def.R
 \docType{class}
 \name{ga_fsm-class}
+\alias{barplot,ga_fsm-method}
+\alias{dotchart,ga_fsm-method}
 \alias{estimation_details,ga_fsm-method}
 \alias{ga_fsm-class}
 \alias{plot,ga_fsm,ANY-method}
@@ -23,6 +25,10 @@
   action_label = NULL, transition_label = NULL, curvature = c(0.3, 0.6,
   0.8))
 
+\S4method{barplot}{ga_fsm}(height, ...)
+
+\S4method{dotchart}{ga_fsm}(x, labels)
+
 \S4method{estimation_details}{ga_fsm}(x)
 
 \S4method{varImp}{ga_fsm}(x)
@@ -33,7 +39,7 @@
 \arguments{
 \item{x}{S4 ga_fsm object.}
 
-\item{...}{Not currently used.}
+\item{...}{arguments to be passed to/from other methods.}
 
 \item{object}{S4 ga_fsm object}
 
@@ -55,6 +61,11 @@ columns of state transition matrix.}
 \item{curvature}{optional numeric vector specifying the curvature of the
   lines for a diagram of 2 or more states.}
 
+\item{height}{ga_fsm S4 object}
+
+\item{labels}{vector of labels for each point. For vectors the default is to
+use names(x) and for matrices the row labels dimnames(x)[[1]].}
+
 \item{data}{data.frame that has columns named "period" and "outcome" (period
 is the time period that the outcome action was taken), and the rest of the
 columns are predictors, ranging from one to three predictors. All of the
@@ -75,6 +86,10 @@ Turns ga_fsm S4 object into list of summaries for printing and then prints it.
 
 Plots ga_fsm S4 object's state transition matrix
 
+Plots ga_fsm S4 object's variable importances
+
+Plots ga_fsm S4 object's variable importances
+
 Extracts slot relevant to estimating the fsm
 
 Extracts slot of variable importances
@@ -88,6 +103,10 @@ Extracts slot of variable importances
 \item \code{summary}: An S4 method for summarizing a ga_fsm S4 object
 
 \item \code{plot}: 
+
+\item \code{barplot}: 
+
+\item \code{dotchart}: 
 
 \item \code{estimation_details}: 
 
