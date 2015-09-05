@@ -24,13 +24,3 @@ res <- evolve_model(cdata)
 summary(res)
 plot(res, action_label = c("C", "D"))
 
-## ---- eval=TRUE, include=TRUE, fig.width=8, fig.height=6, fig.cap="Result of `plot()` method call on ga object, which is obtained by calling `estimation_details()` on `ga_fsm` object."----
-suppressMessages(library(GA))
-plot(estimation_details(res))
-
-## ---- eval=TRUE, include=TRUE, render.args = list(help = list(sections = list("usage", "arguments", "details", "references")))----
-?evolve_model
-
-## ---- eval=TRUE, include=TRUE--------------------------------------------
-sessionInfo()
-
