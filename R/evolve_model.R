@@ -75,8 +75,8 @@ performance <- function(results, outcome, measure){
 #'  probability that the model will predict a negative?'' Positive predictive
 #'  value answers, ``what is the percent of predicted positives that are
 #'  actually positive?''
-#'@param states Optional numeric vector with the number of states. Default is 
-#'  \code{2}.
+#'@param states Optional numeric vector with the number of states. 
+#'  If not provided, will be set to \code{max(data$outcome)}.
 #'@param cv Optional logical vector length one for whether cross-validation 
 #'  should be conducted on training data to select optimal number of states. 
 #'  This can drastically increase computation time because if \code{TRUE}, it 
@@ -85,7 +85,8 @@ performance <- function(results, outcome, measure){
 #'  \code{FALSE}.
 #'@param max_states Optional numeric vector length one only relevant if 
 #'  \code{cv==TRUE}. It specifies how up to how many states that 
-#'  cross-validation should search through. Default is \code{3}.
+#'  cross-validation should search through. 
+#'  If not provided, will be set to \code{states + 1}.
 #'@param k Optional numeric vector length one only relevant if cv==TRUE, 
 #'  specifying number of folds for cross-validation.
 #'@param actions Optional numeric vector with the number of actions. If not 
@@ -154,7 +155,7 @@ performance <- function(results, outcome, measure){
 ################################################################################
 evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
                          measure = c("accuracy", "sens", "spec", "ppv"),
-                         states = 2, cv = FALSE, max_states = 3, k = 2,
+                         states = NA, cv = FALSE, max_states = NA, k = 2,
                          actions = NULL,
                          seed = NULL,
                          popSize = 75, pcrossover = 0.8, pmutation = 0.1, maxiter = 50, run = 25,
@@ -267,6 +268,9 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
   
   inputs <- 2^(ncol(data[ , -which(names(data) %in% c("period", "outcome")), drop = FALSE]))
   
+  if (is.na(states)) states <- max(data$outcome)
+  if (is.na(max_states)) max_states <- states + 1
+
   if (cv) {
     try({
       states <- evolve_model_cv(data,

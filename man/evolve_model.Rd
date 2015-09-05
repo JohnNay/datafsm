@@ -5,8 +5,8 @@
 \title{Use a Genetic Algorithm to Estimate a Finite-state Machine Model}
 \usage{
 evolve_model(data, test_data = NULL, drop_nzv = FALSE,
-  measure = c("accuracy", "sens", "spec", "ppv"), states = 2, cv = FALSE,
-  max_states = 3, k = 2, actions = NULL, seed = NULL, popSize = 75,
+  measure = c("accuracy", "sens", "spec", "ppv"), states = NA, cv = FALSE,
+  max_states = NA, k = 2, actions = NULL, seed = NULL, popSize = 75,
   pcrossover = 0.8, pmutation = 0.1, maxiter = 50, run = 25,
   parallel = FALSE, priors = NULL, verbose = TRUE)
 }
@@ -45,8 +45,8 @@ probability that the model will predict a negative?'' Positive predictive
 value answers, ``what is the percent of predicted positives that are
 actually positive?''}
 
-\item{states}{Optional numeric vector with the number of states. Default is
-\code{2}.}
+\item{states}{Optional numeric vector with the number of states.
+If not provided, will be set to \code{max(data$outcome)}.}
 
 \item{cv}{Optional logical vector length one for whether cross-validation
 should be conducted on training data to select optimal number of states.
@@ -57,7 +57,8 @@ states. Ties are broken by choosing the smaller number of states. Default is
 
 \item{max_states}{Optional numeric vector length one only relevant if
 \code{cv==TRUE}. It specifies how up to how many states that
-cross-validation should search through. Default is \code{3}.}
+cross-validation should search through.
+If not provided, will be set to \code{states + 1}.}
 
 \item{k}{Optional numeric vector length one only relevant if cv==TRUE,
 specifying number of folds for cross-validation.}

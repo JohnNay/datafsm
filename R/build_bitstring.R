@@ -16,7 +16,6 @@
 build_bitstring <- function(action_vec, state_mat, actions) {
   states <- nrow(state_mat)
   inputs <- ncol(state_mat)
-  actions <- as.integer(sqrt(inputs))
 
   if (length(action_vec) != states)
     stop("Error: action_vec does not match number of states")
