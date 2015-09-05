@@ -155,7 +155,7 @@ performance <- function(results, outcome, measure){
 ################################################################################
 evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
                          measure = c("accuracy", "sens", "spec", "ppv"),
-                         states = NA, cv = FALSE, max_states = NA, k = 2,
+                         states = NULL, cv = FALSE, max_states = NULL, k = 2,
                          actions = NULL,
                          seed = NULL,
                          popSize = 75, pcrossover = 0.8, pmutation = 0.1, maxiter = 50, run = 25,
@@ -268,8 +268,8 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
   
   inputs <- 2^(ncol(data[ , -which(names(data) %in% c("period", "outcome")), drop = FALSE]))
   
-  if (is.na(states)) states <- max(data$outcome)
-  if (is.na(max_states)) max_states <- states + 1
+  if (is.null(states)) states <- max(data$outcome)
+  if (is.null(max_states)) max_states <- states + 1
 
   if (cv) {
     try({
