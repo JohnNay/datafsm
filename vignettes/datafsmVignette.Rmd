@@ -40,8 +40,8 @@ citation("datafsm")
 
 To quickly show it works, we can create fake data. Here, we generate 1000 
 repetitions of a ten-round game in which each player starts by making a random
-move, and in subsequent rounds, one player follows a ``tit-for-tat''
-strategy while the other one follows a ``noisy tit-for-tat'' strategy that's
+move, and in subsequent rounds, one player follows a "tit-for-tat"
+strategy while the other one follows a "noisy tit-for-tat" strategy that's
 equivalent to tit-for-tat, except that with a 10% probability the player will
 make a random move.
 
@@ -120,10 +120,12 @@ res <- evolve_model(cdata)
 
 Use the summary and plot methods on the output of the `evolve_model()` function:
 
-```{r plot.fsm, eval=TRUE, include=TRUE, fig.width=5, fig.height=5, fig.cap="Result of `plot()` method call on `ga_fsm` object."}
+```{r plot.fsm, eval=TRUE, include=TRUE, fig.width=5, fig.height=4, fig.cap="Result of `plot()` method call on `ga_fsm` object."}
 summary(res)
-plot(res, action_label = c("C", "D"))
+plot(res, action_label = c("C", "D"), transition_label = c('cc','cd','dc','dd'))
 ```
+
+The diagram shows that `evolve_model` recovered a tit-for-tat model in which the player in question ("me") mimics the last action of the opponent.
 
 Use the `estimation_details` method on the output of the `evolve_model()` function:
 
@@ -138,7 +140,7 @@ plot(estimation_details(res))
 Check out the documentation for the main function of the package to learn about all the options:
 ```{r get.help, eval=TRUE, include=TRUE, render.args = list(help = list(sections = list("usage", "arguments", "details", "references")))}
 ?evolve_model
-````
+```
 
 
 # Acknowledgements
@@ -150,5 +152,5 @@ This work is supported by U.S. National Science Foundation grants EAR-1416964 an
 
 ```{r session.info, eval=TRUE, include=TRUE}
 sessionInfo()
-````
+```
 

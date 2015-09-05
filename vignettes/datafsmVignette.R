@@ -55,9 +55,9 @@ knitr::kable(head(cdata, 11))
 ## ----evolve.model, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE, results='hide'----
 res <- evolve_model(cdata)
 
-## ----plot.fsm, eval=TRUE, include=TRUE, fig.width=5, fig.height=5, fig.cap="Result of `plot()` method call on `ga_fsm` object."----
+## ----plot.fsm, eval=TRUE, include=TRUE, fig.width=5, fig.height=4, fig.cap="Result of `plot()` method call on `ga_fsm` object."----
 summary(res)
-plot(res, action_label = c("C", "D"))
+plot(res, action_label = c("C", "D"), transition_label = c('cc','cd','dc','dd'))
 
 ## ----plot.evolution, eval=TRUE, include=TRUE, fig.width=8, fig.height=6, fig.cap="Result of `plot()` method call on ga object, which is obtained by calling `estimation_details()` on `ga_fsm` object."----
 suppressMessages(library(GA))
