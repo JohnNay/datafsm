@@ -47,7 +47,7 @@ cdata <- data.frame(period = rep(1:10, 1000),
                     other.decision1 = sample(1:0, 10000, TRUE))
 ```
 
-The only required argument of the main function of the package, `evolve_model`, is a `data.frame` object, which must have columns named "period" and "outcome" (period is the time period that the outcome action was taken), and the rest of the columns are predictors, ranging from one to three predictors. Each row of the `data.frame` is an observational unit, an action taken at a particular time and any relevant variables for that time. All of the (3-5 columns) should be named. The period and outcome columns should be integer vectors -- e.g. `c(1,2,1)` -- and the columns with the predictor variable data should be logical vectors -- e.g. `c(TRUE, FALSE, FALSE)`. If the predictor variable data is not a logical valued vector, it will coerced to logical with `as.logical()`.
+The only required argument of the main function of the package, `evolve_model`, is a `data.frame` object, which must have 3-5 columns. The first two columns must be named "period" and "outcome" (period is the time period that the outcome action was taken). The remaining one to three columns are predictors, and may have arbitrary names. Each row of the `data.frame` is an observational unit, an action taken at a particular time and any relevant variables for that time. All of the (3-5 columns) should be named. The period and outcome columns should be integer vectors --- e.g. `c(1,2,1)` --- and the columns with the predictor variable data should be logical vectors --- e.g. `c(TRUE, FALSE, FALSE)` --- or vectors that can be coerced to logical with `as.logical()`.
 
 Here are the first eleven rows of this fake data:
 
@@ -57,9 +57,9 @@ knitr::kable(head(cdata, 11))
 
 We can estimate a model with that data. `evolve_model` uses a genetic algorithm to estimate a finite-state machine (FSM) model, primarily for understanding and predicting decision-making. This is the main function of the `datafsm` package. It relies on the `GA` package for genetic algorithm optimization. We chose to use a GA because GAs perform well in rugged search spaces to solve integer optimization problems, are a natural complement to our binary representation of FSMs, and are easily parallelized. 
 
-`evolve_model` takes data on predictors and data on the outcome and automatically creates a fitness function that takes training data, an action vector that `evolve_model` generates, and a state matrix `evolve_model` generates as input and returns numeric vector of the same length as the `outcome` column of the training data. `evolve_model` then computes a fitness score for that potential solution FSM by comparing it to the provided `outcome` in the real training data. This is repeated for every FSM in the population and then the probability of selection for the next generation is proportional to the fitness scores. If the argument `cv` is set to `TRUE` the function will call itself recursively while varying the number of states inside a cross-validation loop in order to estimate the optimal number of states, then it will set the number of states to that optimal number and estimate the model on the full training set.
+`evolve_model` takes data on predictors and data on the outcome and automatically creates a fitness function that takes training data, an action vector that `evolve_model` generates, and a state matrix `evolve_model` generates as input and returns numeric vector whose length is the number of rows in the training data. `evolve_model` then computes a fitness score for that potential solution FSM by comparing it to the provided `outcome` in the real training data. This is repeated for every FSM in the population and then the probability of selection for the next generation is proportional to the fitness scores. If the argument `cv` is set to `TRUE` the function will call itself recursively while varying the number of states inside a cross-validation loop in order to estimate the optimal number of states, then it will set the number of states to that optimal number and estimate the model on the full training set.
 
-If the argument `parallel` is set to `TRUE`, then these evaluations are distributed across the available processors of the computer using the `doParallel` functions; otherwise, the evalulations of fitness are conducted sequentially. Because this fitness function that `evolve_model` creates must loop through all the training data everytime it is evaluated and we need to evaluate many possible solution FSMs, the fitness function is implemented in C++ so it is very fast.
+If the argument `parallel` is set to `TRUE`, then these evaluations are distributed across the available processors of the computer using the `doParallel` functions; otherwise, the evalulations of fitness are conducted sequentially. Because this fitness function that `evolve_model` creates must loop through all the training data everytime it is evaluated and we need to evaluate many possible solution FSMs, the fitness function is implemented in C++ to improve its performance.
 
 ```{r, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE, results='hide'}
 res <- evolve_model(cdata)
@@ -74,8 +74,8 @@ res <- evolve_model(cdata)
 * `state_mat` Numeric matrix with rows as states and columns as predictors.
 * `action_vec` Numeric vector indicating what action to take for each state.
 * `predictive` Numeric vector of length one with test data accuracy if test data was supplied; otherwise, a character vector with a message that the user should provide test data for better estimate of generalizable performance.
-* `varImp` Numeric vector same length as number of columns of state matrix with relative importance scores for each predictor.
-* `timing` Numeric vector length one with the total elapsed time it took `evolve_model` to execute.
+* `varImp` Numeric vector with length equal to the number of columns in the state matrix, containing relative importance scores for each predictor.
+* `timing` Numeric vector length one containing the total elapsed time it took `evolve_model` to execute.
 * `diagnostics` Character vector length one, designed to be printed with `base::cat()`.
 
 Use the summary and plot methods on the output of the `evolve_model()` function:
