@@ -34,10 +34,10 @@ LinkingTo: Rcpp
 Suggests: 
     doParallel,
     testthat,
+    diagram,
     knitr
 Imports: 
     caret,
-    diagram,
     GA,
     Rcpp
 VignetteBuilder: knitr

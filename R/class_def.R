@@ -128,6 +128,8 @@ setMethod("summary", "ga_fsm",
 #' Plots ga_fsm S4 object's state transition matrix
 #' @describeIn ga_fsm
 #'
+#' @aliases plot,ga_fsm-method
+#' 
 #' @param y not used.
 #' @param maintitle optional character vector 
 #' @param action_label optional character vector same length as action vector,
@@ -293,6 +295,7 @@ setMethod("action_vec", "ga_fsm",
 
 ################################################################################
 #' Extracts number of states
+#' @param x S4 ga_fsm object
 #' @export
 
 setGeneric(name = "states", function(x){

@@ -9,6 +9,7 @@
 \alias{estimation_details,ga_fsm-method}
 \alias{ga_fsm-class}
 \alias{plot,ga_fsm,ANY-method}
+\alias{plot,ga_fsm-method}
 \alias{predict,ga_fsm-method}
 \alias{print,ga_fsm-method}
 \alias{show,ga_fsm-method}

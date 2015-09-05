@@ -6,6 +6,9 @@
 \usage{
 states(x)
 }
+\arguments{
+\item{x}{S4 ga_fsm object}
+}
 \description{
 Extracts number of states
 }
