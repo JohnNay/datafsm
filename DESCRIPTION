@@ -5,9 +5,8 @@ Date: 2015-08-15
 Authors@R: c( person("Nay", "John J.", email = "john.j.nay@gmail.com", role =
     c("cre", "aut")), person("Gilligan", "Jonathan M.", email =
     "jonathan.gilligan@vanderbilt.edu", role = "aut") )
-Description: This package implements our method for automatically
-    generating models of dynamic decision-making that both have strong
-    predictive power and are interpretable in human terms.
+Description: Our method automatically generates models of dynamic decision-making 
+    that both have strong predictive power and are interpretable in human terms.
     We use an efficient model representation and a genetic algorithm-based
     estimation process to generate simple deterministic approximations that
     explain most of the structure of complex stochastic processes.

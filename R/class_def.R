@@ -50,7 +50,6 @@ setMethod("print", "ga_fsm",
 
 ################################################################################
 #' @describeIn ga_fsm An S4 method for showing a ga_fsm S4 object
-#'  @export
 
 setMethod("show", "ga_fsm",
           function(object) {
