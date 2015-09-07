@@ -27,7 +27,7 @@ compare_fsm <- function(users, gas, comparison = "manhattan"){
   # these are non-identifiable when there are 4 inputs and the second row, 1st and 3rd cols of
   # the state matrix cannot be reached by a deterministic strategy.
 
-  as.numeric(dist(x=both, method = comparison))
+  as.numeric(stats::dist(x=both, method = comparison))
 }
 ################################################################################
 

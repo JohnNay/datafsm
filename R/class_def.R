@@ -45,7 +45,7 @@ setClass("ga_fsm",
 #'  @export
 
 setMethod("print", "ga_fsm",
-          function(x, ...) str(x)
+          function(x, ...) utils::str(x)
 )
 
 ################################################################################
@@ -57,7 +57,7 @@ setMethod("show", "ga_fsm",
                   cat("An object of class \"ga_fsm\"\n")
                   cat("\nCall:\n", deparse(object@call), "\n\n",sep="")
                   cat("Available slots:\n")
-                  print(slotNames(object))
+                  print(methods::slotNames(object))
           }
 )
 
@@ -236,7 +236,7 @@ setGeneric("estimation_details", function(x){
 #'  @export
 
 setMethod("estimation_details", "ga_fsm",
-          function(x) slot(x, "GA")
+          function(x) methods::slot(x, "GA")
 )
 
 ################################################################################
@@ -272,7 +272,7 @@ setGeneric(name = "varImp", function(x){
 #'  @export
 
 setMethod("varImp", "ga_fsm",
-          function(x) slot(x, "varImp")
+          function(x) methods::slot(x, "varImp")
 )
 
 ################################################################################
@@ -290,7 +290,7 @@ setGeneric(name = "action_vec", function(x){
 #'  @export
 
 setMethod("action_vec", "ga_fsm",
-          function(x) slot(x, "action_vec")
+          function(x) methods::slot(x, "action_vec")
 )
 
 ################################################################################
@@ -308,7 +308,7 @@ setGeneric(name = "states", function(x){
 #'  @export
 
 setMethod("states", "ga_fsm",
-          function(x) slot(x, "states")
+          function(x) methods::slot(x, "states")
 )
 
 ################################################################################
@@ -320,7 +320,7 @@ setMethod("states", "ga_fsm",
 #' @export
 setMethod("predict", "ga_fsm",
           function(object, data,
-                   type = "prob", na.action = na.omit, ...){
+                   type = "prob", na.action = stats::na.omit, ...){
             
             ## Data-related errors:
             if (missing(data)) 
@@ -363,7 +363,7 @@ setMethod("predict", "ga_fsm",
             # with the same action regardless of the predictors at that time
             # but this would bias the results if NA's are occuring in predictors in other periods
             # so return an error for that:
-            if (any(!complete.cases(data) & !data$period == 1))
+            if (any(!stats::complete.cases(data) & !data$period == 1))
               stop(paste("Error: You have missing values in your training data somewhere other than the first period interactions.",
                          "You can only have missing values for predictor columns, AND these must be in rows where period==1."))
             data[is.na(data)] <- TRUE
@@ -372,11 +372,11 @@ setMethod("predict", "ga_fsm",
             
             if (length(names)==1){
               form <- paste("outcome ~ 0 +", names, sep=" ")
-              data <- model.matrix(eval(parse(text=form)), data)
+              data <- stats::model.matrix(eval(parse(text=form)), data)
             } else {
               predictors <- paste(names, collapse=":")
               form <- paste("outcome ~ 0 +", predictors, sep=" ")
-              data <- model.matrix(eval(parse(text=form)), data)
+              data <- stats::model.matrix(eval(parse(text=form)), data)
             }
             
             if (ncol(data) != inputs)

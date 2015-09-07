@@ -226,7 +226,7 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
   if (anyNA(outcome)) stop("Error: There are missing values in the data.")
   if (length(outcome) == 0) stop("Error: The outcome is zero length.")
   if (missing(seed)) {
-    seed <- floor(runif(1, 1,101))
+    seed <- floor(stats::runif(1, 1,101))
     if(verbose) cat(paste("We set a seed for you to make this reproducible. It is ", seed, ".",
                           " If you want the same results, next time you run this with the same settings,",
                           " also set the seed argument of this function to ", seed, ".\n", sep=""))
@@ -303,7 +303,7 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
   # with the same action regardless of the predictors at that time
   # but this would bias the results if NA's are occuring in predictors in other periods
   # so return an error for that:
-  if (any(!complete.cases(data) & !data$period == 1))
+  if (any(!stats::complete.cases(data) & !data$period == 1))
     stop(paste("Error: You have missing values in your training data somewhere other than the first period interactions.",
                "You can only have missing values for predictor columns, AND these must be in rows where period==1."))
   data[is.na(data)] <- TRUE
@@ -312,11 +312,11 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
   
   if (length(names)==1){
     form <- paste("outcome ~ 0 +", names, sep=" ")
-    data <- model.matrix(eval(parse(text=form)), data)
+    data <- stats::model.matrix(eval(parse(text=form)), data)
   } else {
     predictors <- paste(names, collapse=":")
     form <- paste("outcome ~ 0 +", predictors, sep=" ")
-    data <- model.matrix(eval(parse(text=form)), data)
+    data <- stats::model.matrix(eval(parse(text=form)), data)
   }
   
   if (length(names) > 3) stop(paste("Error: You have more than 3 predictors.",
@@ -439,7 +439,7 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
   
   if(verbose){
     Monitor <- function (object, digits = getOption("digits")) {
-      Fit <- na.exclude(object@fitness)
+      Fit <- stats::na.exclude(object@fitness)
       cat(paste("Iter =", object@iter, " | Mean =", format(mean(Fit),
                                                            digits = digits), " | Best =", format(max(Fit),
                                                                                                  digits = digits),
@@ -448,7 +448,6 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
   } else {
     Monitor <- function (object, digits = getOption("digits")) { }
   }
-  
   
   GA <- GA::ga(type = "binary",
                fitness = fitnessR,
@@ -477,7 +476,6 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
     
     test_period <- test_data$period
     test_outcome <- test_data$outcome
-    
     
     if (!identical(sort(as.integer(unique(test_outcome))), 
                    sort(as.integer(unique(seq(length(unique(test_outcome)))))),
@@ -508,7 +506,7 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
     # with the same action regardless of the predictors at that time
     # but this would bias the results if NA's are occuring in predictors in other periods
     # so return an error for that:
-    if (any(!complete.cases(test_data) & !test_data$period == 1))
+    if (any(!stats::complete.cases(test_data) & !test_data$period == 1))
       warning("Error: You have missing values in your test data somewhere other than the first period interactions. You can only have missing values for predictor columns, AND these must be in rows where period==1.")
     test_data[is.na(test_data)] <- TRUE
     
@@ -516,11 +514,11 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
     
     if (length(names)==1){
       form <- paste("outcome ~ 0 +", names, sep=" ")
-      test_data <- model.matrix(eval(parse(text=form)), test_data)
+      test_data <- stats::model.matrix(eval(parse(text=form)), test_data)
     } else {
       predictors <- paste(names, collapse=":")
       form <- paste("outcome ~ 0 +", predictors, sep=" ")
-      test_data <- model.matrix(eval(parse(text=form)), test_data)
+      test_data <- stats::model.matrix(eval(parse(text=form)), test_data)
     }
     
     if (length(names) > 3) warning(paste("Error: You have more than 3 predictors in your test data.",
@@ -547,15 +545,15 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
   
   varImp <- var_imp(state_mat, action_vec, data, outcome, period, measure)
   
-  new("ga_fsm",
-      call = call,
-      actions = actions,
-      states = states,
-      GA = GA,
-      state_mat = state_mat,
-      action_vec = action_vec,
-      predictive = predictive,
-      varImp = varImp,
-      timing = as.numeric(proc.time()[[3]]) - start_time,
-      diagnostics = msg)
+  methods::new("ga_fsm",
+               call = call,
+               actions = actions,
+               states = states,
+               GA = GA,
+               state_mat = state_mat,
+               action_vec = action_vec,
+               predictive = predictive,
+               varImp = varImp,
+               timing = as.numeric(proc.time()[[3]]) - start_time,
+               diagnostics = msg)
 }
