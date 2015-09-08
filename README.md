@@ -38,8 +38,10 @@ Fake Data Example
 To quickly show it works, we can create fake data. Here, we generate 1000 repetitions of a ten-round game in which each player starts by making a random move, and in subsequent rounds, one player follows a "tit-for-tat" strategy while the other one follows a "noisy tit-for-tat" strategy that's equivalent to tit-for-tat, except that with a 10% probability the player will make a random move.
 
 ``` r
-cdata <- data.frame(period = rep(1:10, 1000),
-                    outcome = NA,
+seed <- 1900
+set.seed(seed)
+cdata <- data.frame(outcome = NA,
+                    period = rep(1:10, 2000),
                     my.decision1 = NA,
                     other.decision1 = NA)
 #
@@ -67,15 +69,16 @@ noisy_tit_for_tat <- function(last_round_self, last_round_opponent) {
 
 for (i in seq_along(cdata$period)) {
   if (cdata$period[i] == 1) {
-    my.decision <- sample(0:1,1)
+    my.decision <- sample(0:1,1, prob = c(0.9,0.1))
     other.decision <- sample(0:1,1)
+    cdata[i, "outcome"] <- pd_outcome(my.decision, other.decision)
   } else{
     my.last <- my.decision
     other.last <- other.decision
     my.decision <- tit_for_tat(my.last, other.last)
     other.decision <- noisy_tit_for_tat(other.last, my.last)
+    cdata[i,c("outcome", "my.decision1", "other.decision1")] <- c(pd_outcome(my.decision, other.decision), my.last, other.last)
   }
-  cdata[i,-1] <- c(pd_outcome(my.decision, other.decision), my.decision, other.decision)
 }
 ```
 
@@ -83,19 +86,19 @@ The only required argument of the main function of the package, `evolve_model`, 
 
 Here are the first eleven rows of this fake data:
 
-|  period|  outcome|  my.decision1|  other.decision1|
-|-------:|--------:|-------------:|----------------:|
-|       1|        1|             0|                1|
-|       2|        2|             1|                0|
-|       3|        1|             0|                1|
-|       4|        2|             1|                0|
-|       5|        1|             0|                1|
-|       6|        2|             1|                0|
-|       7|        1|             0|                1|
-|       8|        2|             1|                0|
-|       9|        1|             0|                1|
-|      10|        2|             1|                0|
-|       1|        2|             1|                1|
+|  outcome|  period|  my.decision1|  other.decision1|
+|--------:|-------:|-------------:|----------------:|
+|        1|       1|            NA|               NA|
+|        1|       2|             0|                0|
+|        1|       3|             0|                0|
+|        1|       4|             0|                0|
+|        1|       5|             0|                0|
+|        1|       6|             0|                0|
+|        1|       7|             0|                0|
+|        1|       8|             0|                0|
+|        1|       9|             0|                0|
+|        1|      10|             0|                0|
+|        1|       1|            NA|               NA|
 
 We can estimate a model with that data. `evolve_model` uses a genetic algorithm to estimate a finite-state machine (FSM) model, primarily for understanding and predicting decision-making. This is the main function of the `datafsm` package. It relies on the `GA` package for genetic algorithm optimization. We chose to use a GA because GAs perform well in rugged search spaces to solve integer optimization problems, are a natural complement to our binary representation of FSMs, and are easily parallelized.
 
@@ -104,7 +107,7 @@ We can estimate a model with that data. `evolve_model` uses a genetic algorithm 
 If the argument `parallel` is set to `TRUE`, then these evaluations are distributed across the available processors of the computer using the `doParallel` functions; otherwise, the evalulations of fitness are conducted sequentially. Because this fitness function that `evolve_model` creates must loop through all the training data everytime it is evaluated and we need to evaluate many possible solution FSMs, the fitness function is implemented in C++ to improve its performance.
 
 ``` r
-res <- evolve_model(cdata)
+res <- evolve_model(cdata, seed = seed)
 ```
 
 `evolve_model` evolves the models on training data and then, if a test set is provided, uses the best solution to make predictions on test data. Finally, the function returns the GA object and the decoded version of the best string in the population. Formally, the function return an `S4` object with slots for:
@@ -138,18 +141,18 @@ summary(res)
 #> 
 #> Results: 
 #> 
-#> Iterations For This Run              = 29 
-#> Training Data Fitness Function Value = 0.95 
+#> Iterations For This Run              = 27 
+#> Training Data Fitness Function Value = 0.99 
 #> Test Data Fitness Function Value     = No test data provided. Provide some to get more accurate estimation of generalization power. 
 #> 
 #> (Bit String Form) of Solution: 
 #>  x1  x2  x3  x4  x5  x6  x7  x8  x9 x10 
-#>   1   1   1   0   1   0   1   0   1   0 
+#>   0   1   0   0   0   0   1   0   0   0 
 #> 
 #> State Matrix of Solution: 
 #>      my.decision1FALSE:other.decision1FALSE
-#> [1,]                                      2
-#> [2,]                                      2
+#> [1,]                                      1
+#> [2,]                                      1
 #>      my.decision1TRUE:other.decision1FALSE
 #> [1,]                                     1
 #> [2,]                                     1
@@ -157,22 +160,23 @@ summary(res)
 #> [1,]                                     2
 #> [2,]                                     2
 #>      my.decision1TRUE:other.decision1TRUE
-#> [1,]                                    1
-#> [2,]                                    1
+#> [1,]                                    2
+#> [2,]                                    2
 #> 
 #> Action Vector of Solution: 
-#> [1] 2 1
+#> [1] 1 2
 #> 
 #> Variable Importance: 
 #> my.decision1FALSE:other.decision1FALSE 
-#>                                  100.0 
+#>                                   88.8 
 #>  my.decision1TRUE:other.decision1FALSE 
-#>                                   70.6 
+#>                                   83.7 
 #>  my.decision1FALSE:other.decision1TRUE 
-#>                                   69.8 
+#>                                  100.0 
 #>   my.decision1TRUE:other.decision1TRUE 
-#>                                   49.1
-plot(res, action_label = c("C", "D"), transition_label = c('cc','cd','dc','dd'))
+#>                                   34.4
+plot(res, action_label = ifelse(action_vec(res)==1, "C", "D"), 
+     transition_label = c('cc','dc','cd','dd'))
 ```
 
 ![Result of `plot()` method call on `ga_fsm` object.](README-plot.fsm-1.png)

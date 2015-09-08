@@ -45,8 +45,10 @@ equivalent to tit-for-tat, except that with a 10% probability the player will
 make a random move.
 
 ```{r fake.data, eval=TRUE, include=TRUE}
-cdata <- data.frame(period = rep(1:10, 1000),
-                    outcome = NA,
+seed <- 1900
+set.seed(seed)
+cdata <- data.frame(outcome = NA,
+                    period = rep(1:10, 2000),
                     my.decision1 = NA,
                     other.decision1 = NA)
 #
@@ -74,15 +76,16 @@ noisy_tit_for_tat <- function(last_round_self, last_round_opponent) {
 
 for (i in seq_along(cdata$period)) {
   if (cdata$period[i] == 1) {
-    my.decision <- sample(0:1,1)
+    my.decision <- sample(0:1,1, prob = c(0.9,0.1))
     other.decision <- sample(0:1,1)
+    cdata[i, "outcome"] <- pd_outcome(my.decision, other.decision)
   } else{
     my.last <- my.decision
     other.last <- other.decision
     my.decision <- tit_for_tat(my.last, other.last)
     other.decision <- noisy_tit_for_tat(other.last, my.last)
+    cdata[i,c("outcome", "my.decision1", "other.decision1")] <- c(pd_outcome(my.decision, other.decision), my.last, other.last)
   }
-  cdata[i,-1] <- c(pd_outcome(my.decision, other.decision), my.decision, other.decision)
 }
 ```
 
@@ -101,7 +104,7 @@ We can estimate a model with that data. `evolve_model` uses a genetic algorithm 
 If the argument `parallel` is set to `TRUE`, then these evaluations are distributed across the available processors of the computer using the `doParallel` functions; otherwise, the evalulations of fitness are conducted sequentially. Because this fitness function that `evolve_model` creates must loop through all the training data everytime it is evaluated and we need to evaluate many possible solution FSMs, the fitness function is implemented in C++ to improve its performance.
 
 ```{r evolve.model, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE, results='hide'}
-res <- evolve_model(cdata)
+res <- evolve_model(cdata, seed = seed)
 ```
 
 `evolve_model` evolves the models on training data and then, if a test set is provided, uses the best solution to make predictions on test data. Finally, the function returns the GA object and the decoded version of the best string in the population. Formally, the function return an `S4` object with slots for:
@@ -121,7 +124,8 @@ Use the summary and plot methods on the output of the `evolve_model()` function:
 
 ```{r plot.fsm, eval=TRUE, include=TRUE, fig.width=5, fig.height=4, fig.cap="Result of `plot()` method call on `ga_fsm` object."}
 summary(res)
-plot(res, action_label = c("C", "D"), transition_label = c('cc','cd','dc','dd'))
+plot(res, action_label = ifelse(action_vec(res)==1, "C", "D"), 
+     transition_label = c('cc','dc','cd','dd'))
 ```
 
 The diagram shows that `evolve_model` recovered a tit-for-tat model in which the player in question ("me") mimics the last action of the opponent.
