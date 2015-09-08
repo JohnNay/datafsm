@@ -21,7 +21,7 @@
     <section class="main-content">
       
 
-<p><a href="https://travis-ci.org/JohnNay/datafsm"><img src="https://travis-ci.org/JohnNay/datafsm.png?branch=master" alt="Build Status"></a></p>
+<p><a href="https://travis-ci.org/JohnNay/datafsm"><img src="https://travis-ci.org/JohnNay/datafsm.png?branch=master" alt="Build Status"></a> <a href="http://cran.r-project.org/package=datafsm"><img src="http://www.r-pkg.org/badges/version/datafsm" alt="CRAN\_Status\_Badge"></a></p>
 
 <p>This package implements our method for automatically generating models of dynamic decision-making that both have strong predictive power and are interpretable in human terms. We use an efficient model representation and a genetic algorithm-based estimation process to generate simple deterministic approximations that explain most of the structure of complex stochastic processes. The genetic algorithm is implemented with the <strong>GA</strong> package (<a href="http://www.jstatsoft.org/v53/i04/">Scrucca 2013</a>). Our method, implemented in C++ and R, scales well to large data sets. We have applied the package to empirical data, and demonstrated the method's ability to recover known data-generating processes by simulating data with agent-based models and correctly deriving the underlying decision models for multiple agent models and degrees of stochasticity.</p>
 
@@ -55,8 +55,10 @@ library(<span class="pl-smi">datafsm</span>)</pre></div>
 
 <p>To quickly show it works, we can create fake data. Here, we generate 1000 repetitions of a ten-round game in which each player starts by making a random move, and in subsequent rounds, one player follows a "tit-for-tat" strategy while the other one follows a "noisy tit-for-tat" strategy that's equivalent to tit-for-tat, except that with a 10% probability the player will make a random move.</p>
 
-<div class="highlight highlight-r"><pre><span class="pl-smi">cdata</span> <span class="pl-k">&lt;-</span> <span class="pl-k">data.frame</span>(<span class="pl-v">period</span> <span class="pl-k">=</span> rep(<span class="pl-c1">1</span><span class="pl-k">:</span><span class="pl-c1">10</span>, <span class="pl-c1">1000</span>),
-                    <span class="pl-v">outcome</span> <span class="pl-k">=</span> <span class="pl-c1">NA</span>,
+<div class="highlight highlight-r"><pre><span class="pl-smi">seed</span> <span class="pl-k">&lt;-</span> <span class="pl-c1">1900</span>
+set.seed(<span class="pl-smi">seed</span>)
+<span class="pl-smi">cdata</span> <span class="pl-k">&lt;-</span> <span class="pl-k">data.frame</span>(<span class="pl-v">outcome</span> <span class="pl-k">=</span> <span class="pl-c1">NA</span>,
+                    <span class="pl-v">period</span> <span class="pl-k">=</span> rep(<span class="pl-c1">1</span><span class="pl-k">:</span><span class="pl-c1">10</span>, <span class="pl-c1">2000</span>),
                     <span class="pl-v">my.decision1</span> <span class="pl-k">=</span> <span class="pl-c1">NA</span>,
                     <span class="pl-v">other.decision1</span> <span class="pl-k">=</span> <span class="pl-c1">NA</span>)
 <span class="pl-c">#</span>
@@ -84,15 +86,16 @@ library(<span class="pl-smi">datafsm</span>)</pre></div>
 
 <span class="pl-k">for</span> (<span class="pl-smi">i</span> <span class="pl-k">in</span> seq_along(<span class="pl-smi">cdata</span><span class="pl-k">$</span><span class="pl-smi">period</span>)) {
   <span class="pl-k">if</span> (<span class="pl-smi">cdata</span><span class="pl-k">$</span><span class="pl-smi">period</span>[<span class="pl-smi">i</span>] <span class="pl-k">==</span> <span class="pl-c1">1</span>) {
-    <span class="pl-smi">my.decision</span> <span class="pl-k">&lt;-</span> sample(<span class="pl-c1">0</span><span class="pl-k">:</span><span class="pl-c1">1</span>,<span class="pl-c1">1</span>)
+    <span class="pl-smi">my.decision</span> <span class="pl-k">&lt;-</span> sample(<span class="pl-c1">0</span><span class="pl-k">:</span><span class="pl-c1">1</span>,<span class="pl-c1">1</span>, <span class="pl-v">prob</span> <span class="pl-k">=</span> c(<span class="pl-c1">0.9</span>,<span class="pl-c1">0.1</span>))
     <span class="pl-smi">other.decision</span> <span class="pl-k">&lt;-</span> sample(<span class="pl-c1">0</span><span class="pl-k">:</span><span class="pl-c1">1</span>,<span class="pl-c1">1</span>)
+    <span class="pl-smi">cdata</span>[<span class="pl-smi">i</span>, <span class="pl-s"><span class="pl-pds">"</span>outcome<span class="pl-pds">"</span></span>] <span class="pl-k">&lt;-</span> pd_outcome(<span class="pl-smi">my.decision</span>, <span class="pl-smi">other.decision</span>)
   } <span class="pl-k">else</span>{
     <span class="pl-smi">my.last</span> <span class="pl-k">&lt;-</span> <span class="pl-smi">my.decision</span>
     <span class="pl-smi">other.last</span> <span class="pl-k">&lt;-</span> <span class="pl-smi">other.decision</span>
     <span class="pl-smi">my.decision</span> <span class="pl-k">&lt;-</span> tit_for_tat(<span class="pl-smi">my.last</span>, <span class="pl-smi">other.last</span>)
     <span class="pl-smi">other.decision</span> <span class="pl-k">&lt;-</span> noisy_tit_for_tat(<span class="pl-smi">other.last</span>, <span class="pl-smi">my.last</span>)
+    <span class="pl-smi">cdata</span>[<span class="pl-smi">i</span>,c(<span class="pl-s"><span class="pl-pds">"</span>outcome<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>my.decision1<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>other.decision1<span class="pl-pds">"</span></span>)] <span class="pl-k">&lt;-</span> c(pd_outcome(<span class="pl-smi">my.decision</span>, <span class="pl-smi">other.decision</span>), <span class="pl-smi">my.last</span>, <span class="pl-smi">other.last</span>)
   }
-  <span class="pl-smi">cdata</span>[<span class="pl-smi">i</span>,<span class="pl-k">-</span><span class="pl-c1">1</span>] <span class="pl-k">&lt;-</span> c(pd_outcome(<span class="pl-smi">my.decision</span>, <span class="pl-smi">other.decision</span>), <span class="pl-smi">my.decision</span>, <span class="pl-smi">other.decision</span>)
 }</pre></div>
 
 <p>The only required argument of the main function of the package, <code>evolve_model</code>, is a <code>data.frame</code> object, which must have 3-5 columns. The first two columns must be named "period" and "outcome" (period is the time period that the outcome action was taken). The remaining one to three columns are predictors, and may have arbitrary names. Each row of the <code>data.frame</code> is an observational unit, an action taken at a particular time and any relevant variables for that time. All of the (3-5 columns) should be named. The period and outcome columns should be integer vectors --- e.g. <code>c(1,2,1)</code> --- and the columns with the predictor variable data should be logical vectors --- e.g. <code>c(TRUE, FALSE, FALSE)</code> --- or vectors that can be coerced to logical with <code>as.logical()</code>.</p>
@@ -102,8 +105,8 @@ library(<span class="pl-smi">datafsm</span>)</pre></div>
 <table>
 <thead>
 <tr>
-<th align="right">period</th>
 <th align="right">outcome</th>
+<th align="right">period</th>
 <th align="right">my.decision1</th>
 <th align="right">other.decision1</th>
 </tr>
@@ -112,68 +115,68 @@ library(<span class="pl-smi">datafsm</span>)</pre></div>
 <tr>
 <td align="right">1</td>
 <td align="right">1</td>
-<td align="right">0</td>
-<td align="right">1</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr>
-<td align="right">2</td>
-<td align="right">2</td>
 <td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0</td>
 <td align="right">0</td>
 </tr>
 <tr>
+<td align="right">1</td>
 <td align="right">3</td>
-<td align="right">1</td>
 <td align="right">0</td>
-<td align="right">1</td>
+<td align="right">0</td>
 </tr>
 <tr>
+<td align="right">1</td>
 <td align="right">4</td>
-<td align="right">2</td>
-<td align="right">1</td>
+<td align="right">0</td>
 <td align="right">0</td>
 </tr>
 <tr>
+<td align="right">1</td>
 <td align="right">5</td>
-<td align="right">1</td>
 <td align="right">0</td>
-<td align="right">1</td>
+<td align="right">0</td>
 </tr>
 <tr>
+<td align="right">1</td>
 <td align="right">6</td>
-<td align="right">2</td>
-<td align="right">1</td>
+<td align="right">0</td>
 <td align="right">0</td>
 </tr>
 <tr>
+<td align="right">1</td>
 <td align="right">7</td>
-<td align="right">1</td>
 <td align="right">0</td>
-<td align="right">1</td>
+<td align="right">0</td>
 </tr>
 <tr>
+<td align="right">1</td>
 <td align="right">8</td>
-<td align="right">2</td>
-<td align="right">1</td>
+<td align="right">0</td>
 <td align="right">0</td>
 </tr>
 <tr>
+<td align="right">1</td>
 <td align="right">9</td>
-<td align="right">1</td>
 <td align="right">0</td>
-<td align="right">1</td>
+<td align="right">0</td>
 </tr>
 <tr>
+<td align="right">1</td>
 <td align="right">10</td>
-<td align="right">2</td>
-<td align="right">1</td>
+<td align="right">0</td>
 <td align="right">0</td>
 </tr>
 <tr>
 <td align="right">1</td>
-<td align="right">2</td>
 <td align="right">1</td>
-<td align="right">1</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 </tbody>
 </table>
@@ -184,7 +187,7 @@ library(<span class="pl-smi">datafsm</span>)</pre></div>
 
 <p>If the argument <code>parallel</code> is set to <code>TRUE</code>, then these evaluations are distributed across the available processors of the computer using the <code>doParallel</code> functions; otherwise, the evalulations of fitness are conducted sequentially. Because this fitness function that <code>evolve_model</code> creates must loop through all the training data everytime it is evaluated and we need to evaluate many possible solution FSMs, the fitness function is implemented in C++ to improve its performance.</p>
 
-<div class="highlight highlight-r"><pre><span class="pl-smi">res</span> <span class="pl-k">&lt;-</span> evolve_model(<span class="pl-smi">cdata</span>)</pre></div>
+<div class="highlight highlight-r"><pre><span class="pl-smi">res</span> <span class="pl-k">&lt;-</span> evolve_model(<span class="pl-smi">cdata</span>, <span class="pl-v">seed</span> <span class="pl-k">=</span> <span class="pl-smi">seed</span>)</pre></div>
 
 <p><code>evolve_model</code> evolves the models on training data and then, if a test set is provided, uses the best solution to make predictions on test data. Finally, the function returns the GA object and the decoded version of the best string in the population. Formally, the function return an <code>S4</code> object with slots for:</p>
 
@@ -218,24 +221,24 @@ library(<span class="pl-smi">datafsm</span>)</pre></div>
 <span class="pl-c">#&gt; </span>
 <span class="pl-c">#&gt; Results: </span>
 <span class="pl-c">#&gt; </span>
-<span class="pl-c">#&gt; Iterations For This Run              = 31 </span>
-<span class="pl-c">#&gt; Training Data Fitness Function Value = 0.951 </span>
+<span class="pl-c">#&gt; Iterations For This Run              = 27 </span>
+<span class="pl-c">#&gt; Training Data Fitness Function Value = 0.99 </span>
 <span class="pl-c">#&gt; Test Data Fitness Function Value     = No test data provided. Provide some to get more accurate estimation of generalization power. </span>
 <span class="pl-c">#&gt; </span>
 <span class="pl-c">#&gt; (Bit String Form) of Solution: </span>
 <span class="pl-c">#&gt;  x1  x2  x3  x4  x5  x6  x7  x8  x9 x10 </span>
-<span class="pl-c">#&gt;   0   1   0   0   1   0   1   0   1   0 </span>
+<span class="pl-c">#&gt;   0   1   0   0   0   0   1   0   0   0 </span>
 <span class="pl-c">#&gt; </span>
 <span class="pl-c">#&gt; State Matrix of Solution: </span>
 <span class="pl-c">#&gt;      my.decision1FALSE:other.decision1FALSE</span>
 <span class="pl-c">#&gt; [1,]                                      1</span>
 <span class="pl-c">#&gt; [2,]                                      1</span>
 <span class="pl-c">#&gt;      my.decision1TRUE:other.decision1FALSE</span>
-<span class="pl-c">#&gt; [1,]                                     2</span>
-<span class="pl-c">#&gt; [2,]                                     2</span>
-<span class="pl-c">#&gt;      my.decision1FALSE:other.decision1TRUE</span>
 <span class="pl-c">#&gt; [1,]                                     1</span>
 <span class="pl-c">#&gt; [2,]                                     1</span>
+<span class="pl-c">#&gt;      my.decision1FALSE:other.decision1TRUE</span>
+<span class="pl-c">#&gt; [1,]                                     2</span>
+<span class="pl-c">#&gt; [2,]                                     2</span>
 <span class="pl-c">#&gt;      my.decision1TRUE:other.decision1TRUE</span>
 <span class="pl-c">#&gt; [1,]                                    2</span>
 <span class="pl-c">#&gt; [2,]                                    2</span>
@@ -245,14 +248,15 @@ library(<span class="pl-smi">datafsm</span>)</pre></div>
 <span class="pl-c">#&gt; </span>
 <span class="pl-c">#&gt; Variable Importance: </span>
 <span class="pl-c">#&gt; my.decision1FALSE:other.decision1FALSE </span>
-<span class="pl-c">#&gt;                                   52.6 </span>
+<span class="pl-c">#&gt;                                   88.8 </span>
 <span class="pl-c">#&gt;  my.decision1TRUE:other.decision1FALSE </span>
-<span class="pl-c">#&gt;                                   82.1 </span>
+<span class="pl-c">#&gt;                                   83.7 </span>
 <span class="pl-c">#&gt;  my.decision1FALSE:other.decision1TRUE </span>
-<span class="pl-c">#&gt;                                   81.9 </span>
+<span class="pl-c">#&gt;                                  100.0 </span>
 <span class="pl-c">#&gt;   my.decision1TRUE:other.decision1TRUE </span>
-<span class="pl-c">#&gt;                                  100.0</span>
-plot(<span class="pl-smi">res</span>, <span class="pl-v">action_label</span> <span class="pl-k">=</span> c(<span class="pl-s"><span class="pl-pds">"</span>C<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>D<span class="pl-pds">"</span></span>), <span class="pl-v">transition_label</span> <span class="pl-k">=</span> c(<span class="pl-s"><span class="pl-pds">'</span>cc<span class="pl-pds">'</span></span>,<span class="pl-s"><span class="pl-pds">'</span>cd<span class="pl-pds">'</span></span>,<span class="pl-s"><span class="pl-pds">'</span>dc<span class="pl-pds">'</span></span>,<span class="pl-s"><span class="pl-pds">'</span>dd<span class="pl-pds">'</span></span>))</pre></div>
+<span class="pl-c">#&gt;                                   34.4</span>
+plot(<span class="pl-smi">res</span>, <span class="pl-v">action_label</span> <span class="pl-k">=</span> ifelse(action_vec(<span class="pl-smi">res</span>)<span class="pl-k">==</span><span class="pl-c1">1</span>, <span class="pl-s"><span class="pl-pds">"</span>C<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>D<span class="pl-pds">"</span></span>), 
+     <span class="pl-v">transition_label</span> <span class="pl-k">=</span> c(<span class="pl-s"><span class="pl-pds">'</span>cc<span class="pl-pds">'</span></span>,<span class="pl-s"><span class="pl-pds">'</span>dc<span class="pl-pds">'</span></span>,<span class="pl-s"><span class="pl-pds">'</span>cd<span class="pl-pds">'</span></span>,<span class="pl-s"><span class="pl-pds">'</span>dd<span class="pl-pds">'</span></span>))</pre></div>
 
 <p><img src="https://raw.githubusercontent.com/JohnNay/datafsm/master/README-plot.fsm-1.png" alt="Result of `plot()` method call on `ga_fsm` object."></p>
 
