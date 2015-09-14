@@ -544,6 +544,7 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
   }
   
   varImp <- var_imp(state_mat, action_vec, data, outcome, period, measure)
+  varImp2 <- var_imp2(state_mat, action_vec, data, outcome, period, measure)
   
   methods::new("ga_fsm",
                call = call,
@@ -554,6 +555,7 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
                action_vec = action_vec,
                predictive = predictive,
                varImp = varImp,
+               varImp2 = varImp2,
                timing = as.numeric(proc.time()[[3]]) - start_time,
                diagnostics = msg)
 }

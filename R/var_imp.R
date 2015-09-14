@@ -1,3 +1,59 @@
+importance <- function(state_mat, action_vec, data, outcome, period, measure){
+  
+  counter <- 1
+  indices <- as.list(rep(NA, length(as.vector(state_mat))))
+  for (i in seq(nrow(state_mat))){
+    for (j in seq(ncol(state_mat))){
+      indices[[counter]] <- c(i, j)
+      counter <- counter + 1
+    }
+  }
+  
+  if (nrow(state_mat)*ncol(state_mat) != length(indices)){
+    stop("Error in var_imp computation: 
+         Numbers of elements of state matrix does not equal length of list to hold indices for each of those elements.")
+  }
+  
+  fitness_mat <- state_mat
+  
+  results1 <- fitnessCPP(action_vec, state_mat, data, period)
+  if (anyNA(results1) | length(results1)==0){
+    stop("Error in var_imp computation: 
+         Results from initial fitness evaluation have missing values or are wrong length.")
+  }
+  
+  results1 <- performance(results = results1, outcome = outcome, measure = measure)
+  
+  for (i in seq(length(indices))) {
+    state_mat_flipped <- state_mat
+    if(nrow(state_mat)==2){
+      # If 2 rows in state matrix then just flip each value:
+      state_mat_flipped[indices[[i]][1],
+                        indices[[i]][2]] <- ifelse(state_mat[indices[[i]][1],
+                                                             indices[[i]][2]]==1, 2, 1)
+    } else {
+      # Sample from all possible values of states besides the one you're in now:
+      state_mat_flipped[indices[[i]][1],
+                        indices[[i]][2]] <- sample(seq(nrow(state_mat))[-i], 1)
+    }
+    
+    results2 <- fitnessCPP(action_vec, state_mat_flipped, data, period)
+    
+    if (anyNA(results2) | length(results2)==0){
+      stop("Error in var_imp computation: 
+           Results from subsequent fitness evaluation have missing values.")
+    }
+    
+    results2 <- performance(results = results2, outcome = outcome, measure = measure)
+    
+    dif <- results1 - results2
+    
+    fitness_mat[indices[[i]][1],
+                indices[[i]][2]] <- dif
+  }
+  fitness_mat
+}
+
 #' Variable Importance Measure for A FSM Model
 #'
 #' \code{var_imp} calculates the importance of the covariates of the model.
@@ -39,62 +95,18 @@
 #' @export
 
 var_imp <- function(state_mat, action_vec, data, outcome, period, measure){
-
-  counter <- 1
-  indices <- as.list(rep(NA, length(as.vector(state_mat))))
-  for (i in seq(nrow(state_mat))){
-    for (j in seq(ncol(state_mat))){
-      indices[[counter]] <- c(i, j)
-      counter <- counter + 1
-    }
-  }
-
-  if (nrow(state_mat)*ncol(state_mat) != length(indices)){
-    stop("Error in var_imp computation: 
-         Numbers of elements of state matrix does not equal length of list to hold indices for each of those elements.")
-  }
-
-  fitness_mat <- state_mat
-
-  results1 <- fitnessCPP(action_vec, state_mat, data, period)
-  if (anyNA(results1) | length(results1)==0){
-    stop("Error in var_imp computation: 
-         Results from initial fitness evaluation have missing values or are wrong length.")
-  }
-  
-  results1 <- performance(results = results1, outcome = outcome, measure = measure)
-
-  for (i in seq(length(indices))) {
-    state_mat_flipped <- state_mat
-    if(nrow(state_mat)==2){
-      # If 2 rows in state matrix then just flip each value:
-      state_mat_flipped[indices[[i]][1],
-                        indices[[i]][2]] <- ifelse(state_mat[indices[[i]][1],
-                                                             indices[[i]][2]]==1, 2, 1)
-    } else {
-      # Sample from all possible values of states besides the one you're in now:
-      state_mat_flipped[indices[[i]][1],
-                        indices[[i]][2]] <- sample(seq(nrow(state_mat))[-i], 1)
-    }
-    
-    results2 <- fitnessCPP(action_vec, state_mat_flipped, data, period)
-    
-    if (anyNA(results2) | length(results2)==0){
-      stop("Error in var_imp computation: 
-           Results from subsequent fitness evaluation have missing values.")
-    }
-
-    results2 <- performance(results = results2, outcome = outcome, measure = measure)
-
-    dif <- results1 - results2
-
-    fitness_mat[indices[[i]][1],
-                indices[[i]][2]] <- dif
-  }
-
+  fitness_mat <- importance(state_mat, action_vec, data, outcome, period, measure)
   varImp <- colSums(fitness_mat) # same as: as.vector(apply(fitness_mat, MARGIN=2, sum))
   varImp <- (varImp/ifelse(max(varImp)==0, 0.001, max(varImp)))*100 # make the best be 100
   varImp <- ifelse(varImp < 0, 0, varImp)
   names(varImp) <- colnames(state_mat)
+  varImp
+}
+
+var_imp2 <- function(state_mat, action_vec, data, outcome, period, measure){
+  varImp <- importance(state_mat, action_vec, data, outcome, period, measure)
+  varImp <- (varImp/ifelse(max(varImp)==0, 0.001, max(varImp)))*100 # make the best be 100
+  varImp <- ifelse(varImp < 0, 0, varImp)
+  colnames(varImp) <- colnames(state_mat)
   varImp
 }

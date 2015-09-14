@@ -35,6 +35,7 @@ setClass("ga_fsm",
                    action_vec = "numeric",
                    predictive = "numericOrchar",
                    varImp = "numeric",
+                   varImp2 = "matrix",
                    timing = "numeric",
                    diagnostics = "character")
 )
