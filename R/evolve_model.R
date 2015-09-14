@@ -319,14 +319,14 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
     data <- stats::model.matrix(eval(parse(text=form)), data)
   }
   
-  if (length(names) > 3) stop(paste("Error: You have more than 3 predictors.",
-                                    "Your model will be too complicated.",
+  if (length(names) > 3) warning(paste("Error: You have more than 3 predictors.",
+                                    "Your model will probably be too complicated.",
                                     "Do some type of feature selection to choose less",
                                     "than 4 predictors and then use the data.frame",
                                     "with just those features next time."))
   
   if (ncol(data) != inputs)
-    stop("Error: At least one of your predictor variables does not have exactly 2 levels.")
+    stop("Error: ncol(data) != inputs; at least one of your predictor variables probably does not have exactly 2 levels.")
   
   cols <- colnames(data)
   # numeric vector same length as number of columns of the
