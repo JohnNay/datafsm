@@ -31,7 +31,7 @@ int predictor_lookup(IntegerVector x){
 //' repeated for every FSM in the population and then the probability of 
 //' selection for the next generation is set to be proportional to the fitness 
 //' scores. This function is also used in the predict method for the resulting
-//' final model that is returned. The function aborts the user aborts in R,
+//' final model that is returned. The function aborts if the user aborts in R,
 //' checking every 1000 iterations.
 //' 
 //' @param action_vec Integer Vector.
@@ -60,7 +60,8 @@ IntegerVector fitnessCPP(IntegerVector action_vec, IntegerMatrix state_mat, Inte
       
       if (these_covariates[0] > 1 || these_covariates[0] < 0 ||
           these_covariates[1] > 1 || these_covariates[1] < 0 ||
-          these_covariates[2] > 1 || these_covariates[2] < 0) {
+          these_covariates[2] > 1 || these_covariates[2] < 0 ||
+          these_covariates[3] > 1 || these_covariates[3] < 0) {
         Rprintf("Looking up history[%d], period %d: (%d, %d, %d)\n", i,
                 these_covariates[0], these_covariates[1], these_covariates[2], these_covariates[3]);
       }
