@@ -105,8 +105,8 @@ var_imp <- function(state_mat, action_vec, data, outcome, period, measure){
 
 var_imp2 <- function(state_mat, action_vec, data, outcome, period, measure){
   varImp <- importance(state_mat, action_vec, data, outcome, period, measure)
-  varImp <- (varImp/ifelse(max(varImp)==0, 0.001, max(varImp)))*100 # make the best be 100
-  varImp <- ifelse(varImp < 0, 0, varImp)
+  #varImp <- (varImp/ifelse(max(varImp)==0, 0.001, max(varImp)))*100 # make the best be 100
+  #varImp <- ifelse(varImp < 0, 0, varImp)
   colnames(varImp) <- colnames(state_mat)
   varImp
 }
