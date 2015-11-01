@@ -1,0 +1,64 @@
+#'Use a Genetic Algorithm to Estimate a Finite-state Machine Model n-times
+#'
+#'\code{evolve_model} uses a genetic algorithm to estimate a finite-state 
+#'machine model, primarily for understanding and predicting decision-making.
+#'
+#'This function of the \strong{datafsm} package applies the \code{evolve_model} 
+#'function multiple times and then returns a list with either all the mdoels or 
+#'the best one.
+#'
+#'\code{evolve_model} uses a stochastic meta-heuristic optimization routine to 
+#'estimate the parameters that define a FSM model. Because this is not 
+#'guaranteed to return the best result, we run it many times.
+#'
+#'@inheritParams evolve_model
+#'@param return_best Optional logical vector length one specifying whether to 
+#'  return just the best model or all models.
+#'@param ntimes Optional integer vector length one specifying the number of
+#'  times to estimate model.
+#'  
+#'@return Returns a list where each element is an S4 object of class ga_fsm. See
+#'  \linkS4class{ga_fsm} for the details of the slots (objects) that this type 
+#'  of object will have and for information on the methods that can be used to 
+#'  summarize the calling and execution of \code{evolve_model()}, including 
+#'  \code{summary}, \code{print}, and \code{plot}.
+#'  
+#' @examples
+#' # Create data:
+#'cdata <- data.frame(period = rep(1:10, 1000),
+#'                    outcome = rep(1:2, 5000),
+#'                    my.decision1 = sample(1:0, 10000, TRUE),
+#'                    other.decision1 = sample(1:0, 10000, TRUE))
+#' (res <- evolve_model_ntimes(cdata, ntimes=2))
+#' (res <- evolve_model_ntimes(cdata, return_best = FALSE, ntimes=2))
+#'
+#'@export
+
+################################################################################
+evolve_model_ntimes <- function(data, test_data = NULL, drop_nzv = FALSE,
+                                measure = c("accuracy", "sens", "spec", "ppv"),
+                                states = NULL, cv = FALSE, max_states = NULL, k = 2,
+                                actions = NULL,
+                                seed = NULL,
+                                popSize = 75, pcrossover = 0.8, pmutation = 0.1, maxiter = 50, run = 25,
+                                parallel = FALSE,
+                                priors = NULL,
+                                verbose = TRUE,
+                                return_best = TRUE, ntimes = 10) {
+  out <- replicate(n = ntimes,
+                   evolve_model(data = data, test_data = test_data, drop_nzv = drop_nzv,
+                                measure = measure ,
+                                states = states, cv = cv, max_states = max_states, k = k,
+                                actions = actions,
+                                seed = seed,
+                                popSize = popSize, pcrossover = pcrossover, 
+                                pmutation = pmutation, maxiter = maxiter, run = run,
+                                parallel = parallel, priors = priors,
+                                verbose = verbose), 
+                   simplify = FALSE)
+  if(return_best){
+    return(out[which.min(vapply(out, best_performance, FUN.VALUE=numeric(1)))])
+  } else{
+    return(out)
+  }
+}

@@ -225,7 +225,7 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
                                               "outcome variable are not the same length."))
   if (anyNA(outcome)) stop("Error: There are missing values in the data.")
   if (length(outcome) == 0) stop("Error: The outcome is zero length.")
-  if (missing(seed)) {
+  if (is.null(seed)) {
     seed <- floor(stats::runif(1, 1,101))
     if(verbose) cat(paste("We set a seed for you to make this reproducible. It is ", seed, ".",
                           " If you want the same results, next time you run this with the same settings,",
@@ -234,7 +234,7 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
                              " If you want the same results, next time you run this with the same settings,",
                              " also set the seed argument of this function to ", seed, ".\n", sep=""))
   }
-  if (missing(actions)) {
+  if (is.null(actions)) {
     if(length(unique(outcome))==1){
       stop(paste("Error: There is only one unique value in the",
                  "outcome vector you supplied."))
@@ -417,7 +417,7 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
     priors
   }
   
-  if (missing(priors)) {
+  if (is.null(priors)) {
     priors <- build_priors(popSize, nBits, states, inputs, actions)
   } else {
     if (is.vector(priors)) {
@@ -470,7 +470,7 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
   
   action_vec <- decode_action_vec(GA@solution[1, ],  states, inputs, actions)
   
-  if (missing(test_data)){
+  if (is.null(test_data)){
     predictive <- "No test data provided. Provide some to get more accurate estimation of generalization power."
   } else {
     
