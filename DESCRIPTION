@@ -5,31 +5,32 @@ Date: 2015-09-07
 Authors@R: c( person("Nay", "John J.", email = "john.j.nay@gmail.com", role =
     c("cre", "aut")), person("Gilligan", "Jonathan M.", email =
     "jonathan.gilligan@vanderbilt.edu", role = "aut") )
-Description: Our method automatically generates models of dynamic decision-making 
-    that both have strong predictive power and are interpretable in human terms.
-    We use an efficient model representation and a genetic algorithm-based
-    estimation process to generate simple deterministic approximations that
-    explain most of the structure of complex stochastic processes.
-    We have applied the software to empirical data, and demonstrated it's 
-    ability to recover known data-generating processes by simulating
-    data with agent-based models and correctly deriving the underlying decision
-    models for multiple agent models and degrees of stochasticity.
+Description: Our method automatically generates models of dynamic decision-
+    making that both have strong predictive power and are interpretable in human
+    terms. We use an efficient model representation and a genetic algorithm-based
+    estimation process to generate simple deterministic approximations that explain
+    most of the structure of complex stochastic processes. We have applied the
+    software to empirical data, and demonstrated it's ability to recover known data-
+    generating processes by simulating data with agent-based models and correctly
+    deriving the underlying decision models for multiple agent models and degrees of
+    stochasticity.
 URL: http://johnnay.github.io/datafsm/
 BugReports: https://github.com/JohnNay/datafsm/issues
-Depends: 
+Depends:
     R (>= 3.1.1),
     methods,
     stats
 License: MIT + file LICENSE
 LazyData: true
 LinkingTo: Rcpp
-Suggests: 
+Suggests:
     doParallel,
     testthat,
     diagram,
     knitr
-Imports: 
+Imports:
     caret,
     GA,
     Rcpp
 VignetteBuilder: knitr
+RoxygenNote: 5.0.1

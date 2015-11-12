@@ -314,6 +314,7 @@ setMethod("states", "ga_fsm",
 )
 
 ################################################################################
+#' Predicts new data with estimated model
 #' @describeIn ga_fsm
 #' @param type Not currently used.
 #' @param na.action Optional function.
