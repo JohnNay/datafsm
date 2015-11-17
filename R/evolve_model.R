@@ -208,16 +208,19 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
   nzvs <- caret::nearZeroVar(data[ , -which(names(data) %in% c("period", "outcome")), drop=FALSE],
                              freqCut = 95/5, uniqueCut=10)
   if (length(nzvs) > 0){
-    to_drop <- colnames(data)[-which(names(data) %in% c("period", "outcome"))[nzvs]]
-    if(verbose) cat("We should be dropping", length(to_drop), "feature(s), which is (are):", to_drop, "\n")
-    msg <- paste0(msg, "We should be dropping ", length(to_drop), " feature(s), which is (are): ", to_drop, "\n")
+    to_drop <- colnames(data)[-which(names(data) %in% c("period", "outcome"))][nzvs]
     
-    if(drop_nzv){
-      # just names in features[[k]] so we dont drop group, folds and training vars
-      if(verbose) cat("Dropping", length(to_drop), "feature(s), which is (are):", to_drop)
-      msg <- paste0(msg, "Dropping ", length(to_drop), " feature(s), which is (are): ", to_drop)
+    if (length(to_drop) > 0){
+      if(verbose) cat("We should be dropping", length(to_drop), "feature(s), which is (are):", to_drop, "\n")
+      msg <- paste0(msg, "We should be dropping ", length(to_drop), " feature(s), which is (are): ", to_drop, "\n")
       
-      data <- data[ , -which(names(data) %in% to_drop), drop=FALSE]
+      if(drop_nzv){
+        # just names in features[[k]] so we dont drop group, folds and training vars
+        if(verbose) cat("Dropping", length(to_drop), "feature(s), which is (are):", to_drop)
+        msg <- paste0(msg, "Dropping ", length(to_drop), " feature(s), which is (are): ", to_drop)
+        
+        data <- data[ , -which(names(data) %in% to_drop), drop=FALSE]
+      }
     }
   }
   
