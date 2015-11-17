@@ -13,4 +13,6 @@ Second release of package.
 * BIGGEST CHANGE: Added evolve_model_ntimes() function to run evolve_model() ntimes and return either the best or all of them, depending on user specification. 
 * In evolve_model() instead of missing(), now use is.null() so evolve_model can be called inside other functions easily.
 
+# datafsm 0.1.2
 
+* Fixed line dropping NZV vars (line 211 of evolve_model.R)
