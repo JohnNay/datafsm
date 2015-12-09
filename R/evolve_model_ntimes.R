@@ -54,7 +54,7 @@ evolve_model_ntimes <- function(data, test_data = NULL, drop_nzv = FALSE,
                                 ntimes = 1), 
                    simplify = FALSE)
   if(return_best){
-    return(out[which.min(vapply(out, best_performance, FUN.VALUE=numeric(1)))])
+    return(out[[which.min(vapply(out, best_performance, FUN.VALUE=numeric(1)))]])
   } else{
     return(out)
   }
