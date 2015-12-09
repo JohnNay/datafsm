@@ -210,7 +210,8 @@ setMethod("barplot", "ga_fsm",
 
 ################################################################################
 #' Plots ga_fsm S4 object's variable importances
-#' @describeIn ga_fsm
+#' @describeIn ga_fsm Plots ga_fsm S4 object's variable importances
+#' @param x S4 ga_fsm object
 #' @param labels  vector of labels for each point. For vectors the default is to
 #'   use names(x) and for matrices the row labels dimnames(x)[[1]].
 #' @export
@@ -315,7 +316,7 @@ setMethod("states", "ga_fsm",
 
 ################################################################################
 #' Predicts new data with estimated model
-#' @describeIn ga_fsm
+#' @describeIn ga_fsm Predicts new data with estimated model
 #' @param type Not currently used.
 #' @param na.action Optional function.
 #' @inheritParams evolve_model

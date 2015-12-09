@@ -51,8 +51,6 @@ find_wildcards <- function(state_mat, action_vec, cols){
 }
 
 
-# cols <- c(1, 2, 1, 2)
-
 #' Determines if State Matrix is Degenerate for Given Data Set.
 #'
 #' \code{degeneracy_check} finds indices for non-identifiable elements of state

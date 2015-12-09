@@ -12,10 +12,6 @@
 #'guaranteed to return the best result, we run it many times.
 #'
 #'@inheritParams evolve_model
-#'@param return_best Optional logical vector length one specifying whether to 
-#'  return just the best model or all models.
-#'@param ntimes Optional integer vector length one specifying the number of
-#'  times to estimate model.
 #'  
 #'@return Returns a list where each element is an S4 object of class ga_fsm. See
 #'  \linkS4class{ga_fsm} for the details of the slots (objects) that this type 
@@ -54,7 +50,8 @@ evolve_model_ntimes <- function(data, test_data = NULL, drop_nzv = FALSE,
                                 popSize = popSize, pcrossover = pcrossover, 
                                 pmutation = pmutation, maxiter = maxiter, run = run,
                                 parallel = parallel, priors = priors,
-                                verbose = verbose), 
+                                verbose = verbose, 
+                                ntimes = 1), 
                    simplify = FALSE)
   if(return_best){
     return(out[which.min(vapply(out, best_performance, FUN.VALUE=numeric(1)))])

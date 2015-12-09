@@ -97,9 +97,9 @@ finding a very good solution but will also increase the computation time.
 This is passed to the GA::ga() function of the \strong{GA} package.}
 
 \item{parallel}{Optional logical vector length one. For running the GA 
-evolution in parallel. Depending on the number of cores registered and the 
-memory on your machine, this can make the process much faster, but only 
-works for Unix-based machines that can fork the processes.}
+ evolution in parallel. Depending on the number of cores registered and the 
+memory on your machine, this can make the process much faster, but only works
+for Unix-based machines that can fork the processes.}
 
 \item{priors}{Optional numeric matrix of solutions strings to be included in 
 the initialization. User needs to use a decoder function to translate prior 
@@ -110,10 +110,11 @@ then random priors are automatically created.}
 messages should be displayed on the user's console or not.}
 
 \item{return_best}{Optional logical vector length one specifying whether to 
-return just the best model or all models.}
+return just the best model or all models. Only relevant if ntimes > 1.
+Default is TRUE.}
 
-\item{ntimes}{Optional integer vector length one specifying the number of
-times to estimate model.}
+\item{ntimes}{Optional integer vector length one specifying the number of 
+times to estimate model. Default is 1 time.}
 }
 \value{
 Returns a list where each element is an S4 object of class ga_fsm. See

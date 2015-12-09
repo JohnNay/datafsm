@@ -8,7 +8,8 @@ evolve_model(data, test_data = NULL, drop_nzv = FALSE,
   measure = c("accuracy", "sens", "spec", "ppv"), states = NULL,
   cv = FALSE, max_states = NULL, k = 2, actions = NULL, seed = NULL,
   popSize = 75, pcrossover = 0.8, pmutation = 0.1, maxiter = 50,
-  run = 25, parallel = FALSE, priors = NULL, verbose = TRUE)
+  run = 25, parallel = FALSE, priors = NULL, verbose = TRUE,
+  return_best = TRUE, ntimes = 1)
 }
 \arguments{
 \item{data}{data.frame that has columns named "period" and "outcome" (period 
@@ -96,9 +97,9 @@ finding a very good solution but will also increase the computation time.
 This is passed to the GA::ga() function of the \strong{GA} package.}
 
 \item{parallel}{Optional logical vector length one. For running the GA 
-evolution in parallel. Depending on the number of cores registered and the 
-memory on your machine, this can make the process much faster, but only 
-works for Unix-based machines that can fork the processes.}
+ evolution in parallel. Depending on the number of cores registered and the 
+memory on your machine, this can make the process much faster, but only works
+for Unix-based machines that can fork the processes.}
 
 \item{priors}{Optional numeric matrix of solutions strings to be included in 
 the initialization. User needs to use a decoder function to translate prior 
@@ -107,13 +108,20 @@ then random priors are automatically created.}
 
 \item{verbose}{Optional logical vector length one specifying whether helpful 
 messages should be displayed on the user's console or not.}
+
+\item{return_best}{Optional logical vector length one specifying whether to 
+return just the best model or all models. Only relevant if ntimes > 1.
+Default is TRUE.}
+
+\item{ntimes}{Optional integer vector length one specifying the number of 
+times to estimate model. Default is 1 time.}
 }
 \value{
 Returns an S4 object of class ga_fsm. See \linkS4class{ga_fsm} for the
  details of the slots (objects) that this type of object will have and for 
  information on the methods that can be used to summarize the calling and 
- execution of \code{evolve_model()}, including \code{summary}, 
- \code{print}, and \code{plot}. Timing measurement is in seconds.
+ execution of \code{evolve_model()}, including \code{summary}, \code{print},
+ and \code{plot}. Timing measurement is in seconds.
 }
 \description{
 \code{evolve_model} uses a genetic algorithm to estimate a finite-state 
@@ -172,7 +180,7 @@ plot(estimation_details(res))
 }
 \references{
 Luca Scrucca (2013). GA: A Package for Genetic Algorithms in R. 
- Journal of Statistical Software, 53(4), 1-37. URL 
+ Journal of Statistical Software, 53(4), 1-37. URL
  http://www.jstatsoft.org/v53/i04/.
 }
 

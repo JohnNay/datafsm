@@ -5,10 +5,12 @@
 \alias{action_vec,ga_fsm-method}
 \alias{barplot,ga_fsm-method}
 \alias{best_performance,ga_fsm-method}
+\alias{dotchart,ga_fsm-method}
 \alias{estimation_details,ga_fsm-method}
 \alias{ga_fsm-class}
 \alias{plot,ga_fsm,ANY-method}
 \alias{plot,ga_fsm-method}
+\alias{predict,ga_fsm-method}
 \alias{print,ga_fsm-method}
 \alias{show,ga_fsm-method}
 \alias{states,ga_fsm-method}
@@ -29,6 +31,8 @@
 
 \S4method{barplot}{ga_fsm}(height, ...)
 
+\S4method{dotchart}{ga_fsm}(x, labels)
+
 \S4method{estimation_details}{ga_fsm}(x)
 
 \S4method{best_performance}{ga_fsm}(x)
@@ -38,6 +42,9 @@
 \S4method{action_vec}{ga_fsm}(x)
 
 \S4method{states}{ga_fsm}(x)
+
+\S4method{predict}{ga_fsm}(object, data, type = "prob",
+  na.action = stats::na.omit, ...)
 }
 \arguments{
 \item{x}{S4 ga_fsm object.
@@ -68,6 +75,23 @@ columns of state transition matrix.}
 lines for a diagram of 2 or more states.}
 
 \item{height}{ga_fsm S4 object}
+
+\item{labels}{vector of labels for each point. For vectors the default is to
+use names(x) and for matrices the row labels dimnames(x)[[1]].}
+
+\item{data}{data.frame that has columns named "period" and "outcome" (period 
+is the time period that the outcome action was taken), and the rest of the 
+columns are predictors, ranging from one to three predictors. All of the 
+(3-5 columns) should be named. The period and outcome columns should be 
+integer vectors and the columns with the predictor variable data should be 
+logical vectors (\code{TRUE, FALSE}). If the predictor variable data is not 
+logical, it will coerced to logical with \code{base::as.logical()}.}
+
+\item{type}{Not currently used.}
+
+\item{na.action}{Optional function.}
+
+\item{x}{S4 ga_fsm object}
 }
 \description{
 An S4 class to return the results of using a GA to estimate a FSM with
@@ -76,6 +100,8 @@ An S4 class to return the results of using a GA to estimate a FSM with
 Turns ga_fsm S4 object into list of summaries for printing and then prints it.
 
 Plots ga_fsm S4 object's state transition matrix
+
+Plots ga_fsm S4 object's variable importances
 
 Plots ga_fsm S4 object's variable importances
 
@@ -88,6 +114,8 @@ Extracts slot of variable importances
 Extracts slot of action_vec
 
 Extracts number of states
+
+Predicts new data with estimated model
 }
 \section{Methods (by generic)}{
 \itemize{
@@ -101,6 +129,8 @@ Extracts number of states
 
 \item \code{barplot}: 
 
+\item \code{dotchart}: Plots ga_fsm S4 object's variable importances
+
 \item \code{estimation_details}: @export
 
 \item \code{best_performance}: @export
@@ -110,6 +140,8 @@ Extracts number of states
 \item \code{action_vec}: @export
 
 \item \code{states}: @export
+
+\item \code{predict}: Predicts new data with estimated model
 }}
 \section{Slots}{
 
