@@ -66,6 +66,8 @@ setMethod("show", "ga_fsm",
 ################################################################################
 #' Turns ga_fsm S4 object into list of summaries for printing and then prints it.
 #' @describeIn ga_fsm An S4 method for summarizing a ga_fsm S4 object
+#' 
+#' @aliases summary,ga_fsm-method
 #'
 #' @param object S4 ga_fsm object
 #' @param digits Optional numeric vector length one for how many significant digits to

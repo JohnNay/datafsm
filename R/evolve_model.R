@@ -520,7 +520,7 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
         warning("Error: You have missing values in your test data somewhere other than the first period interactions. You can only have missing values for predictor columns, AND these must be in rows where period==1.")
       test_data[is.na(test_data)] <- TRUE
       
-      names <- colnames(test_data[ , -which(names(test_data) %in% c("period", "outcome"))])
+      names <- colnames(test_data[ , -which(names(test_data) %in% c("period", "outcome")), drop=FALSE])
       
       if (length(names)==1){
         form <- paste("outcome ~ 0 +", names, sep=" ")
