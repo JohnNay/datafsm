@@ -283,15 +283,16 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
     
     if (cv) {
       try({
-        states <- evolve_model_cv(data,
-                                  measure,
-                                  k,
-                                  actions,
-                                  max_states,
-                                  seed,
-                                  popSize, pcrossover, pmutation, maxiter, run,
-                                  parallel,
-                                  verbose)
+        states <- evolve_model_cv(data = data,
+                                  measure = measure,
+                                  k = k,
+                                  actions =actions,
+                                  max_states = max_states,
+                                  seed=seed,
+                                  popSize=popSize, pcrossover=pcrossover, pmutation=pmutation, maxiter=maxiter, run=run,
+                                  parallel=parallel,
+                                  verbose=verbose,
+                                  ntimes = ntimes)
         if(verbose) cat("Cross-validation found optimal number of states on training data to be ", states, ".\n\n", sep="")
         msg <- paste0(msg, "Cross-validation found optimal number of states on training data to be ", states, ".\n\n")
       })
@@ -430,7 +431,9 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
     if (is.null(priors)) {
       priors <- build_priors(popSize, nBits, states, inputs, actions)
     } else {
+      if(verbose) message("Priors have been provided, so we are using those to initialize...")
       if (is.vector(priors)) {
+        if(verbose) message("You provided the priors as vector so we are converting it to a matrix...")
         if (nBits > 1){
           priors <- matrix(priors, nrow = 1)
         } else  {

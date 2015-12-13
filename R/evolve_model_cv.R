@@ -86,7 +86,8 @@ evolve_model_cv <- function(data,
                             seed,
                             popSize, pcrossover, pmutation, maxiter, run,
                             parallel,
-                            verbose) {
+                            verbose,
+                            ntimes) {
   
   interacts <- add_interact_num(data)
   
@@ -119,6 +120,7 @@ evolve_model_cv <- function(data,
                                 states = s, cv = FALSE, seed = seed,
                                 popSize = popSize, pcrossover =pcrossover,
                                 pmutation = pmutation, maxiter = maxiter, run = run,
+                                ntimes = ntimes, return_best = TRUE,
                                 parallel = parallel)@predictive
       if(verbose) cat("\nCross-validated value of", measure, "is", mat[s, f], ".\n\n")
     }
