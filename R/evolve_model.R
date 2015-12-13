@@ -6,6 +6,17 @@ performance <- function(results, outcome, measure){
          ppv = caret::posPredValue(data = factor(results), reference = factor(outcome)))
 }
 
+build_priors <- function(popSize, nBits, states, inputs, actions) {
+  priors <- matrix(nrow = popSize, ncol = nBits)
+  for(i in 1:popSize) {
+    av <- sample(actions,states,TRUE)
+    sm <- matrix(sample(states,states * inputs,TRUE), nrow=states)
+    priors[i,] <- build_bitstring(av,sm, actions)
+  }
+  #    prior_fitness <- unlist(lapply(1:popSize, function(i) fitnessR(priors[i,])))
+  priors
+}
+
 #'Use a Genetic Algorithm to Estimate a Finite-state Machine Model
 #'
 #'\code{evolve_model} uses a genetic algorithm to estimate a finite-state 
@@ -417,17 +428,6 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
     
     nBits <- (states*inputs*l1 + states*l2)
     
-    build_priors <- function(popSize, nBits, states, inputs, actions) {
-      priors <- matrix(nrow = popSize, ncol = nBits)
-      for(i in 1:popSize) {
-        av <- sample(actions,states,TRUE)
-        sm <- matrix(sample(states,states * inputs,TRUE), nrow=states)
-        priors[i,] <- build_bitstring(av,sm, actions)
-      }
-      #    prior_fitness <- unlist(lapply(1:popSize, function(i) fitnessR(priors[i,])))
-      priors
-    }
-    
     if (is.null(priors)) {
       priors <- build_priors(popSize, nBits, states, inputs, actions)
     } else {
@@ -442,6 +442,16 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
       } else {
         priors <- as.matrix(priors)
       }
+      
+      # Mutate the priors, randomly change one element in each
+      for(i in seq(nrow(priors))){
+        parent <- as.vector(priors[i, ])
+        n <- length(parent)
+        j <- sample(1:n, size = 1)
+        parent[j] <- abs(parent[j] - 1)
+        priors[i, ] <- parent
+      }
+      
       if (nBits != ncol(priors)) stop(paste("Error: Priors do not match number of variables.",
                                             "Remember that you need to provide a decoded bitstring for the priors."))
     }
