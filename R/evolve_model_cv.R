@@ -1,5 +1,12 @@
-
-################################################################################
+#' Add interaction numbers for panel data
+#' 
+#' \code{add_interact_num} takes in data and returns a vector of interactions
+#' 
+#' @param d data.frame of panel data
+#'     
+#' @return Returns a vector specifying interactions
+#'   
+#' @export
 add_interact_num <- function(d){
         game <- rep(NA, nrow(d))
         game[1] <- 1

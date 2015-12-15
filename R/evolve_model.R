@@ -1,4 +1,19 @@
+#'Measure Model Performance
+#'
+#'\code{performance} measures difference between predictions and data
+#'
+#'This is the function of the \strong{datafsm} package used to measure the fsm model performance. It uses the caret package.
+#'
+#'@param results Numeric vector with predictions
+#'@param outcome Numeric vector same length as results with real data to compare to.
+#'
+#'@inheritParams evolve_model
+#'  
+#'@return Returns a numeric vector length one.
+#'
+#'@export
 performance <- function(results, outcome, measure){
+  stopifnot(length(results)==length(outcome))
   switch(measure,
          accuracy = sum(ifelse( results == outcome , 1 , 0)) / length(results),
          sens = caret::sensitivity(data = factor(results), reference = factor(outcome)),
