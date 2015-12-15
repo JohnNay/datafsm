@@ -5,67 +5,81 @@
 \title{Estimate Optimal Number of States of a Finite-state Machine Model}
 \usage{
 evolve_model_cv(data, measure, k, actions, max_states, seed, popSize,
-  pcrossover, pmutation, maxiter, run, parallel, verbose)
+  pcrossover, pmutation, maxiter, run, parallel, verbose, ntimes)
 }
 \arguments{
-\item{data}{data.frame that has "period" and "outcome" columns and rest of 
+\item{data}{data.frame that has columns named "period" and "outcome" (period 
+is the time period that the outcome action was taken), and the rest of the 
 columns are predictors, ranging from one to three predictors. All of the 
-(3-5 columns) should be named.}
+(3-5 columns) should be named. The period and outcome columns should be 
+integer vectors and the columns with the predictor variable data should be 
+logical vectors (\code{TRUE, FALSE}). If the predictor variable data is not 
+logical, it will coerced to logical with \code{base::as.logical()}.}
 
-\item{measure}{Optional character vector that is either: "accuracy", "sens", 
-"spec", or "ppv". This specifies what measure of predictive performance to 
-use for training and evaluating the model. The default measure is 
-"accuracy". However, accuracy can be a problematic measure when the classes
-are imbalanced in the samples, i.e. if a class the model is trying to 
-predict is very rare. Alternatives to accuracy are available that 
-illuminate different aspects of predictive power. Sensitivity answers the 
-question, `` given that a result is truly an event, what is the probability
-that the model will predict an event?'' Specificity answers the question, 
-``given that a result is truly not an event, what is the probability that 
-the model will predict a negative?'' Positive predictive value answers, 
-``what is the percent of predicted positives that are actually positive?''}
+\item{measure}{Optional length one character vector that is either:
+"accuracy", "sens", "spec", or "ppv". This specifies what measure of
+predictive performance to use for training and evaluating the model. The
+default measure is \code{"accuracy"}. However, accuracy can be a problematic
+measure when the classes are imbalanced in the samples, i.e. if a class the
+model is trying to predict is very rare. Alternatives to accuracy are
+available that illuminate different aspects of predictive power. Sensitivity
+answers the question, `` given that a result is truly an event, what is the
+probability that the model will predict an event?'' Specificity answers the
+question, ``given that a result is truly not an event, what is the
+probability that the model will predict a negative?'' Positive predictive
+value answers, ``what is the percent of predicted positives that are
+actually positive?''}
 
-\item{k}{Numeric vector with the number of folds for k-fold cross-validation.}
+\item{k}{Optional numeric vector length one only relevant if cv==TRUE, 
+specifying number of folds for cross-validation.}
 
-\item{actions}{Numeric vector with the number of actions. If not provided, 
-then actions will be set as the number of unique values in the outcome 
-vector.}
+\item{actions}{Optional numeric vector with the number of actions. If not 
+provided, then actions will be set as the number of unique values in the 
+outcome vector.}
 
-\item{max_states}{Numeric vector with the maximum number of states to test.}
+\item{max_states}{Optional numeric vector length one only relevant if 
+\code{cv==TRUE}. It specifies how up to how many states that 
+cross-validation should search through. 
+If not provided, will be set to \code{states + 1}.}
 
-\item{seed}{Numeric vector length one.}
+\item{seed}{Optional numeric vector length one.}
 
-\item{popSize}{Numeric vector length one specifying the size of the GA 
-population. A larger number will increase the probability of finding a very
-good solution but will also increase the computation time. This is passed 
-to the GA::ga() function of the \strong{GA} package.}
+\item{popSize}{Optional numeric vector length one specifying the size of the 
+GA population. A larger number will increase the probability of finding a 
+very good solution but will also increase the computation time. This is 
+passed to the GA::ga() function of the \strong{GA} package.}
 
-\item{pcrossover}{Numeric vector length one specifying probability of 
-crossover for GA. This is passed to the GA::ga() function of the 
-\strong{GA} package.}
+\item{pcrossover}{Optional numeric vector length one specifying probability of
+crossover for GA. This is passed to the GA::ga() function of the \strong{GA}
+package.}
 
-\item{pmutation}{Numeric vector length one specifying probability of mutation
-for GA. This is passed to the GA::ga() function of the \strong{GA} package.}
+\item{pmutation}{Optional numeric vector length one specifying probability of 
+mutation for GA. This is passed to the GA::ga() function of the \strong{GA} 
+package.}
 
-\item{maxiter}{Numeric vector length one specifying max number of iterations 
-for stopping the GA evolution. A larger number will increase the 
+\item{maxiter}{Optional numeric vector length one specifying max number of 
+iterations for stopping the GA evolution. A larger number will increase the 
 probability of finding a very good solution but will also increase the 
-computation time. This is passed to the GA::ga() function of the 
-\strong{GA} package.}
+computation time. This is passed to the GA::ga() function of the \strong{GA}
+package. \code{maxiter} is scaled by how many parameters are in the model: 
+\code{maxiter <- maxiter + ((maxiter*(nBits^2)) / maxiter)}.}
 
-\item{run}{Numeric vector length one specifying max number of consecutive 
-iterations without improvement in best fitness score for stopping the GA 
-evolution. A larger number will increase the probability of finding a very 
-good solution but will also increase the computation time. This is passed 
-to the GA::ga() function of the \strong{GA} package.}
+\item{run}{Optional numeric vector length one specifying max number of 
+consecutive iterations without improvement in best fitness score for 
+stopping the GA evolution. A larger number will increase the probability of 
+finding a very good solution but will also increase the computation time. 
+This is passed to the GA::ga() function of the \strong{GA} package.}
 
-\item{parallel}{Logical vector length one. For running the GA evolution in 
-parallel. Depending on the number of cores registered and the memory on 
-your machine, this can make the process much faster, but only works for 
-Unix-based machines that can fork the processes.}
+\item{parallel}{Optional logical vector length one. For running the GA 
+ evolution in parallel. Depending on the number of cores registered and the 
+memory on your machine, this can make the process much faster, but only works
+for Unix-based machines that can fork the processes.}
 
 \item{verbose}{Optional logical vector length one specifying whether helpful 
 messages should be displayed on the user's console or not.}
+
+\item{ntimes}{Optional integer vector length one specifying the number of 
+times to estimate model. Default is 1 time.}
 }
 \value{
 Returns the number of states that maximizes the \code{measure}, e.g.
@@ -74,8 +88,6 @@ Returns the number of states that maximizes the \code{measure}, e.g.
 \description{
 \code{evolve_model_cv} calls \code{evolve_model} with varied numbers of 
 states and compares their performance with cross-validation.
-\code{evolve_model} relies on the \strong{GA} package for genetic algorithm
-optimization.
 }
 \references{
 Luca Scrucca (2013). GA: A Package for Genetic Algorithms in R. 

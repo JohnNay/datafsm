@@ -14,55 +14,8 @@ add_interact_num <- function(d){
 #' 
 #' \code{evolve_model_cv} calls \code{evolve_model} with varied numbers of 
 #' states and compares their performance with cross-validation.
-#' \code{evolve_model} relies on the \strong{GA} package for genetic algorithm
-#' optimization.
 #' 
-#' @param data data.frame that has "period" and "outcome" columns and rest of 
-#'   columns are predictors, ranging from one to three predictors. All of the 
-#'   (3-5 columns) should be named.
-#' @param measure Optional character vector that is either: "accuracy", "sens", 
-#'   "spec", or "ppv". This specifies what measure of predictive performance to 
-#'   use for training and evaluating the model. The default measure is 
-#'   "accuracy". However, accuracy can be a problematic measure when the classes
-#'   are imbalanced in the samples, i.e. if a class the model is trying to 
-#'   predict is very rare. Alternatives to accuracy are available that 
-#'   illuminate different aspects of predictive power. Sensitivity answers the 
-#'   question, `` given that a result is truly an event, what is the probability
-#'   that the model will predict an event?'' Specificity answers the question, 
-#'   ``given that a result is truly not an event, what is the probability that 
-#'   the model will predict a negative?'' Positive predictive value answers, 
-#'   ``what is the percent of predicted positives that are actually positive?''
-#' @param k Numeric vector with the number of folds for k-fold cross-validation.
-#' @param max_states Numeric vector with the maximum number of states to test.
-#' @param actions Numeric vector with the number of actions. If not provided, 
-#'   then actions will be set as the number of unique values in the outcome 
-#'   vector.
-#' @param seed Numeric vector length one.
-#' @param popSize Numeric vector length one specifying the size of the GA 
-#'   population. A larger number will increase the probability of finding a very
-#'   good solution but will also increase the computation time. This is passed 
-#'   to the GA::ga() function of the \strong{GA} package.
-#' @param pcrossover Numeric vector length one specifying probability of 
-#'   crossover for GA. This is passed to the GA::ga() function of the 
-#'   \strong{GA} package.
-#' @param pmutation Numeric vector length one specifying probability of mutation
-#'   for GA. This is passed to the GA::ga() function of the \strong{GA} package.
-#' @param maxiter Numeric vector length one specifying max number of iterations 
-#'   for stopping the GA evolution. A larger number will increase the 
-#'   probability of finding a very good solution but will also increase the 
-#'   computation time. This is passed to the GA::ga() function of the 
-#'   \strong{GA} package.
-#' @param run Numeric vector length one specifying max number of consecutive 
-#'   iterations without improvement in best fitness score for stopping the GA 
-#'   evolution. A larger number will increase the probability of finding a very 
-#'   good solution but will also increase the computation time. This is passed 
-#'   to the GA::ga() function of the \strong{GA} package.
-#' @param parallel Logical vector length one. For running the GA evolution in 
-#'   parallel. Depending on the number of cores registered and the memory on 
-#'   your machine, this can make the process much faster, but only works for 
-#'   Unix-based machines that can fork the processes.
-#' @param verbose Optional logical vector length one specifying whether helpful 
-#'   messages should be displayed on the user's console or not.
+#'@inheritParams evolve_model
 #'   
 #' @return Returns the number of states that maximizes the \code{measure}, e.g.
 #'   accuracy.
