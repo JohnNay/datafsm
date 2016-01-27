@@ -11,6 +11,9 @@
 #'estimate the parameters that define a FSM model. Because this is not 
 #'guaranteed to return the best result, we run it many times.
 #'
+#'@param cores integer vector length one specifying number of cores to use if
+#'  parallel is TRUE.
+#'  
 #'@inheritParams evolve_model
 #'  
 #'@return Returns a list where each element is an S4 object of class ga_fsm. See
@@ -40,7 +43,7 @@ evolve_model_ntimes <- function(data, test_data = NULL, drop_nzv = FALSE,
                                 parallel = FALSE,
                                 priors = NULL,
                                 verbose = TRUE,
-                                return_best = TRUE, ntimes = 10) {
+                                return_best = TRUE, ntimes = 10, cores = NULL) {
   if (parallel) {
     if (is.null(cores)) cores <- parallel::detectCores() - 1
     doParallel::registerDoParallel(cores = cores)
