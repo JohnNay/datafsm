@@ -41,18 +41,30 @@ evolve_model_ntimes <- function(data, test_data = NULL, drop_nzv = FALSE,
                                 priors = NULL,
                                 verbose = TRUE,
                                 return_best = TRUE, ntimes = 10) {
-  out <- replicate(n = ntimes,
-                   evolve_model(data = data, test_data = test_data, drop_nzv = drop_nzv,
-                                measure = measure ,
-                                states = states, cv = cv, max_states = max_states, k = k,
-                                actions = actions,
-                                seed = seed,
-                                popSize = popSize, pcrossover = pcrossover, 
-                                pmutation = pmutation, maxiter = maxiter, run = run,
-                                parallel = parallel, priors = priors,
-                                verbose = verbose, 
-                                ntimes = 1), 
-                   simplify = FALSE)
+  if (parallel) {
+    if (is.null(cores)) cores <- parallel::detectCores() - 1
+    doParallel::registerDoParallel(cores = cores)
+    forloop <- foreach::`%dopar%`
+  } else{
+    forloop <- foreach::`%do%`
+  }
+  
+  i <- NULL # http://stackoverflow.com/questions/9439256/how-can-i-handle-r-cmd-check-no-visible-binding-for-global-variable-notes-when
+  out <- forloop(foreach::foreach(i=seq(ntimes)), {
+    tryCatch(evolve_model(data = data, test_data = test_data, drop_nzv = drop_nzv,
+                          measure = measure ,
+                          states = states, cv = cv, max_states = max_states, k = k,
+                          actions = actions,
+                          seed = seed,
+                          popSize = popSize, pcrossover = pcrossover, 
+                          pmutation = pmutation, maxiter = maxiter, run = run,
+                          parallel = FALSE, # This operation runs single threaded.
+                          priors = priors,
+                          verbose = verbose, 
+                          ntimes = 1), 
+             error = function(e) NA)
+  })
+  
   if(return_best){
     return(out[[which.min(vapply(out, best_performance, FUN.VALUE=numeric(1)))]])
   } else{

@@ -90,8 +90,6 @@ logical, it will coerced to logical with \code{base::as.logical()}.}
 \item{type}{Not currently used.}
 
 \item{na.action}{Optional function.}
-
-\item{x}{S4 ga_fsm object}
 }
 \description{
 An S4 class to return the results of using a GA to estimate a FSM with
