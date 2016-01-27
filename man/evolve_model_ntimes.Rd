@@ -9,7 +9,7 @@ evolve_model_ntimes(data, test_data = NULL, drop_nzv = FALSE,
   cv = FALSE, max_states = NULL, k = 2, actions = NULL, seed = NULL,
   popSize = 75, pcrossover = 0.8, pmutation = 0.1, maxiter = 50,
   run = 25, parallel = FALSE, priors = NULL, verbose = TRUE,
-  return_best = TRUE, ntimes = 10)
+  return_best = TRUE, ntimes = 10, cores = NULL)
 }
 \arguments{
 \item{data}{data.frame that has columns named "period" and "outcome" (period 
@@ -115,6 +115,9 @@ Default is TRUE.}
 
 \item{ntimes}{Optional integer vector length one specifying the number of 
 times to estimate model. Default is 1 time.}
+
+\item{cores}{integer vector length one specifying number of cores to use if
+parallel is TRUE.}
 }
 \value{
 Returns a list where each element is an S4 object of class ga_fsm. See

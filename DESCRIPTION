@@ -25,6 +25,7 @@ LazyData: true
 LinkingTo: Rcpp
 Suggests:
     doParallel,
+    foreach,
     testthat,
     diagram,
     knitr
