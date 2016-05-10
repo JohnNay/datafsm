@@ -16,3 +16,4 @@ Second release of package.
 # datafsm 0.1.2
 
 * Fixed line dropping NZV vars (line 211 of evolve_model.R)
+* Changed all occurencies of 'maxfitness' to 'maxFitness' to comply with new GA version soon to be on CRAN.
