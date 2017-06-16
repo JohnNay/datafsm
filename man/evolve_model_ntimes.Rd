@@ -132,7 +132,7 @@ machine model, primarily for understanding and predicting decision-making.
 }
 \details{
 This function of the \strong{datafsm} package applies the \code{evolve_model} 
-function multiple times and then returns a list with either all the mdoels or 
+function multiple times and then returns a list with either all the models or 
 the best one.
 
 \code{evolve_model} uses a stochastic meta-heuristic optimization routine to 

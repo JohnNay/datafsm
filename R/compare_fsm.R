@@ -3,7 +3,7 @@
 #' \code{compare_fsm} uses a specified distance measure to compare FSMs.
 #'
 #' Compares a user-defined FSM to a decoded estimated FSM. If you have have FSMs
-#' that may have values in the matrices that arent all simple integers, you can
+#' that may have values in the matrices that are not all simple integers, you can
 #' use the distance metric that is most appropriate. Euclidean does
 #' sqrt(sum((x_i - y_i)^2)) - the L2 norm. Manhattan takes abs diff between
 #' them - the L1 norm. Binary treats non-zero elements as "on" and zero
