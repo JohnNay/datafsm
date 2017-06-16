@@ -1,5 +1,5 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![Build Status](https://travis-ci.org/jonathan-g/datafsm.png?branch=master)](https://travis-ci.org/JohnNay/datafsm) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/datafsm)](http://cran.r-project.org/package=datafsm)
+[![Build Status](https://travis-ci.org/jonathan-g/datafsm.png?branch=master)](https://travis-ci.org/jonathan-g/datafsm) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/datafsm)](http://cran.r-project.org/package=datafsm)
 
 This package implements our method for automatically generating models of dynamic decision-making that both have strong predictive power and are interpretable in human terms. We use an efficient model representation and a genetic algorithm-based estimation process to generate simple deterministic approximations that explain most of the structure of complex stochastic processes. The genetic algorithm is implemented with the **GA** package ([Scrucca 2013](http://www.jstatsoft.org/v53/i04/)). Our method, implemented in C++ and R, scales well to large data sets. We have applied the package to empirical data, and demonstrated the method's ability to recover known data-generating processes by simulating data with agent-based models and correctly deriving the underlying decision models for multiple agent models and degrees of stochasticity.
 
@@ -127,54 +127,8 @@ Use the summary and plot methods on the output of the `evolve_model()` function:
 
 ``` r
 summary(res)
-#>                                     
-#> Gentic Algorithm Settings: 
-#> Population size       =  75 
-#> Number of generations =  150 
-#> Elitism               =  4 
-#> Crossover probability =  0.8 
-#> Mutation probability  =  0.1 
-#> 
-#> Finite State Machine Settings: 
-#> Actions =  2 
-#> States  =  2 
-#> 
-#> Results: 
-#> 
-#> Iterations For This Run              = 27 
-#> Training Data Fitness Function Value = 0.99 
-#> Test Data Fitness Function Value     = No test data provided. Provide some to get more accurate estimation of generalization power. 
-#> 
-#> (Bit String Form) of Solution: 
-#>  x1  x2  x3  x4  x5  x6  x7  x8  x9 x10 
-#>   0   1   0   0   0   0   1   0   0   0 
-#> 
-#> State Matrix of Solution: 
-#>      my.decision1FALSE:other.decision1FALSE
-#> [1,]                                      1
-#> [2,]                                      1
-#>      my.decision1TRUE:other.decision1FALSE
-#> [1,]                                     1
-#> [2,]                                     1
-#>      my.decision1FALSE:other.decision1TRUE
-#> [1,]                                     2
-#> [2,]                                     2
-#>      my.decision1TRUE:other.decision1TRUE
-#> [1,]                                    2
-#> [2,]                                    2
-#> 
-#> Action Vector of Solution: 
-#> [1] 1 2
-#> 
-#> Variable Importance: 
-#> my.decision1FALSE:other.decision1FALSE 
-#>                                   88.8 
-#>  my.decision1TRUE:other.decision1FALSE 
-#>                                   83.7 
-#>  my.decision1FALSE:other.decision1TRUE 
-#>                                  100.0 
-#>   my.decision1TRUE:other.decision1TRUE 
-#>                                   34.4
+#> Length  Class   Mode 
+#>      1 ga_fsm     S4
 plot(res, action_label = ifelse(action_vec(res)==1, "C", "D"), 
      transition_label = c('cc','dc','cd','dd'))
 ```
@@ -202,34 +156,41 @@ Session Info
 
 ``` r
 sessionInfo()
-#> R version 3.2.2 (2015-08-14)
-#> Platform: x86_64-apple-darwin13.4.0 (64-bit)
-#> Running under: OS X 10.10.5 (Yosemite)
+#> R version 3.4.0 (2017-04-21)
+#> Platform: x86_64-w64-mingw32/x64 (64-bit)
+#> Running under: Windows 10 x64 (build 15063)
+#> 
+#> Matrix products: default
 #> 
 #> locale:
-#> [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+#> [1] LC_COLLATE=English_United States.1252 
+#> [2] LC_CTYPE=English_United States.1252   
+#> [3] LC_MONETARY=English_United States.1252
+#> [4] LC_NUMERIC=C                          
+#> [5] LC_TIME=English_United States.1252    
 #> 
 #> attached base packages:
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] GA_2.2          iterators_1.0.7 foreach_1.4.2   datafsm_0.1.0  
+#> [1] GA_3.0.2        iterators_1.0.8 foreach_1.4.3   datafsm_0.2.0  
 #> 
 #> loaded via a namespace (and not attached):
-#>  [1] Rcpp_0.12.0         formatR_1.2         nloptr_1.0.4       
-#>  [4] plyr_1.8.3          highr_0.5           tools_3.2.2        
-#>  [7] digest_0.6.8        lme4_1.1-8          evaluate_0.7.2     
-#> [10] gtable_0.1.2        nlme_3.1-121        lattice_0.20-33    
-#> [13] mgcv_1.8-7          Matrix_1.2-2        yaml_2.1.13        
-#> [16] parallel_3.2.2      SparseM_1.7         brglm_0.5-9        
-#> [19] proto_0.3-10        BradleyTerry2_1.0-6 stringr_1.0.0      
-#> [22] knitr_1.11          gtools_3.5.0        stats4_3.2.2       
-#> [25] grid_3.2.2          caret_6.0-52        nnet_7.3-10        
-#> [28] diagram_1.6.3       rmarkdown_0.8       minqa_1.2.4        
-#> [31] ggplot2_1.0.1       reshape2_1.4.1      car_2.0-26         
-#> [34] magrittr_1.5        scales_0.2.5        codetools_0.2-14   
-#> [37] htmltools_0.2.6     MASS_7.3-43         splines_3.2.2      
-#> [40] pbkrtest_0.4-2      shape_1.4.2         colorspace_1.2-6   
-#> [43] quantreg_5.11       stringi_0.5-5       doParallel_1.0.8   
-#> [46] munsell_0.4.2
+#>  [1] Rcpp_0.12.11       nloptr_1.0.4       compiler_3.4.0    
+#>  [4] plyr_1.8.4         highr_0.6          tools_3.4.0       
+#>  [7] digest_0.6.12      lme4_1.1-13        evaluate_0.10     
+#> [10] tibble_1.3.3       gtable_0.2.0       nlme_3.1-131      
+#> [13] lattice_0.20-35    mgcv_1.8-17        rlang_0.1.1       
+#> [16] Matrix_1.2-10      yaml_2.1.14        parallel_3.4.0    
+#> [19] SparseM_1.77       stringr_1.2.0      knitr_1.16        
+#> [22] MatrixModels_0.4-1 stats4_3.4.0       rprojroot_1.2     
+#> [25] grid_3.4.0         caret_6.0-76       nnet_7.3-12       
+#> [28] diagram_1.6.3      rmarkdown_1.5      minqa_1.2.4       
+#> [31] ggplot2_2.2.1.9000 reshape2_1.4.2     car_2.1-4         
+#> [34] magrittr_1.5       backports_1.1.0    scales_0.4.1      
+#> [37] codetools_0.2-15   ModelMetrics_1.1.0 htmltools_0.3.6   
+#> [40] MASS_7.3-47        splines_3.4.0      pbkrtest_0.4-7    
+#> [43] shape_1.4.2        colorspace_1.3-2   quantreg_5.33     
+#> [46] stringi_1.1.5      lazyeval_0.2.0     doParallel_1.0.10 
+#> [49] munsell_0.4.3
 ```
