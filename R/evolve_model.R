@@ -54,7 +54,7 @@ build_priors <- function(popSize, nBits, states, inputs, actions) {
 #'available processors of the computer using the \strong{doParallel} package, 
 #'otherwise, the evaluations of fitness are conducted sequentially. Because 
 #'this fitness function that \code{evolve_model} creates must loop through all 
-#'the data everytime it is evaluated and we need to evaluate many possible 
+#'the data every time it is evaluated and we need to evaluate many possible 
 #'solution FSMs, the fitness function is implemented in C++ so it is very fast.
 #'
 #'\code{evolve_model} uses a stochastic meta-heuristic optimization routine to 
