@@ -3,7 +3,7 @@
 
 This package implements our method for automatically generating models of dynamic decision-making that both have strong predictive power and are interpretable in human terms. We use an efficient model representation and a genetic algorithm-based estimation process to generate simple deterministic approximations that explain most of the structure of complex stochastic processes. The genetic algorithm is implemented with the **GA** package ([Scrucca 2013](http://www.jstatsoft.org/v53/i04/)). Our method, implemented in C++ and R, scales well to large data sets. We have applied the package to empirical data, and demonstrated the method's ability to recover known data-generating processes by simulating data with agent-based models and correctly deriving the underlying decision models for multiple agent models and degrees of stochasticity.
 
-A user of our package can estimate models by providing their data in a common "panel data" format. The package is designed to estimate time series classification models that use a small number of binary predictor variables and move back and forth between the values of the outcome variable over time. Larger sets of predictor variables can be reduced to smaller sets with cross-validation. Although the predictor variables must be binary, a quantitative variable can be converted into binary by division of the observed values into high/low classes. Future releases of the package may include additional estimation methods to complement genetic algorithm optimization. 
+A user of our package can estimate models by providing their data in a common "panel data" format. The package is designed to estimate time series classification models that use a small number of binary predictor variables and move back and forth between the values of the outcome variable over time. Larger sets of predictor variables can be reduced to smaller sets with cross-validation. Although the predictor variables must be binary, a quantitative variable can be converted into binary by division of the observed values into high/low classes. Future releases of the package may include additional estimation methods to complement genetic algorithm optimization.
 
 ``` r
 # Load and attach datafsm into your R session, making its functions available:
@@ -104,7 +104,7 @@ We can estimate a model with that data. `evolve_model` uses a genetic algorithm 
 
 `evolve_model` takes data on predictors and data on the outcome and automatically creates a fitness function that takes training data, an action vector that `evolve_model` generates, and a state matrix `evolve_model` generates as input and returns numeric vector whose length is the number of rows in the training data. `evolve_model` then computes a fitness score for that potential solution FSM by comparing it to the provided `outcome` in the real training data. This is repeated for every FSM in the population and then the probability of selection for the next generation is proportional to the fitness scores. If the argument `cv` is set to `TRUE` the function will call itself recursively while varying the number of states inside a cross-validation loop in order to estimate the optimal number of states, then it will set the number of states to that optimal number and estimate the model on the full training set.
 
-If the argument `parallel` is set to `TRUE`, then these evaluations are distributed across the available processors of the computer using the `doParallel` functions; otherwise, the evalulations of fitness are conducted sequentially. Because this fitness function that `evolve_model` creates must loop through all the training data everytime it is evaluated and we need to evaluate many possible solution FSMs, the fitness function is implemented in C++ to improve its performance.
+If the argument `parallel` is set to `TRUE`, then these evaluations are distributed across the available processors of the computer using the `doParallel` functions; otherwise, the evaluations of fitness are conducted sequentially. Because this fitness function that `evolve_model` creates must loop through all the training data everytime it is evaluated and we need to evaluate many possible solution FSMs, the fitness function is implemented in C++ to improve its performance.
 
 ``` r
 res <- evolve_model(cdata, seed = seed)
@@ -133,7 +133,7 @@ plot(res, action_label = ifelse(action_vec(res)==1, "C", "D"),
      transition_label = c('cc','dc','cd','dd'))
 ```
 
-![Result of `plot()` method call on `ga_fsm` object.](README-plot.fsm-1.png)
+![Result of `plot()` method call on `ga_fsm` object.](man/figures/README/plot.fsm-1.png)
 
 The diagram shows that `evolve_model` recovered a tit-for-tat model in which the player in question ("me") mimics the last action of the opponent.
 
@@ -144,7 +144,7 @@ suppressMessages(library(GA))
 plot(estimation_details(res))
 ```
 
-![Result of `plot()` method call on ga object, which is obtained by calling `estimation_details()` on `ga_fsm` object.](README-plot.evolution-1.png)
+![Result of `plot()` method call on ga object, which is obtained by calling `estimation_details()` on `ga_fsm` object.](man/figures/README/plot.evolution-1.png)
 
 Acknowledgements
 ================
