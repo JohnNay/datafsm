@@ -1,5 +1,5 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![Build Status](https://travis-ci.org/JohnNay/datafsm.png?branch=master)](https://travis-ci.org/JohnNay/datafsm) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/datafsm)](http://cran.r-project.org/package=datafsm)
+[![Build Status](https://travis-ci.org/jonathan-g/datafsm.png?branch=master)](https://travis-ci.org/JohnNay/datafsm) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/datafsm)](http://cran.r-project.org/package=datafsm)
 
 This package implements our method for automatically generating models of dynamic decision-making that both have strong predictive power and are interpretable in human terms. We use an efficient model representation and a genetic algorithm-based estimation process to generate simple deterministic approximations that explain most of the structure of complex stochastic processes. The genetic algorithm is implemented with the **GA** package ([Scrucca 2013](http://www.jstatsoft.org/v53/i04/)). Our method, implemented in C++ and R, scales well to large data sets. We have applied the package to empirical data, and demonstrated the method's ability to recover known data-generating processes by simulating data with agent-based models and correctly deriving the underlying decision models for multiple agent models and degrees of stochasticity.
 
