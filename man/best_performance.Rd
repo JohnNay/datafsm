@@ -12,4 +12,3 @@ best_performance(x)
 \description{
 Extracts performance
 }
-

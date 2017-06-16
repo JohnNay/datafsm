@@ -149,4 +149,3 @@ cdata <- data.frame(period = rep(1:10, 1000),
 (res <- evolve_model_ntimes(cdata, return_best = FALSE, ntimes=2))
 
 }
-

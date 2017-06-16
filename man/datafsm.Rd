@@ -4,6 +4,7 @@
 \name{datafsm}
 \alias{datafsm}
 \alias{datafsm-package}
+\alias{datafsm-package}
 \title{datafsm: A package for estimating FSM models.}
 \description{
 It relies on the \strong{GA} package:
@@ -30,3 +31,20 @@ model:
 }
 }
 
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/jonathan-g/datafsm}
+  \item Report bugs at \url{https://github.com/jonathan-g/datafsm/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Gilligan Jonathan M. \email{jonathan.gilligan@vanderbilt.edu}
+
+Authors:
+\itemize{
+  \item Nay John J. \email{john.j.nay@gmail.com}
+}
+
+}

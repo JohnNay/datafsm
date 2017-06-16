@@ -183,4 +183,3 @@ Luca Scrucca (2013). GA: A Package for Genetic Algorithms in R.
  Journal of Statistical Software, 53(4), 1-37. URL
  http://www.jstatsoft.org/v53/i04/.
 }
-

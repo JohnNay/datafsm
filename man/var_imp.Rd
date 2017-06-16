@@ -51,4 +51,3 @@ measures the change in fitness (prediction of data) relative to the original
 model. Then these changes are summed across columns to provide the importance
 of each of the columns of the state matrix.
 }
-

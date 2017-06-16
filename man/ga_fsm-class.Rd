@@ -2,20 +2,20 @@
 % Please edit documentation in R/class_def.R
 \docType{class}
 \name{ga_fsm-class}
-\alias{action_vec,ga_fsm-method}
-\alias{barplot,ga_fsm-method}
-\alias{best_performance,ga_fsm-method}
-\alias{dotchart,ga_fsm-method}
-\alias{estimation_details,ga_fsm-method}
 \alias{ga_fsm-class}
-\alias{plot,ga_fsm,ANY-method}
-\alias{plot,ga_fsm-method}
-\alias{predict,ga_fsm-method}
 \alias{print,ga_fsm-method}
 \alias{show,ga_fsm-method}
-\alias{states,ga_fsm-method}
 \alias{summary,ga_fsm-method}
+\alias{plot,ga_fsm,ANY-method}
+\alias{plot,ga_fsm-method}
+\alias{barplot,ga_fsm-method}
+\alias{dotchart,ga_fsm-method}
+\alias{estimation_details,ga_fsm-method}
+\alias{best_performance,ga_fsm-method}
 \alias{varImp,ga_fsm-method}
+\alias{action_vec,ga_fsm-method}
+\alias{states,ga_fsm-method}
+\alias{predict,ga_fsm-method}
 \title{An S4 class to return the results of using a GA to estimate a FSM with
 \code{\link{evolve_model}}.}
 \usage{
@@ -141,6 +141,7 @@ Predicts new data with estimated model
 
 \item \code{predict}: Predicts new data with estimated model
 }}
+
 \section{Slots}{
 
 \describe{

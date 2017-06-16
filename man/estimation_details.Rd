@@ -12,4 +12,3 @@ estimation_details(x)
 \description{
 Extracts slot relevant to estimating the fsm
 }
-

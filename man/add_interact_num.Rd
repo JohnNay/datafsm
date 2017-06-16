@@ -15,4 +15,3 @@ Returns a vector specifying interactions
 \description{
 \code{add_interact_num} takes in data and returns a vector of interactions
 }
-

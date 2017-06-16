@@ -61,4 +61,3 @@ of the state matrix can be identified.'' If the model is fine, then
 \code{sparse_state_mat} and \code{corrected_state_mat} should be equal to
 \code{state_mat}.
 }
-

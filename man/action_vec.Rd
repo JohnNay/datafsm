@@ -12,4 +12,3 @@ action_vec(x)
 \description{
 Extracts slot of action_vec
 }
-

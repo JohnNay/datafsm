@@ -37,4 +37,3 @@ tft_action <- matrix(c(1, 2))
 find_wildcards(tft_state, tft_action,  c(1, 2, 1, 2))
 
 }
-

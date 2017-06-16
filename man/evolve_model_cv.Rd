@@ -98,4 +98,3 @@ Luca Scrucca (2013). GA: A Package for Genetic Algorithms in R.
   Statistical Learning: Data Mining, Inference, and Prediction, Second
   Edition. 2nd ed. New York, NY: Springer.
 }
-

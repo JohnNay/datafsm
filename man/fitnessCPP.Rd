@@ -26,4 +26,3 @@ scores. This function is also used in the predict method for the resulting
 final model that is returned. The function aborts if the user aborts in R,
 checking every 1000 iterations.
 }
-

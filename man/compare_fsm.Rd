@@ -30,4 +30,3 @@ them - the L1 norm. Binary treats non-zero elements as "on" and zero
 elements as "off" and distance is the proportion of bits in which only one is
 on amongst those in which at least one is on.
 }
-

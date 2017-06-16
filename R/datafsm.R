@@ -24,7 +24,6 @@
 #' 
 #' @docType package
 #' @name datafsm
-NULL
-
+#' @useDynLib datafsm, .registration = TRUE
 #' @importFrom methods setClass setGeneric setMethod setRefClass
-NULL
+"_PACKAGE"

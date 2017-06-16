@@ -22,4 +22,3 @@ Returns numeric vector bitstring.
 \code{build_bitstring} creates a bitstring from an action vector, state
 matrix, and number of actions.
 }
-
