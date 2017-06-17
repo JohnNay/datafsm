@@ -27,7 +27,8 @@ predictors.}
 }
 \value{
 Returns a list of with sparse and corrected state matrix.  If the
-  model is fine, then \code{sparse_state_mat} and \code{corrected_state_mat}
+  model is fine, then\cr
+  \code{sparse_state_mat} and \code{corrected_state_mat}
   should be equal to \code{state_mat}.
 }
 \description{

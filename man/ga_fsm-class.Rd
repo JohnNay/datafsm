@@ -84,8 +84,11 @@ is the time period that the outcome action was taken), and the rest of the
 columns are predictors, ranging from one to three predictors. All of the 
 (3-5 columns) should be named. The period and outcome columns should be 
 integer vectors and the columns with the predictor variable data should be 
-logical vectors (\code{TRUE, FALSE}). If the predictor variable data is not 
-logical, it will coerced to logical with \code{base::as.logical()}.}
+logical vectors\cr
+(\code{TRUE, FALSE}). 
+If the predictor variable data is not 
+logical, it will coerced to logical with\cr
+\code{base::as.logical()}.}
 
 \item{type}{Not currently used.}
 

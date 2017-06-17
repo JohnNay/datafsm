@@ -13,8 +13,11 @@ is the time period that the outcome action was taken), and the rest of the
 columns are predictors, ranging from one to three predictors. All of the 
 (3-5 columns) should be named. The period and outcome columns should be 
 integer vectors and the columns with the predictor variable data should be 
-logical vectors (\code{TRUE, FALSE}). If the predictor variable data is not 
-logical, it will coerced to logical with \code{base::as.logical()}.}
+logical vectors\cr
+(\code{TRUE, FALSE}). 
+If the predictor variable data is not 
+logical, it will coerced to logical with\cr
+\code{base::as.logical()}.}
 
 \item{measure}{Optional length one character vector that is either:
 "accuracy", "sens", "spec", or "ppv". This specifies what measure of
@@ -61,7 +64,7 @@ package.}
 iterations for stopping the GA evolution. A larger number will increase the 
 probability of finding a very good solution but will also increase the 
 computation time. This is passed to the GA::ga() function of the \strong{GA}
-package. \code{maxiter} is scaled by how many parameters are in the model: 
+package. \code{maxiter} is scaled by how many parameters are in the model:\cr
 \code{maxiter <- maxiter + ((maxiter*(nBits^2)) / maxiter)}.}
 
 \item{run}{Optional numeric vector length one specifying max number of 
