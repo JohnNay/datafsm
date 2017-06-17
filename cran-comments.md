@@ -4,7 +4,12 @@
 
 
 ## R CMD check results
-There were no ERRORs or WARNINGs.
+There were no ERRORs and 1 WARNING.
+
+* LaTeX errors when creating PDF version.
+
+There are 12 overfull \hbox warnings from LaTeX when building the manual.
+All of these are overfull by less than 4.5 pt.
 
 There was 1 NOTE:
 
