@@ -10,7 +10,9 @@ There was 1 NOTE:
 
 * New submission. 
 
-This package was withdrawn. I have fixed the problems that caused it to be withdrawn and I am re-submitting.
+This package was archived due to a breaking change to an upstream package GA. 
+I have fixed the package to work with the current version of GA and am
+re-submitting it.
 
 ## Downstream dependencies
 None.
