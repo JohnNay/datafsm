@@ -1,3 +1,7 @@
+# datafsm 0.2.1
+
+* Updated tests to work with forthcoming testthat version 2.0.0
+
 # datafsm 0.2.0
 
 * Updated to use new R native-routine registration and disable symbol search using Rcpp::compileAttributes().
