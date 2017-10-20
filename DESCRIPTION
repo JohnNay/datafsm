@@ -1,7 +1,7 @@
 Package: datafsm
 Title: Estimating Finite State Machine Models from Data
-Version: 0.2.0
-Date: 2017-06-16
+Version: 0.2.1
+Date: 2017-10-18
 Authors@R: c( person("Nay", "John J.", 
       email = "john.j.nay@gmail.com", role = c("aut")), 
     person("Gilligan",  "Jonathan M.", 
@@ -27,7 +27,7 @@ LinkingTo: Rcpp
 Suggests:
     doParallel,
     foreach,
-    testthat,
+    testthat (>= 1.0.2),
     diagram,
     knitr
 Imports:
