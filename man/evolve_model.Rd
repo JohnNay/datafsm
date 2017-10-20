@@ -6,10 +6,10 @@
 \usage{
 evolve_model(data, test_data = NULL, drop_nzv = FALSE,
   measure = c("accuracy", "sens", "spec", "ppv"), states = NULL,
-  cv = FALSE, max_states = NULL, k = 2, actions = NULL, 
-  seed = NULL, popSize = 75, pcrossover = 0.8, pmutation = 0.1, 
-  maxiter = 50, run = 25, parallel = FALSE, priors = NULL, 
-  verbose = TRUE, return_best = TRUE, ntimes = 1)
+  cv = FALSE, max_states = NULL, k = 2, actions = NULL, seed = NULL,
+  popSize = 75, pcrossover = 0.8, pmutation = 0.1, maxiter = 50,
+  run = 25, parallel = FALSE, priors = NULL, verbose = TRUE,
+  return_best = TRUE, ntimes = 1)
 }
 \arguments{
 \item{data}{data.frame that has columns named "period" and "outcome" (period 

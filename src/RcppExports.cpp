@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // predictor_lookup
 int predictor_lookup(IntegerVector x);
-RcppExport SEXP datafsm_predictor_lookup(SEXP xSEXP) {
+RcppExport SEXP _datafsm_predictor_lookup(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -18,7 +18,7 @@ END_RCPP
 }
 // fitnessCPP
 IntegerVector fitnessCPP(IntegerVector action_vec, IntegerMatrix state_mat, IntegerMatrix covariates, IntegerVector period);
-RcppExport SEXP datafsm_fitnessCPP(SEXP action_vecSEXP, SEXP state_matSEXP, SEXP covariatesSEXP, SEXP periodSEXP) {
+RcppExport SEXP _datafsm_fitnessCPP(SEXP action_vecSEXP, SEXP state_matSEXP, SEXP covariatesSEXP, SEXP periodSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -32,8 +32,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"datafsm_predictor_lookup", (DL_FUNC) &datafsm_predictor_lookup, 1},
-    {"datafsm_fitnessCPP", (DL_FUNC) &datafsm_fitnessCPP, 4},
+    {"_datafsm_predictor_lookup", (DL_FUNC) &_datafsm_predictor_lookup, 1},
+    {"_datafsm_fitnessCPP", (DL_FUNC) &_datafsm_fitnessCPP, 4},
     {NULL, NULL, 0}
 };
 

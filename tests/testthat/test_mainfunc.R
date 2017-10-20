@@ -24,11 +24,11 @@ test_that("evolve_model() returns warnings and errors", {
   
   cdata <- data.frame(period = 1:5, outcome = c(1,1,1,1,1),
                       my.decision1 = c(1,0,1,3,1), other.decision1 = c(0,0,0,1,1))
-  expect_error(evolve_model(cdata, cv=FALSE), "unique", all=FALSE)
+  expect_error(evolve_model(cdata, cv=FALSE), "unique")
   
   cdata <- data.frame(period = 1:5,
                       my.decision1 = c(1,0,1,3,1), other.decision1 = c(0,0,0,1,1))
-  expect_error(evolve_model(cdata, cv=FALSE), "predictor", all=FALSE)
+  expect_error(evolve_model(cdata, cv=FALSE), regexp = "predictor")
   
 })
 

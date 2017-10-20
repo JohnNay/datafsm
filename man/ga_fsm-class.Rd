@@ -26,8 +26,8 @@
 \S4method{summary}{ga_fsm}(object, digits = 3)
 
 \S4method{plot}{ga_fsm,ANY}(x, y, maintitle = "Transition Diagram",
-  action_label = NULL, transition_label = NULL,
-  curvature = c(0.3, 0.6, 0.8))
+  action_label = NULL, transition_label = NULL, curvature = c(0.3, 0.6,
+  0.8))
 
 \S4method{barplot}{ga_fsm}(height, ...)
 
