@@ -1,3 +1,5 @@
+This package is now being maintained here: https://github.com/jonathan-g/datafsm
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![Build Status](https://travis-ci.org/JohnNay/datafsm.png?branch=master)](https://travis-ci.org/JohnNay/datafsm) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/datafsm)](http://cran.r-project.org/package=datafsm)
 
