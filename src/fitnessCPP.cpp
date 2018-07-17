@@ -13,7 +13,7 @@ int predictor_lookup(IntegerVector x){
           }
           if (x[i]==1){
                   result = i; // Not using R indexing convention here
-                  num_ones = num_ones + 1;
+                  ++num_ones;
           }
   }
   if (num_ones > 1)
@@ -57,15 +57,21 @@ IntegerVector fitnessCPP(IntegerVector action_vec, IntegerMatrix state_mat, Inte
     int old_state;
     if (period[i] > 1){
       IntegerVector these_covariates = covariates(i,_);
-      
-      if (these_covariates[0] > 1 || these_covariates[0] < 0 ||
-          these_covariates[1] > 1 || these_covariates[1] < 0 ||
-          these_covariates[2] > 1 || these_covariates[2] < 0 ||
-          these_covariates[3] > 1 || these_covariates[3] < 0) {
-        Rprintf("Looking up history[%d], period %d: (%d, %d, %d)\n", i,
-                these_covariates[0], these_covariates[1], these_covariates[2], these_covariates[3]);
+      LogicalVector legal_covariates;
+      legal_covariates = these_covariates <= 1;
+      legal_covariates = legal_covariates & (these_covariates >= 0);
+
+      if (! is_true(all(legal_covariates))) {
+        Rprintf("Looking up history[%d], period %d: ()", i, period[i]);
+        for (IntegerVector::iterator it = these_covariates.begin(); it != these_covariates.end(); ++it) {
+          if (it > these_covariates.begin()) {
+            Rprintf(", ");
+          }
+          Rprintf("%d", *it);
+        }
+        Rprintf(")\n");
       }
-      
+
       int history = predictor_lookup(these_covariates);
       
       if (history > covariates.ncol() || history < 0) 
