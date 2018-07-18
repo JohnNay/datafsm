@@ -1,6 +1,6 @@
 Package: datafsm
 Title: Estimating Finite State Machine Models from Data
-Version: 0.2.1
+Version: 0.2.2
 Date: 2017-10-18
 Authors@R: c( person("Nay", "John J.", 
       email = "john.j.nay@gmail.com", role = c("aut")), 
