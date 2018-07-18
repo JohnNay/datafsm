@@ -29,7 +29,8 @@ Suggests:
     foreach,
     testthat (>= 1.0.2),
     diagram,
-    knitr
+    knitr,
+    rmarkdown
 Imports:
     caret,
     GA,

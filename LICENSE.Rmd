@@ -5,7 +5,7 @@ output:
 ---
 
 ```{r license, echo=FALSE, eval=TRUE}
-license <- read.table('license', header=FALSE, sep=':', stringsAsFactors=FALSE, strip.white=TRUE)
+license <- read.table('LICENSE', header=FALSE, sep=':', stringsAsFactors=FALSE, strip.white=TRUE)
 n <- license[,1]
 license <- license[,2]
 names(license) <- n

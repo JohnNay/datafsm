@@ -1,3 +1,7 @@
+# datafsm 0.2.2
+
+* Rewrote covariate testing in fitnessCPP to fix memory access errors.
+
 # datafsm 0.2.1
 
 * Updated tests to work with forthcoming testthat version 2.0.0
