@@ -56,7 +56,7 @@ If not provided, will be set to \code{max(data$outcome)}.}
 \item{cv}{Optional logical vector length one for whether cross-validation 
 should be conducted on training data to select optimal number of states. 
 This can drastically increase computation time because if \code{TRUE}, it 
-will run evolve_model k*max_states times to estimate optimal value for 
+will run \code{evolve_model} \code{k*max_states} times to estimate optimal value for 
 states. Ties are broken by choosing the smaller number of states. Default is
 \code{FALSE}.}
 
