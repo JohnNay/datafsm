@@ -3,22 +3,28 @@ using namespace Rcpp;
 
 // [[Rcpp::export]]
 int predictor_lookup(IntegerVector x){
-  int result;
+  int result = -1;
   int num_ones = 0;
-  int n = x.length();
-
-  for(int i = 0; i < n; i++){
-          if (x[i] > 1 || x[i] < 0){
-                  Rprintf("Illegal value for: %d.\n", x[i]);
-          }
-          if (x[i]==1){
-                  result = i; // Not using R indexing convention here
-                  ++num_ones;
-          }
+  
+  { // limit scope of loop variables
+    IntegerVector::iterator it;
+    int i;
+    
+    for(it = x.begin(), i = 0; it != x.end(); ++it, ++i){
+      if (*it > 1 || *it < 0){
+        Rprintf("Illegal value for: %d.\n", *it);
+      }
+      if (*it == 1){
+        result = i; // Not using R indexing convention here
+        ++num_ones;
+      }
+    }
   }
   if (num_ones > 1)
     Rcpp::stop("There are %d 1s in this row, but there can only be one 1 in each row.\n", num_ones);
-
+  if (num_ones == 0)
+    Rcpp::stop("There are no 1s in this row, but there must be one 1 in each row.\n");
+  
   return result;
 }
 
@@ -47,10 +53,13 @@ int predictor_lookup(IntegerVector x){
 IntegerVector fitnessCPP(IntegerVector action_vec, IntegerMatrix state_mat, IntegerMatrix covariates, IntegerVector period){
   
   int n = covariates.nrow();
+  if (period.length() != n)
+    Rcpp::stop("Mismatch: nrow(covariates) = %d, length(period) = %d", n, period.length());
   
   int state = 1;
   int max_state = state_mat.nrow();
-  if (action_vec.length() < max_state) Rprintf("Action vector has length %d, but there are %d states\n", action_vec.length(), max_state);
+  if (action_vec.length() < max_state) 
+    Rcpp::stop("Action vector has length %d, but there are %d states\n", action_vec.length(), max_state);
   IntegerVector decision(n);
   
   for(int i = 0; i < n; i++){
@@ -75,19 +84,19 @@ IntegerVector fitnessCPP(IntegerVector action_vec, IntegerMatrix state_mat, Inte
       int history = predictor_lookup(these_covariates);
       
       if (history > covariates.ncol() || history < 0) 
-        Rcpp::stop("Illegal value for history: %d.\n", history);
+        Rcpp::stop("Illegal value for history: %d (max legal value is %d).\n", history, covariates.ncol());
       // Not using R indexing convention for history anymore, just for state
       
       old_state = state;
       state = state_mat((state-1), history); // action_vec and state_mat were made for R where indexing starts at 1,
-      if (state > max_state) {
+      if (state > max_state || state < 1) {
         Rprintf("Illegal state[%d](%d,%d) = %d in period %d. max_state = %d\n", i, old_state, history,
                 state, period[i], max_state);
         Rcpp::stop("Illegal state matrix");
       }
       // not 0 like in Cpp
       
-      decision[i] = action_vec[(state-1)];
+      decision[i] = action_vec[state-1];
     } else {
       decision[i] = action_vec[0];
       state = 1;
