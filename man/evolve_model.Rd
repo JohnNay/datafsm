@@ -12,23 +12,23 @@ evolve_model(data, test_data = NULL, drop_nzv = FALSE,
   return_best = TRUE, ntimes = 1)
 }
 \arguments{
-\item{data}{data.frame that has columns named "period" and "outcome" (period 
-is the time period that the outcome action was taken), and the rest of the 
-columns are predictors, ranging from one to three predictors. All of the 
-(3-5 columns) should be named. The period and outcome columns should be 
-integer vectors and the columns with the predictor variable data should be 
-logical vectors\cr
+\item{data}{A \code{data.frame} that has columns named "period" and "outcome" 
+(period is the time period that the outcome action was taken), and one to
+three additional columns, containing predictors. 
+All of the 3-5 columns should be named. 
+The period and outcome columns should be integer vectors and the columns 
+with the predictor variable data should be logical vectors
 (\code{TRUE, FALSE}). 
 If the predictor variable data is not 
-logical, it will coerced to logical with\cr
+logical, it will coerced to logical with
 \code{base::as.logical()}.}
 
-\item{test_data}{Optional data.frame that has "period" and "outcome" columns 
-and rest of columns are predictors, ranging from one to three predictors. 
-All of the (3-5 columns) should be named. Outcome variable is the decision 
-the decision-maker took for that period. This data.frame should be in the
-same format and have the same order of columns as the data.frame passed to
-the required \code{data} argument.}
+\item{test_data}{Optional \code{data.frame} that has "period" and "outcome" 
+columns, with one to three additional columns containing predictors.
+All of the (3-5 columns) should be named. The outcome variable is the 
+decision the decision-maker took for that period. 
+This \code{data.frame} should be in the same format and have the same order 
+of columns as the data.frame passed to the required \code{data} argument.}
 
 \item{drop_nzv}{Optional logical vector length one specifying whether 
 predictors variables with variance in provided data near zero should be 
