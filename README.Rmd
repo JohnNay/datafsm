@@ -45,8 +45,11 @@ equivalent to tit-for-tat, except that with a 10% probability the player will
 make a random move.
 
 ```{r fake.data, eval=TRUE, include=TRUE}
-seed <- 1900
-set.seed(seed)
+seed1 <- 1900
+seed2 <- 1900
+seed3 <- 1900
+# 468534172
+set.seed(seed1)
 cdata <- data.frame(outcome = NA,
                     period = rep(1:10, 2000),
                     my.decision1 = NA,
@@ -66,8 +69,10 @@ tit_for_tat <- function(last_round_self, last_round_opponent) {
     last_round_opponent
 }
 
-noisy_tit_for_tat <- function(last_round_self, last_round_opponent) {
-  if (runif(1,0,1) <= 0.1) {
+noise_level = 0.1
+
+noisy_tit_for_tat <- function(last_round_self, last_round_opponent, noise_level) {
+  if (runif(1,0,1) <= noise_level) {
     sample(0:1,1)
   } else {
     last_round_opponent
@@ -76,15 +81,16 @@ noisy_tit_for_tat <- function(last_round_self, last_round_opponent) {
 
 for (i in seq_along(cdata$period)) {
   if (cdata$period[i] == 1) {
-    my.decision <- sample(0:1,1, prob = c(0.9,0.1))
+    my.decision <- sample(0:1,1, prob = c(1 - noise_level, noise_level))
     other.decision <- sample(0:1,1)
     cdata[i, "outcome"] <- pd_outcome(my.decision, other.decision)
   } else{
     my.last <- my.decision
     other.last <- other.decision
     my.decision <- tit_for_tat(my.last, other.last)
-    other.decision <- noisy_tit_for_tat(other.last, my.last)
-    cdata[i,c("outcome", "my.decision1", "other.decision1")] <- c(pd_outcome(my.decision, other.decision), my.last, other.last)
+    other.decision <- noisy_tit_for_tat(other.last, my.last, noise_level)
+    cdata[i,c("outcome", "my.decision1", "other.decision1")] <- 
+      c(pd_outcome(my.decision, other.decision), my.last, other.last)
   }
 }
 ```
@@ -104,7 +110,8 @@ We can estimate a model with that data. `evolve_model` uses a genetic algorithm 
 If the argument `parallel` is set to `TRUE`, then these evaluations are distributed across the available processors of the computer using the `doParallel` functions; otherwise, the evaluations of fitness are conducted sequentially. Because this fitness function that `evolve_model` creates must loop through all the training data every time it is evaluated and we need to evaluate many possible solution FSMs, the fitness function is implemented in C++ to improve its performance.
 
 ```{r evolve.model, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE, results='hide'}
-res <- evolve_model(cdata, seed = seed)
+set.seed(seed2)
+res <- evolve_model(cdata, seed = seed3)
 ```
 
 `evolve_model` evolves the models on training data and then, if a test set is provided, uses the best solution to make predictions on test data. Finally, the function returns the GA object and the decoded version of the best string in the population. Formally, the function return an `S4` object with slots for:

@@ -46,9 +46,9 @@ equivalent to tit-for-tat, except that with a 10% probability the player will
 make a random move.
 
 ```{r fake.data, eval=TRUE, include=TRUE}
-seed1 <- 1441457286
-seed2 <-  468534171
-seed3 <-       2804
+seed1 <- 1900
+seed2 <- 1900
+seed3 <- 1900
 # 468534172
 set.seed(seed1)
 cdata <- data.frame(outcome = NA,
@@ -70,7 +70,7 @@ tit_for_tat <- function(last_round_self, last_round_opponent) {
     last_round_opponent
 }
 
-noise_level = 0.2
+noise_level = 0.1
 
 noisy_tit_for_tat <- function(last_round_self, last_round_opponent, noise_level) {
   if (runif(1,0,1) <= noise_level) {
