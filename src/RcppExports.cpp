@@ -6,26 +6,26 @@
 using namespace Rcpp;
 
 // predictor_lookup
-int predictor_lookup(IntegerVector x);
+int predictor_lookup(const IntegerVector x);
 RcppExport SEXP _datafsm_predictor_lookup(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector >::type x(xSEXP);
     rcpp_result_gen = Rcpp::wrap(predictor_lookup(x));
     return rcpp_result_gen;
 END_RCPP
 }
 // fitnessCPP
-IntegerVector fitnessCPP(IntegerVector action_vec, IntegerMatrix state_mat, IntegerMatrix covariates, IntegerVector period);
+IntegerVector fitnessCPP(const IntegerVector action_vec, const IntegerMatrix state_mat, const IntegerMatrix covariates, const IntegerVector period);
 RcppExport SEXP _datafsm_fitnessCPP(SEXP action_vecSEXP, SEXP state_matSEXP, SEXP covariatesSEXP, SEXP periodSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type action_vec(action_vecSEXP);
-    Rcpp::traits::input_parameter< IntegerMatrix >::type state_mat(state_matSEXP);
-    Rcpp::traits::input_parameter< IntegerMatrix >::type covariates(covariatesSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type period(periodSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector >::type action_vec(action_vecSEXP);
+    Rcpp::traits::input_parameter< const IntegerMatrix >::type state_mat(state_matSEXP);
+    Rcpp::traits::input_parameter< const IntegerMatrix >::type covariates(covariatesSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector >::type period(periodSEXP);
     rcpp_result_gen = Rcpp::wrap(fitnessCPP(action_vec, state_mat, covariates, period));
     return rcpp_result_gen;
 END_RCPP

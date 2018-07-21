@@ -2,12 +2,12 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-int predictor_lookup(IntegerVector x){
+int predictor_lookup(const IntegerVector x){
   int result = -1;
   int num_ones = 0;
   
   { // limit scope of loop variables
-    IntegerVector::iterator it;
+    IntegerVector::const_iterator it;
     int i;
     
     for(it = x.begin(), i = 0; it != x.end(); ++it, ++i){
@@ -19,6 +19,8 @@ int predictor_lookup(IntegerVector x){
         ++num_ones;
       }
     }
+    if (i != x.length()) 
+      Rcpp::stop("predictor_lookup took %d iterations for a vector of length %d", i, x.length());
   }
   if (num_ones > 1)
     Rcpp::stop("There are %d 1s in this row, but there can only be one 1 in each row.\n", num_ones);
@@ -50,7 +52,8 @@ int predictor_lookup(IntegerVector x){
 //' @importFrom Rcpp sourceCpp
 // [[Rcpp::export]]
 
-IntegerVector fitnessCPP(IntegerVector action_vec, IntegerMatrix state_mat, IntegerMatrix covariates, IntegerVector period){
+IntegerVector fitnessCPP(const IntegerVector action_vec, const IntegerMatrix state_mat, 
+                         const IntegerMatrix covariates, const IntegerVector period){
   
   int n = covariates.nrow();
   if (period.length() != n)
@@ -59,20 +62,22 @@ IntegerVector fitnessCPP(IntegerVector action_vec, IntegerMatrix state_mat, Inte
   int state = 1;
   int max_state = state_mat.nrow();
   if (action_vec.length() < max_state) 
-    Rcpp::stop("Action vector has length %d, but there are %d states\n", action_vec.length(), max_state);
+    Rcpp::stop("Action vector has length %d, but there are %d states\n",
+               action_vec.length(), max_state);
   IntegerVector decision(n);
   
   for(int i = 0; i < n; i++){
-    int old_state;
+    int old_state = state;
     if (period[i] > 1){
-      IntegerVector these_covariates = covariates(i,_);
+      const IntegerVector these_covariates = covariates(i,_);
+      
       LogicalVector legal_covariates;
-      legal_covariates = these_covariates <= 1;
-      legal_covariates = legal_covariates & (these_covariates >= 0);
+      legal_covariates = (these_covariates <= 1) & (these_covariates >= 0);
 
-      if (! is_true(all(legal_covariates))) {
-        Rprintf("Looking up history[%d], period %d: ()", i, period[i]);
-        for (IntegerVector::iterator it = these_covariates.begin(); it != these_covariates.end(); ++it) {
+      if (is_true(any( ! legal_covariates))) {
+        Rprintf("Looking up history[%d], period %d: (", i, period[i]);
+        for (IntegerVector::const_iterator it = these_covariates.begin(); 
+             it != these_covariates.end(); ++it) {
           if (it > these_covariates.begin()) {
             Rprintf(", ");
           }
@@ -83,11 +88,23 @@ IntegerVector fitnessCPP(IntegerVector action_vec, IntegerMatrix state_mat, Inte
 
       int history = predictor_lookup(these_covariates);
       
-      if (history > covariates.ncol() || history < 0) 
+      // if (i == 10 && period[i] == 5)
+      {
+      Rprintf("i = %d, period = %d, state = %d, old_state = %d, covariates = (", 
+              i, period[i], state, old_state);
+        for(IntegerVector::const_iterator it = these_covariates.begin();
+            it != these_covariates.end(); ++it) {
+          if (it != these_covariates.begin()) 
+            Rprintf(", ");
+          Rprintf("%d", *it);
+        }
+        Rprintf("), history = %d", history);
+      }
+      
+      if (history >= covariates.ncol() || history < 0) 
         Rcpp::stop("Illegal value for history: %d (max legal value is %d).\n", history, covariates.ncol());
       // Not using R indexing convention for history anymore, just for state
       
-      old_state = state;
       state = state_mat((state-1), history); // action_vec and state_mat were made for R where indexing starts at 1,
       if (state > max_state || state < 1) {
         Rprintf("Illegal state[%d](%d,%d) = %d in period %d. max_state = %d\n", i, old_state, history,
