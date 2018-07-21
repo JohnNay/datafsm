@@ -70,8 +70,10 @@ tit_for_tat <- function(last_round_self, last_round_opponent) {
     last_round_opponent
 }
 
-noisy_tit_for_tat <- function(last_round_self, last_round_opponent) {
-  if (runif(1,0,1) <= 0.1) {
+noise_level = 0.2
+
+noisy_tit_for_tat <- function(last_round_self, last_round_opponent, noise_level) {
+  if (runif(1,0,1) <= noise_level) {
     sample(0:1,1)
   } else {
     last_round_opponent
@@ -80,15 +82,16 @@ noisy_tit_for_tat <- function(last_round_self, last_round_opponent) {
 
 for (i in seq_along(cdata$period)) {
   if (cdata$period[i] == 1) {
-    my.decision <- sample(0:1,1, prob = c(0.9,0.1))
+    my.decision <- sample(0:1,1, prob = c(1 - noise_level, noise_level))
     other.decision <- sample(0:1,1)
     cdata[i, "outcome"] <- pd_outcome(my.decision, other.decision)
   } else{
     my.last <- my.decision
     other.last <- other.decision
     my.decision <- tit_for_tat(my.last, other.last)
-    other.decision <- noisy_tit_for_tat(other.last, my.last)
-    cdata[i,c("outcome", "my.decision1", "other.decision1")] <- c(pd_outcome(my.decision, other.decision), my.last, other.last)
+    other.decision <- noisy_tit_for_tat(other.last, my.last, noise_level)
+    cdata[i,c("outcome", "my.decision1", "other.decision1")] <- 
+      c(pd_outcome(my.decision, other.decision), my.last, other.last)
   }
 }
 ```
