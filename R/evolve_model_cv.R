@@ -38,20 +38,11 @@ add_interact_num <- function(d){
 #' @export
 
 ################################################################################
-evolve_model_cv <- function(data,
-                            measure,
-                            k,
-                            actions,
-                            max_states,
+evolve_model_cv <- function(data, measure, k, actions, max_states,
                             seed,
-                            popSize, 
-                            pcrossover, 
-                            pmutation, 
-                            maxiter, 
-                            run,
-                            parallel,
-                            verbose,
-                            ntimes) {
+                            popSize, pcrossover, pmutation, 
+                            maxiter, run,
+                            parallel, verbose, ntimes) {
   
   interacts <- add_interact_num(data)
   

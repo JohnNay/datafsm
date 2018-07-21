@@ -26,8 +26,8 @@
 \S4method{summary}{ga_fsm}(object, digits = 3)
 
 \S4method{plot}{ga_fsm,ANY}(x, y, maintitle = "Transition Diagram",
-  action_label = NULL, transition_label = NULL, curvature = c(0.3, 0.6,
-  0.8))
+  action_label = NULL, transition_label = NULL, 
+  curvature = c(0.3, 0.6, 0.8))
 
 \S4method{barplot}{ga_fsm}(height, ...)
 
@@ -86,8 +86,8 @@ All of the 3-5 columns should be named.
 The period and outcome columns should be integer vectors and the columns 
 with the predictor variable data should be logical vectors
 (\code{TRUE, FALSE}). 
-If the predictor variable data is not 
-logical, it will coerced to logical with
+If the predictor variable data is not  logical, it will coerced to logical 
+with \cr 
 \code{base::as.logical()}.}
 
 \item{type}{Not currently used.}

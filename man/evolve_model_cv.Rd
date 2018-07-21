@@ -4,8 +4,9 @@
 \alias{evolve_model_cv}
 \title{Estimate Optimal Number of States of a Finite-state Machine Model}
 \usage{
-evolve_model_cv(data, measure, k, actions, max_states, seed, popSize,
-  pcrossover, pmutation, maxiter, run, parallel, verbose, ntimes)
+evolve_model_cv(data, measure, k, actions, max_states, seed, 
+  popSize, pcrossover, pmutation, maxiter, run, parallel, 
+  verbose, ntimes)
 }
 \arguments{
 \item{data}{A \code{data.frame} that has columns named "period" and "outcome" 
@@ -15,8 +16,8 @@ All of the 3-5 columns should be named.
 The period and outcome columns should be integer vectors and the columns 
 with the predictor variable data should be logical vectors
 (\code{TRUE, FALSE}). 
-If the predictor variable data is not 
-logical, it will coerced to logical with
+If the predictor variable data is not  logical, it will coerced to logical 
+with \cr 
 \code{base::as.logical()}.}
 
 \item{measure}{Optional length one character vector that is either:

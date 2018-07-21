@@ -78,8 +78,8 @@ build_priors <- function(popSize, nBits, states, inputs, actions) {
 #'  The period and outcome columns should be integer vectors and the columns 
 #'  with the predictor variable data should be logical vectors
 #'  (\code{TRUE, FALSE}). 
-#'  If the predictor variable data is not 
-#'  logical, it will coerced to logical with
+#'  If the predictor variable data is not  logical, it will coerced to logical 
+#'  with \cr 
 #'  \code{base::as.logical()}.
 #'@param test_data Optional \code{data.frame} that has "period" and "outcome" 
 #'  columns, with one to three additional columns containing predictors.
@@ -191,9 +191,10 @@ build_priors <- function(popSize, nBits, states, inputs, actions) {
 evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
                          measure = c("accuracy", "sens", "spec", "ppv"),
                          states = NULL, cv = FALSE, max_states = NULL, k = 2,
-                         actions = NULL,
+                         actions = NULL, 
                          seed = NULL,
-                         popSize = 75, pcrossover = 0.8, pmutation = 0.1, maxiter = 50, run = 25,
+                         popSize = 75, pcrossover = 0.8, pmutation = 0.1, 
+                         maxiter = 50, run = 25,
                          parallel = FALSE,
                          priors = NULL,
                          verbose = TRUE, 
