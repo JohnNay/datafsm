@@ -71,6 +71,14 @@ build_priors <- function(popSize, nBits, states, inputs, actions) {
 #'in the population. See \linkS4class{ga_fsm} for the details of the slots 
 #'(objects) that this type of object will have.
 #'
+#'@usage evolve_model(data, test_data = NULL, drop_nzv = FALSE,
+#'         measure = c("accuracy", "sens", "spec", "ppv"), 
+#'         states = NULL, cv = FALSE, max_states = NULL, k = 2, 
+#'         actions = NULL, seed = NULL, popSize = 75, 
+#'         pcrossover = 0.8, pmutation = 0.1, maxiter = 50, 
+#'         run = 25, parallel = FALSE, priors = NULL, 
+#'         verbose = TRUE, return_best = TRUE, ntimes = 1)
+#'
 #'@param data A \code{data.frame} that has columns named "period" and "outcome" 
 #'  (period is the time period that the outcome action was taken), and one to
 #'  three additional columns, containing predictors. 
@@ -110,9 +118,9 @@ build_priors <- function(popSize, nBits, states, inputs, actions) {
 #'@param cv Optional logical vector length one for whether cross-validation 
 #'  should be conducted on training data to select optimal number of states. 
 #'  This can drastically increase computation time because if \code{TRUE}, it 
-#'  will run \code{evolve_model} \code{k*max_states} times to estimate optimal value for 
-#'  states. Ties are broken by choosing the smaller number of states. Default is
-#'  \code{FALSE}.
+#'  will run \code{evolve_model} \code{k*max_states} times to estimate optimal 
+#'  value for states. Ties are broken by choosing the smaller number of states. 
+#'  Default is \code{FALSE}.
 #'@param max_states Optional numeric vector length one only relevant if 
 #'  \code{cv==TRUE}. It specifies how up to how many states that 
 #'  cross-validation should search through. 

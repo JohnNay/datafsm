@@ -134,6 +134,10 @@ setMethod("summary", "ga_fsm",
 #'
 #' @aliases plot,ga_fsm-method
 #' 
+#' @usage \S4method{plot}{ga_fsm,ANY}(x, y, maintitle = "Transition Diagram",
+#'           action_label = NULL, transition_label = NULL, 
+#'           curvature = c(0.3, 0.6, 0.8))
+#'
 #' @param y not used.
 #' @param maintitle optional character vector 
 #' @param action_label optional character vector same length as action vector,

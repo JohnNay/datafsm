@@ -5,11 +5,13 @@
 \title{Use a Genetic Algorithm to Estimate a Finite-state Machine Model n-times}
 \usage{
 evolve_model_ntimes(data, test_data = NULL, drop_nzv = FALSE,
-  measure = c("accuracy", "sens", "spec", "ppv"), states = NULL,
-  cv = FALSE, max_states = NULL, k = 2, actions = NULL, 
-  seed = NULL, popSize = 75, pcrossover = 0.8, pmutation = 0.1, 
-  maxiter = 50, run = 25, parallel = FALSE, priors = NULL, 
-  verbose = TRUE, return_best = TRUE, ntimes = 10, cores = NULL)
+        measure = c("accuracy", "sens", "spec", "ppv"), 
+        states = NULL, cv = FALSE, max_states = NULL, k = 2, 
+        actions = NULL, seed = NULL, popSize = 75, 
+        pcrossover = 0.8, pmutation = 0.1, maxiter = 50, 
+        run = 25, parallel = FALSE, priors = NULL, 
+        verbose = TRUE, return_best = TRUE, ntimes = 10, 
+        cores = NULL)
 }
 \arguments{
 \item{data}{A \code{data.frame} that has columns named "period" and "outcome" 
@@ -56,9 +58,9 @@ If not provided, will be set to \code{max(data$outcome)}.}
 \item{cv}{Optional logical vector length one for whether cross-validation 
 should be conducted on training data to select optimal number of states. 
 This can drastically increase computation time because if \code{TRUE}, it 
-will run \code{evolve_model} \code{k*max_states} times to estimate optimal value for 
-states. Ties are broken by choosing the smaller number of states. Default is
-\code{FALSE}.}
+will run \code{evolve_model} \code{k*max_states} times to estimate optimal 
+value for states. Ties are broken by choosing the smaller number of states. 
+Default is \code{FALSE}.}
 
 \item{max_states}{Optional numeric vector length one only relevant if 
 \code{cv==TRUE}. It specifies how up to how many states that 

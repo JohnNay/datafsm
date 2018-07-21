@@ -22,6 +22,10 @@ add_interact_num <- function(d){
 #' \code{evolve_model_cv} calls \code{evolve_model} with varied numbers of 
 #' states and compares their performance with cross-validation.
 #' 
+#'@usage evolve_model_cv(data, measure, k, actions, max_states, seed, 
+#'         popSize, pcrossover, pmutation, maxiter, run,  parallel, 
+#'         verbose, ntimes)
+#'
 #'@inheritParams evolve_model
 #'   
 #' @return Returns the number of states that maximizes the \code{measure}, e.g.

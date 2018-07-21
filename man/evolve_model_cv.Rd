@@ -5,8 +5,8 @@
 \title{Estimate Optimal Number of States of a Finite-state Machine Model}
 \usage{
 evolve_model_cv(data, measure, k, actions, max_states, seed, 
-  popSize, pcrossover, pmutation, maxiter, run, parallel, 
-  verbose, ntimes)
+        popSize, pcrossover, pmutation, maxiter, run,  parallel, 
+        verbose, ntimes)
 }
 \arguments{
 \item{data}{A \code{data.frame} that has columns named "period" and "outcome" 
