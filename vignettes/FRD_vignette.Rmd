@@ -1,0 +1,198 @@
+---
+title: "Example with real data"
+author: "John Nay"
+date: "2015-08-20"
+output:
+  rmarkdown::html_vignette:
+    fig_caption: yes
+vignette: >
+  %\VignetteIndexEntry{Example with real data}
+  %\VignetteEngine{knitr::rmarkdown_notangle}
+  %\VignetteEncoding{UTF-8}
+references:
+  - id: fudenberg2012
+    type: article-journal
+    author:
+      - family: Fudenberg
+        given:  Drew 
+      - family: Rand
+        given:  David G 
+      - family: Dreber
+        given:  Anna
+    issued: 
+      year: 2012
+    title: "Slow to Anger and Fast to Forgive: Cooperation in an Uncertain World" 
+    container-title: American Economic Review 
+    volume: 102 
+    issue: 2
+    page: 720--49 
+    DOI: "10.1257/aer.102.2.720"
+    URL: "https://doi.org/10.1257/aer.102.2.720"
+  - id: nay2015
+    type: paper-conference
+    author:
+      - family: Nay
+        given:  John J.
+      - family: Gilligan
+        given: Jonathan M.
+    collection-editor:
+      - family: Yilmaz
+        given: L.
+      - family: Chan
+        given: W. K. V.
+      - family: Moon
+        given: I.
+      - family: Roeder
+        given: T. M. K.
+      - family: Macal
+        given: C. M.
+      - family: Rosetti
+        given: M.
+    issued:
+      year: 2015
+    title: "Data-Driven Dynamic Decision Models"
+    contianer-title: Proceedings of the 2015 Winter Simulation Conference
+    publisher: IEEE Press
+    page: 2752--2763
+    DOI: "0.1109/WSC.2015.7408381"
+    URL: "https://arxiv.org/abs/1603.08150"
+---
+
+```{r setup, include=FALSE}
+is_check <- ("CheckExEnv" %in% search()) || any(c("_R_CHECK_TIMINGS_",
+             "_R_CHECK_LICENSE_") %in% names(Sys.getenv()))
+knitr::opts_chunk$set(eval = !is_check, echo = TRUE, cache = FALSE)
+```
+This document applies the `datafsm` software package [@nay2015] to the data from @fudenberg2012. 
+For the motivation, underlying design, and tests on simulated data see @nay2015. 
+For a simple example of how to use the package see the "[Introduction to datafsm](datafsm_introduction.html)" vignette.
+```{r initialize}
+library(tidyverse)
+library(pander)
+library(datafsm)
+
+set.seed(1533406114)
+```
+Estimating a model is as simple as ensuring the input data, e.g. `prepped`, is 
+in the correct format and calling `evolve_model(prepped)`. Here, we loop 
+through the six experimental treatments in the data and estimate a separate 
+model for each, storing the results in a list we name `res`. The `parallel` 
+argument allows this work to automatically be spread across all available 
+processors on the computer. This parallelization, combined with the 
+implementation of the core computation in C++, speeds up estimation 
+considerably.
+```{r analyze_data}
+data(FRD_games, package = "datafsm")
+
+prepped <- data_frame(
+  outcome = as.integer(
+    ifelse(FRD_games$my.decision == "coop", 1, 2)
+  ),
+  period = as.integer(FRD_games$period),
+  my.decision1 = as.integer(
+    ifelse(FRD_games$my.decision1 == 1, 1, 0)
+  ),
+  other.decision1 = as.integer(
+    ifelse(FRD_games$other.decision1 == 1, 1, 0)
+  )
+)
+
+group_indices <- FRD_games$group %>% unique() %>% sort()
+group_seeds <- sample.int(.Machine$integer.max, length(group_indices)) %>%
+  set_names(as.character(group_indices))
+
+patterns <- FRD_games %>% select(group, error, r, t) %>%
+  group_by(group) %>% distinct() %>% ungroup() %>%
+  arrange(group) %>% column_to_rownames(var = "group")
+
+row.names(patterns) <- patterns$group
+
+res <- lapply(as.list(group_indices), function(x){ 
+  evolve_model(prepped[FRD_games$group==x,], parallel = TRUE, 
+               seed = group_seeds[[as.character(x)]])
+})
+```
+The resulting object has methods for inspecting (`print`, `show`, `summary`, 
+`estimation_details`, `best_performance`, `varImp`, `states`), 
+visualizing (`plot`, `barplot`, `dotchart`), and 
+predicting new data (`predict`). 
+Below we use the plot and barplot methods to see the resulting model and the 
+associated relative importance of the predictor variables. In this case, the 
+predictor variables are the outcomes of the decisions in the previous period of 
+the game and the outcome variable (the current state) is the action the model 
+predicts the agent will take in the current period. The state on the far left 
+is the starting state.
+
+The variable importance is computed by switching each value of an estimated 
+model’s state matrix to another value in its feasible range, measuring the 
+decrease in goodness of fit to the data, normalizing the values so the largest 
+is 100, then summing across each column to estimate the relative importance of 
+each predictor variable across all states.
+
+```{r plot_results}
+names(res) <- group_indices
+tl = c("dd", "cd", "dc", "cc")
+for(name in names(res)){
+  plot(res[[name]], 
+       action_label = ifelse(action_vec(res[[name]])==1, "C", "D"), 
+       transition_label = tl,
+       maintitle = paste0("Error: ", patterns[name, "error"], 
+                          ", Reward: ", patterns[name, "r"],
+                          ", Temptation: ", patterns[name, "t"],
+                          "\n In-sample accuracy (n= ", 
+                          formatC(sum(FRD_games$group==name),
+                                  big.mark=',',digits=0),") : ",
+                          round(best_performance(res[[name]]),2)))
+
+   barplot(res[[name]], names.arg=tl)
+}
+```
+These variable importance plots of the six models capture ways in which the 
+game design affects player behavior. The first two models are from the games 
+where the error is zero or low: the `cc` outcome is by far the strongest 
+predictor of play. Compare this to the next four models where error is higher: 
+the `dd` becomes much more important. Now compare the third and fourth models 
+from games with payoffs more amenable to cooperation to the fifth and sixth 
+models from games with payoffs less amenable to cooperation: the `dd` outcome 
+is more important in the latter. We can summarize this main pattern with a 
+table.
+
+```{r model_comparison}
+c_minus_d <- sapply(res, function(x) varImp(x)[4] - varImp(x)[1])
+df <- cbind(patterns[group_indices, 
+                     which(names(patterns) %in%  c("error", "r", "t"))], 
+            c_minus_d)
+names(df) <- c("Error", "Reward", "Temptation", "CC Imp. Rel. to DD")
+row.names(df) <- NULL
+pander(df)
+```
+
+These were all two-state models, which is the default. When we call 
+`evolve_model` we can either manually set the number of states, states, or we 
+can set the argument `cv` to `TRUE`, which then estimates the out-of-sample 
+performance through _k_-fold cross-validation on the training data for many 
+values of the number of states to determine the number of states with best 
+out-of-sample performance for the given dataset (and the given split into 
+_k_-folds, which it should be relatively insensitive to).
+
+```{r k_fold}
+k_fold_seeds <- sample.int(.Machine$integer.max, length(group_indices)) %>%
+  set_names(as.character(group_indices))
+res2 <- lapply(as.list(group_indices), function(x){ 
+  evolve_model(prepped[FRD_games$group==x,], parallel = TRUE, 
+               cv = TRUE, max_states = 6, k = 5, 
+               seed = k_fold_seeds[[as.character(x)]])
+})
+```
+```{r k_fold_results}
+names(res2) <- group_indices
+res2states <- sapply(res2, states)
+df <- cbind(patterns[names(res2states), 
+                     which(names(patterns) %in% 
+                             c("error", "r", "t"))], res2states)
+names(df) <- c("Error", "Reward", "Temptation", "States") 
+row.names(df) <- NULL
+pander(df)
+```
+
+# References

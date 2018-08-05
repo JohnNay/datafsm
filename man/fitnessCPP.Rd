@@ -16,12 +16,12 @@ fitnessCPP(action_vec, state_mat, covariates, period)
 \item{period}{Integer Vector.}
 }
 \description{
-A generated action vector and state matrix are input and this function 
-returns a numeric vector of the same length as the \code{outcome}. 
-\code{evolve_model} then computes a fitness score for that potential 
-solution FSM by comparing it to the provided \code{outcome}. This is 
-repeated for every FSM in the population and then the probability of 
-selection for the next generation is set to be proportional to the fitness 
+A generated action vector and state matrix are input and this function
+returns a numeric vector of the same length as the \code{outcome}.
+\code{evolve_model} then computes a fitness score for that potential
+solution FSM by comparing it to the provided \code{outcome}. This is
+repeated for every FSM in the population and then the probability of
+selection for the next generation is set to be proportional to the fitness
 scores. This function is also used in the predict method for the resulting
 final model that is returned. The function aborts if the user aborts in R,
 checking every 1000 iterations.

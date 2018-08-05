@@ -1,19 +1,20 @@
 Package: datafsm
 Title: Estimating Finite State Machine Models from Data
 Version: 0.2.2
-Date: 2018-07-20
+Date: 2018-08-03
 Authors@R: c( person("Nay", "John J.", 
       email = "john.j.nay@gmail.com", role = c("aut")), 
     person("Gilligan",  "Jonathan M.", 
       email = "jonathan.gilligan@vanderbilt.edu", role = c("cre", "aut")))
-Description: Our method automatically generates models of dynamic decision-
-    making that both have strong predictive power and are interpretable in human
-    terms. We use an efficient model representation and a genetic algorithm-based
-    estimation process to generate simple deterministic approximations that explain
-    most of the structure of complex stochastic processes. We have applied the
-    software to empirical data, and demonstrated it's ability to recover known data-
-    generating processes by simulating data with agent-based models and correctly
-    deriving the underlying decision models for multiple agent models and degrees of
+Description: This package automatically generates finite state machine models 
+    of dynamic decision-making that both have strong predictive power and are 
+    interpretable in human terms. We use an efficient model representation and 
+    a genetic algorithm-based estimation process to generate simple 
+    deterministic approximations that explain most of the structure of complex 
+    stochastic processes. We have applied the software to empirical data, and 
+    demonstrated it's ability to recover known data-generating processes by 
+    simulating data with agent-based models and correctly deriving the 
+    underlying decision models for multiple agent models and degrees of
     stochasticity.
 URL: https://github.com/jonathan-g/datafsm
 BugReports: https://github.com/jonathan-g/datafsm/issues
@@ -30,7 +31,9 @@ Suggests:
     testthat (>= 1.0.2),
     diagram,
     knitr,
-    rmarkdown
+    rmarkdown,
+    pander,
+    tidyverse
 Imports:
     caret,
     GA,

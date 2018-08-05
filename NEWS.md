@@ -1,6 +1,10 @@
 # datafsm 0.2.2
 
-* Rewrote covariate testing in fitnessCPP to fix memory access errors.
+* Rewrote covariate testing in `fitnessCPP` to fix memory access errors.
+* Added new vignette, giving an example using real data from Fudenberg,
+  Rand, and Dreber.
+* Change progress reports to use `message()` and `warning()` instead of 
+  `print()` and `cat()`
 
 # datafsm 0.2.1
 

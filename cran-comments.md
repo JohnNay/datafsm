@@ -12,3 +12,7 @@ There were no reported memory access errors
 
 ## Downstream dependencies
 None.
+
+## Other notes
+
+The vignette FRD_vignette.Rmd takes a very long time to build.

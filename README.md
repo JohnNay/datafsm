@@ -67,8 +67,8 @@ probability the player will make a random move.
 
 ``` r
 seed1 <- 1900
-seed2 <-  1900
-seed3 <-       1900
+seed2 <- 1900
+seed3 <- 1900
 # 468534172
 set.seed(seed1)
 cdata <- data.frame(outcome = NA,
@@ -272,7 +272,7 @@ sessionInfo()
 #>  [1] magic_1.5-8         ddalpha_1.3.4       tidyr_0.8.1        
 #>  [4] sfsmisc_1.1-2       splines_3.5.1       prodlim_2018.04.18 
 #>  [7] assertthat_0.2.0    highr_0.7           stats4_3.5.1       
-#> [10] DRR_0.0.3           yaml_2.1.19         robustbase_0.93-1.1
+#> [10] DRR_0.0.3           yaml_2.2.0          robustbase_0.93-1.1
 #> [13] ipred_0.9-6         diagram_1.6.4       pillar_1.3.0       
 #> [16] backports_1.1.2     lattice_0.20-35     glue_1.3.0         
 #> [19] digest_0.6.15       colorspace_1.3-2    recipes_0.1.3      
@@ -293,6 +293,6 @@ sessionInfo()
 #> [64] abind_1.4-5         reshape2_1.4.3      R6_2.2.2           
 #> [67] lubridate_1.7.4     knitr_1.20          dplyr_0.7.6        
 #> [70] bindr_0.1.1         rprojroot_1.3-2     shape_1.4.4        
-#> [73] stringi_1.2.4       parallel_3.5.1      Rcpp_0.12.17       
+#> [73] stringi_1.2.4       parallel_3.5.1      Rcpp_0.12.18       
 #> [76] rpart_4.1-13        DEoptimR_1.0-8      tidyselect_0.2.4
 ```
