@@ -5,6 +5,8 @@
   Rand, and Dreber.
 * Change progress reports to use `message()` and `warning()` instead of 
   `print()` and `cat()`
+* Added new dataset with iterated prisoner's dilemma games from Nay and 
+  Vorobeychik (2016).
 
 # datafsm 0.2.1
 

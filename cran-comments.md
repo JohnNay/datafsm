@@ -15,5 +15,4 @@ None.
 
 ## Notes
 
-The vignette FRD_vignette.Rmd takes a very long time to build, so I 
-am including a pre-compiled version of the vignette.
+The vignette FRD_vignette.Rmd takes a very long time to build.
