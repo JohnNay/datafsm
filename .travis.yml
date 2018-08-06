@@ -1,5 +1,4 @@
 language: R
-sudo: required
 
 cache: packages
 
@@ -7,6 +6,5 @@ r_packages:
   - devtools
   - rmarkdown
 
-script:
-- R --no-save --no-restore CMD build --no-resave-data --no-build-vignettes .
-- R --no-save --no-restpre CMD check --as-cran --no-manual --timings *tar.gz 
+r_build_args: --no-resave-data --no-build-vignettes
+r_check_args: --as-cran --no-manual --timings
