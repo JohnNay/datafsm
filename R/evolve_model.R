@@ -422,8 +422,7 @@ evolve_model <- function(data, test_data = NULL, drop_nzv = FALSE,
         children <- output$children
         if (! all(valid_bsl(children))) {
           if (iter > warning_threshold) {
-            warning("Invalid crossover #", iter, '\n')
-            print(children)
+            warning("Invalid crossover #", iter, '\n', "(", paste(children, collapse = ", "), ")")
           }
           output <- NULL
         }

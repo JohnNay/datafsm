@@ -7,3 +7,6 @@ datafsm.Rcheck
 .RData
 .Rprofile
 *.Rproj
+vignettes/*_cache/
+vignettes/*_files/
+vignettes/res*.Rds

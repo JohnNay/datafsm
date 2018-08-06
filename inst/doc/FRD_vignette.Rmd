@@ -5,6 +5,7 @@ date: "2015-08-20"
 output:
   rmarkdown::html_vignette:
     fig_caption: yes
+  pdf_document: default
 vignette: >
   %\VignetteIndexEntry{Example with real data}
   %\VignetteEncoding{UTF-8}

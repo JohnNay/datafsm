@@ -58,7 +58,7 @@ evolve_model_cv <- function(data, measure, k, actions, max_states,
 
     if(length(group_folds) != length(unique(interacts))) stop("Assignment of groups to folds didnt work: length(group_folds) != length(unique(interacts)).")
     if(length(unique(group_folds)) != k) stop("Assignment of groups to folds didnt work: length(unique(group_folds)) != k.")
-    # if(verbose) message("Group folds:", group_folds)
+    # if(verbose) message("Group folds: ", group_folds)
 
     # create a vector same length as data with assignments of each row to a fold:
     fold_ass <- rep(NA, nrow(data))
@@ -72,7 +72,7 @@ evolve_model_cv <- function(data, measure, k, actions, max_states,
     for(f in seq(k)){
       training <- fold_ass == f
       if(class(training) != "logical") stop("Training index not logical vector.")
-      if(verbose) message("\nCross-validated testing with states set to", s, "\n")
+      if(verbose) message("\nCross-validated testing with states set to ", s, "\n")
       mat[s, f] <- evolve_model(data[training, ], data[!training, ],
                                 drop_nzv = FALSE,
                                 measure = measure,
@@ -80,8 +80,8 @@ evolve_model_cv <- function(data, measure, k, actions, max_states,
                                 popSize = popSize, pcrossover =pcrossover,
                                 pmutation = pmutation, maxiter = maxiter, run = run,
                                 ntimes = ntimes, return_best = TRUE,
-                                parallel = parallel)@predictive
-      if(verbose) message("\nCross-validated value of", measure, "is", mat[s, f], ".\n")
+                                parallel = parallel, verbose = verbose)@predictive
+      if(verbose) message("\nCross-validated value of ", measure, " is ", mat[s, f], ".\n")
     }
   }
   results <- apply(mat[seq(from = 2, to = max_states, by = 1), ], 1, mean) # mean predictive accuracy for each number of states across all k folds (columns)

@@ -66,7 +66,7 @@ IntegerVector fitnessCPP(const IntegerVector action_vec, const IntegerMatrix sta
                action_vec.length(), max_state);
   IntegerVector decision(n);
 
-  for(int i = 0; i < n; i++){
+  for(int i = 0; i < n; ++i){
     int old_state = state;
     if (period[i] > 1){
       const IntegerVector these_covariates = covariates(i,_);
@@ -74,7 +74,7 @@ IntegerVector fitnessCPP(const IntegerVector action_vec, const IntegerMatrix sta
       LogicalVector legal_covariates;
       legal_covariates = (these_covariates <= 1) & (these_covariates >= 0);
 
-      if (is_true(any( ! legal_covariates))) {
+      if (is_false(all(legal_covariates))) {
         Rprintf("Looking up history[%d], period %d: (", i, period[i]);
         for (IntegerVector::const_iterator it = these_covariates.begin();
              it != these_covariates.end(); ++it) {
