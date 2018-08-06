@@ -1,6 +1,19 @@
 language: R
-
 cache: packages
 
+matrix:
+  include:
+    - name: release
+      r: release
+      r_check_args: --as-cran
+    - name: devel
+      r: devel
+      r_check_args: --as-cran --use-valgrind
+      env:
+        - VALGRIND_OPTS='--leak-check=full --track-origins=yes'
+      addons:
+        apt:
+          packages:
+            - valgrind
+
 r_build_args: --no-resave-data --no-build-vignettes
-r_check_args: --as-cran
