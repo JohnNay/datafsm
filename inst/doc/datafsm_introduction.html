@@ -463,8 +463,54 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 </ul>
 <p>Use the summary and plot methods on the output of the <code>evolve_model()</code> function:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">summary</span>(res)</a></code></pre></div>
-<pre><code>## Length  Class   Mode 
-##      1 ga_fsm     S4</code></pre>
+<pre><code>##                                     
+## Gentic Algorithm Settings: 
+## Population size       =  75 
+## Number of generations =  150 
+## Elitism               =  4 
+## Crossover probability =  0.8 
+## Mutation probability  =  0.1 
+## 
+## Finite State Machine Settings: 
+## Actions =  2 
+## States  =  2 
+## 
+## Results: 
+## 
+## Iterations For This Run              = 26 
+## Training Data Fitness Function Value = 0.99 
+## Test Data Fitness Function Value     = No test data provided. Provide some to get more accurate estimation of generalization power. 
+## 
+## (Bit String Form) of Solution: 
+##  x1  x2  x3  x4  x5  x6  x7  x8  x9 x10 
+##   0   1   0   0   0   0   1   0   0   0 
+## 
+## State Matrix of Solution: 
+##      my.decision1FALSE:other.decision1FALSE
+## [1,]                                      1
+## [2,]                                      1
+##      my.decision1TRUE:other.decision1FALSE
+## [1,]                                     1
+## [2,]                                     1
+##      my.decision1FALSE:other.decision1TRUE
+## [1,]                                     2
+## [2,]                                     2
+##      my.decision1TRUE:other.decision1TRUE
+## [1,]                                    2
+## [2,]                                    2
+## 
+## Action Vector of Solution: 
+## [1] 1 2
+## 
+## Variable Importance: 
+## my.decision1FALSE:other.decision1FALSE 
+##                                   88.8 
+##  my.decision1TRUE:other.decision1FALSE 
+##                                   83.7 
+##  my.decision1FALSE:other.decision1TRUE 
+##                                  100.0 
+##   my.decision1TRUE:other.decision1TRUE 
+##                                   34.4</code></pre>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">plot</span>(res, <span class="dt">action_label =</span> <span class="kw">ifelse</span>(<span class="kw">action_vec</span>(res)<span class="op">==</span><span class="dv">1</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;D&quot;</span>), </a>
 <a class="sourceLine" id="cb8-2" data-line-number="2">     <span class="dt">transition_label =</span> <span class="kw">c</span>(<span class="st">'cc'</span>,<span class="st">'dc'</span>,<span class="st">'cd'</span>,<span class="st">'dd'</span>))</a></code></pre></div>
 <div class="figure">
@@ -512,7 +558,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] GA_3.1.1         iterators_1.0.10 foreach_1.4.4    datafsm_0.2.2   
+## [1] datafsm_0.2.2    GA_3.1.1         iterators_1.0.10 foreach_1.4.4   
 ## [5] devtools_1.13.6 
 ## 
 ## loaded via a namespace (and not attached):
