@@ -11,6 +11,7 @@ matrix:
       r_check_args: --as-cran --use-valgrind
       env:
         - VALGRIND_OPTS='--leak-check=full --track-origins=yes'
+      install: travis_wait mvn install
       addons:
         apt:
           packages:
