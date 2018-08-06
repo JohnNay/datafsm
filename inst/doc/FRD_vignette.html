@@ -291,14 +291,14 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <a class="sourceLine" id="cb1-4" data-line-number="4"></a>
 <a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw">set.seed</span>(<span class="dv">1533406114</span>)</a></code></pre></div>
 <p>Estimating a model is as simple as ensuring the input data, e.g. <code>prepped</code>, is in the correct format and calling <code>evolve_model(prepped)</code>. Here, we loop through the six experimental treatments in the data and estimate a separate model for each, storing the results in a list we name <code>res</code>. The <code>parallel</code> argument allows this work to automatically be spread across all available processors on the computer. This parallelization, combined with the implementation of the core computation in C++, speeds up estimation considerably.</p>
-<p>There are 30 expeimental groups in the full data set, but for simpicity and to keep the computational demands reasonable, we will only analyze 6 of these groups.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">data</span>(FRD_games, <span class="dt">package =</span> <span class="st">&quot;datafsm&quot;</span>)</a>
+<p>The datafsm package includes a dataset from <span class="citation">Nay and Vorobeychik (2016)</span>, which represents 168,386 rounds of play in 30 different variations on the iterated prisoner’s dilemma game. This example will focus on the six games studied by <span class="citation">Fudenberg, Rand, and Dreber (2012)</span>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">data</span>(NV_games, <span class="dt">package =</span> <span class="st">&quot;datafsm&quot;</span>)</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb2-3" data-line-number="3">group_df &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">g1 =</span> <span class="dv">15</span>, <span class="dt">g2 =</span> <span class="dv">16</span>, <span class="dt">g3 =</span> <span class="dv">17</span>, <span class="dt">g4 =</span> <span class="dv">14</span>, <span class="dt">g5 =</span> <span class="dv">13</span>, <span class="dt">g6 =</span> <span class="dv">12</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb2-4" data-line-number="4"><span class="st">  </span><span class="kw">as_data_frame</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(<span class="dt">key =</span> label, <span class="dt">value =</span> group) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb2-5" data-line-number="5"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">group =</span> <span class="kw">as.integer</span>(group))</a>
 <a class="sourceLine" id="cb2-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7">prepped &lt;-<span class="st"> </span>FRD_games <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">transmute</span>(</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">prepped &lt;-<span class="st"> </span>NV_games <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">transmute</span>(</a>
 <a class="sourceLine" id="cb2-8" data-line-number="8">  <span class="dt">group =</span> <span class="kw">as.integer</span>(group),</a>
 <a class="sourceLine" id="cb2-9" data-line-number="9">  <span class="dt">outcome =</span> <span class="kw">as.integer</span>(my.decision <span class="op">==</span><span class="st"> &quot;coop&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>,</a>
 <a class="sourceLine" id="cb2-10" data-line-number="10">  <span class="dt">period =</span> <span class="kw">as.integer</span>(period),</a>
@@ -314,7 +314,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <a class="sourceLine" id="cb2-20" data-line-number="20">group_seeds &lt;-<span class="st"> </span><span class="kw">sample.int</span>(.Machine<span class="op">$</span>integer.max, <span class="kw">length</span>(group_indices)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb2-21" data-line-number="21"><span class="st">  </span><span class="kw">set_names</span>(<span class="kw">as.character</span>(group_indices))</a>
 <a class="sourceLine" id="cb2-22" data-line-number="22"></a>
-<a class="sourceLine" id="cb2-23" data-line-number="23">patterns &lt;-<span class="st"> </span>FRD_games <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(group, error, r, t) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-23" data-line-number="23">patterns &lt;-<span class="st"> </span>NV_games <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(group, error, r, t) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb2-24" data-line-number="24"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">group =</span> <span class="kw">as.integer</span>(group)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb2-25" data-line-number="25"><span class="st">  </span><span class="kw">full_join</span>(group_df, <span class="dt">by =</span> <span class="st">&quot;group&quot;</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb2-26" data-line-number="26"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>group) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">group =</span> label) <span class="op">%&gt;%</span></a>
@@ -511,6 +511,9 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 </div>
 <div id="ref-nay2015">
 <p>Nay, John J., and Jonathan M. Gilligan. 2015. “Data-Driven Dynamic Decision Models.” In, 2752–63. IEEE Press. <a href="https://doi.org/0.1109/WSC.2015.7408381" class="uri">https://doi.org/0.1109/WSC.2015.7408381</a>.</p>
+</div>
+<div id="ref-nay2016">
+<p>Nay, John J., and Yevgeniy Vorobeychik. 2016. “Predicting Human Cooperation.” <em>PLOS ONE</em> 11 (5): e0155656. <a href="https://doi.org/10.1371/journal.pone.0155656" class="uri">https://doi.org/10.1371/journal.pone.0155656</a>.</p>
 </div>
 </div>
 </div>

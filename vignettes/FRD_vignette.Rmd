@@ -10,6 +10,22 @@ vignette: >
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown_notangle}
 references:
+  - id: nay2016
+    type: article-journal
+    author:
+      - family: Nay
+        given:  John J. 
+      - family: Vorobeychik
+        given:  Yevgeniy
+    issued: 
+      year: 2016
+    title: "Predicting Human Cooperation" 
+    container-title: PLOS ONE 
+    volume: 11
+    issue: 5
+    page: e0155656 
+    DOI: "10.1371/journal.pone.0155656"
+    URL: "https://doi.org/10.1371/journal.pone.0155656"
   - id: fudenberg2012
     type: article-journal
     author:
@@ -89,17 +105,19 @@ processors on the computer. This parallelization, combined with the
 implementation of the core computation in C++, speeds up estimation 
 considerably.
 
-There are 30 expeimental groups in the full data set, but for simpicity and to 
-keep the computational demands reasonable, we will only analyze 6 of these 
-groups.
+The datafsm package includes a dataset from @nay2016,
+which represents 168,386 rounds of play in 30 different variations on the 
+iterated prisoner's dilemma game.
+This example will focus on the six games studied by 
+@fudenberg2012.
 ```{r prepare_data, dependson = "initialize"}
-data(FRD_games, package = "datafsm")
+data(NV_games, package = "datafsm")
 
 group_df <- list(g1 = 15, g2 = 16, g3 = 17, g4 = 14, g5 = 13, g6 = 12) %>%
   as_data_frame() %>% gather(key = label, value = group) %>%
   mutate(group = as.integer(group))
 
-prepped <- FRD_games %>% transmute(
+prepped <- NV_games %>% transmute(
   group = as.integer(group),
   outcome = as.integer(my.decision == "coop") + 1,
   period = as.integer(period),
@@ -115,7 +133,7 @@ group_indices <- prepped$group %>% unique() %>% sort()
 group_seeds <- sample.int(.Machine$integer.max, length(group_indices)) %>%
   set_names(as.character(group_indices))
 
-patterns <- FRD_games %>% select(group, error, r, t) %>%
+patterns <- NV_games %>% select(group, error, r, t) %>%
   mutate(group = as.integer(group)) %>%
   full_join(group_df, by = "group") %>%
   select(-group) %>% rename(group = label) %>%

@@ -249,18 +249,21 @@ Session Info
 
 ``` r
 sessionInfo()
-#> R version 3.5.1 (2018-07-02)
-#> Platform: x86_64-w64-mingw32/x64 (64-bit)
-#> Running under: Windows 10 x64 (build 17134)
+#> R version 3.4.4 (2018-03-15)
+#> Platform: x86_64-pc-linux-gnu (64-bit)
+#> Running under: Ubuntu 16.04.5 LTS
 #> 
 #> Matrix products: default
+#> BLAS: /usr/lib/libblas/libblas.so.3.6.0
+#> LAPACK: /usr/lib/lapack/liblapack.so.3.6.0
 #> 
 #> locale:
-#> [1] LC_COLLATE=English_United States.1252 
-#> [2] LC_CTYPE=English_United States.1252   
-#> [3] LC_MONETARY=English_United States.1252
-#> [4] LC_NUMERIC=C                          
-#> [5] LC_TIME=English_United States.1252    
+#>  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+#>  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+#>  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+#>  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+#>  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+#> [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 #> 
 #> attached base packages:
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
@@ -270,9 +273,9 @@ sessionInfo()
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] magic_1.5-8         ddalpha_1.3.4       tidyr_0.8.1        
-#>  [4] sfsmisc_1.1-2       splines_3.5.1       prodlim_2018.04.18 
-#>  [7] assertthat_0.2.0    highr_0.7           stats4_3.5.1       
-#> [10] DRR_0.0.3           yaml_2.2.0          robustbase_0.93-1.1
+#>  [4] sfsmisc_1.1-2       splines_3.4.4       prodlim_2018.04.18 
+#>  [7] assertthat_0.2.0    highr_0.7           stats4_3.4.4       
+#> [10] DRR_0.0.3           yaml_2.1.19         robustbase_0.93-1.1
 #> [13] ipred_0.9-6         diagram_1.6.4       pillar_1.3.0       
 #> [16] backports_1.1.2     lattice_0.20-35     glue_1.3.0         
 #> [19] digest_0.6.15       colorspace_1.3-2    recipes_0.1.3      
@@ -280,19 +283,19 @@ sessionInfo()
 #> [25] timeDate_3043.102   pkgconfig_2.0.1     CVST_0.2-2         
 #> [28] broom_0.5.0         caret_6.0-80        purrr_0.2.5        
 #> [31] scales_0.5.0        gower_0.1.2         lava_1.6.2         
-#> [34] tibble_1.4.2        ggplot2_3.0.0       withr_2.1.2        
+#> [34] tibble_1.4.2        ggplot2_3.0.0.9000  withr_2.1.2        
 #> [37] nnet_7.3-12         lazyeval_0.2.1      cli_1.0.0          
 #> [40] survival_2.42-6     magrittr_1.5        crayon_1.3.4       
 #> [43] evaluate_0.11       doParallel_1.0.11   nlme_3.1-137       
 #> [46] MASS_7.3-50         dimRed_0.1.0        class_7.3-14       
-#> [49] tools_3.5.1         stringr_1.3.1       kernlab_0.9-26     
+#> [49] tools_3.4.4         stringr_1.3.1       kernlab_0.9-26     
 #> [52] munsell_0.5.0       bindrcpp_0.2.2      pls_2.6-0          
-#> [55] compiler_3.5.1      RcppRoll_0.3.0      rlang_0.2.1        
-#> [58] grid_3.5.1          rmarkdown_1.10      geometry_0.3-6     
+#> [55] compiler_3.4.4      RcppRoll_0.3.0      rlang_0.2.1        
+#> [58] grid_3.4.4          rmarkdown_1.10      geometry_0.3-6     
 #> [61] gtable_0.2.0        ModelMetrics_1.1.0  codetools_0.2-15   
 #> [64] abind_1.4-5         reshape2_1.4.3      R6_2.2.2           
 #> [67] lubridate_1.7.4     knitr_1.20          dplyr_0.7.6        
 #> [70] bindr_0.1.1         rprojroot_1.3-2     shape_1.4.4        
-#> [73] stringi_1.2.4       parallel_3.5.1      Rcpp_0.12.18       
+#> [73] stringi_1.2.4       parallel_3.4.4      Rcpp_0.12.18       
 #> [76] rpart_4.1-13        DEoptimR_1.0-8      tidyselect_0.2.4
 ```

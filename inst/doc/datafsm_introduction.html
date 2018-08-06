@@ -530,6 +530,9 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <h1>Documentation for <code>evolve_model</code></h1>
 <p>Check out the documentation for the main function of the package to learn about all the options:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">?evolve_model</a></code></pre></div>
+<pre><code>## Warning in tools::parse_Rd(path): /home/jonathan/programming/r-projects/
+## datafsm/man/NV_games.Rd:72: unknown macro '\itme'</code></pre>
+<pre><code>## Using development documentation for evolve_model</code></pre>
 </div>
 <div id="acknowledgements" class="section level1">
 <h1>Acknowledgements</h1>
@@ -537,7 +540,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 </div>
 <div id="session-info" class="section level1">
 <h1>Session Info</h1>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">sessionInfo</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">sessionInfo</span>()</a></code></pre></div>
 <pre><code>## R version 3.4.4 (2018-03-15)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
 ## Running under: Ubuntu 16.04.5 LTS
@@ -558,37 +561,43 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] datafsm_0.2.2    GA_3.1.1         iterators_1.0.10 foreach_1.4.4   
-## [5] devtools_1.13.6 
+##  [1] GA_3.1.1           iterators_1.0.10   foreach_1.4.4     
+##  [4] datafsm_0.2.2      devtools_1.13.6    forcats_0.3.0     
+##  [7] stringr_1.3.1      dplyr_0.7.6        purrr_0.2.5       
+## [10] readr_1.1.1        tidyr_0.8.1        tibble_1.4.2      
+## [13] ggplot2_3.0.0.9000 tidyverse_1.2.1   
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] magic_1.5-8         ddalpha_1.3.4       tidyr_0.8.1        
-##  [4] sfsmisc_1.1-2       splines_3.4.4       prodlim_2018.04.18 
-##  [7] assertthat_0.2.0    stats4_3.4.4        highr_0.7          
-## [10] DRR_0.0.3           yaml_2.1.19         robustbase_0.93-1.1
-## [13] ipred_0.9-6         diagram_1.6.4       pillar_1.3.0       
-## [16] backports_1.1.2     lattice_0.20-35     glue_1.3.0         
-## [19] digest_0.6.15       colorspace_1.3-2    recipes_0.1.3      
-## [22] htmltools_0.3.6     Matrix_1.2-14       plyr_1.8.4         
-## [25] timeDate_3043.102   pkgconfig_2.0.1     CVST_0.2-2         
-## [28] broom_0.5.0         caret_6.0-80        purrr_0.2.5        
-## [31] scales_0.5.0        gower_0.1.2         lava_1.6.2         
-## [34] git2r_0.23.0        tibble_1.4.2        ggplot2_3.0.0.9000 
-## [37] withr_2.1.2         nnet_7.3-12         lazyeval_0.2.1     
-## [40] cli_1.0.0           survival_2.42-6     magrittr_1.5       
-## [43] crayon_1.3.4        memoise_1.1.0       evaluate_0.11      
-## [46] doParallel_1.0.11   nlme_3.1-137        MASS_7.3-50        
-## [49] dimRed_0.1.0        class_7.3-14        tools_3.4.4        
-## [52] stringr_1.3.1       kernlab_0.9-26      munsell_0.5.0      
-## [55] bindrcpp_0.2.2      pls_2.6-0           compiler_3.4.4     
-## [58] RcppRoll_0.3.0      rlang_0.2.1         grid_3.4.4         
-## [61] rstudioapi_0.7      rmarkdown_1.10      geometry_0.3-6     
-## [64] gtable_0.2.0        ModelMetrics_1.1.0  codetools_0.2-15   
-## [67] abind_1.4-5         reshape2_1.4.3      R6_2.2.2           
-## [70] lubridate_1.7.4     knitr_1.20          dplyr_0.7.6        
-## [73] bindr_0.1.1         rprojroot_1.3-2     shape_1.4.4        
-## [76] stringi_1.2.4       parallel_3.4.4      Rcpp_0.12.17       
-## [79] rpart_4.1-13        DEoptimR_1.0-8      tidyselect_0.2.4</code></pre>
+##  [1] nlme_3.1-137        lubridate_1.7.4     doParallel_1.0.11  
+##  [4] dimRed_0.1.0        httr_1.3.1          rprojroot_1.3-2    
+##  [7] tools_3.4.4         backports_1.1.2     utf8_1.1.4         
+## [10] R6_2.2.2            rpart_4.1-13        lazyeval_0.2.1     
+## [13] colorspace_1.3-2    nnet_7.3-12         withr_2.1.2        
+## [16] tidyselect_0.2.4    compiler_3.4.4      cli_1.0.0          
+## [19] rvest_0.3.2         xml2_1.2.0          desc_1.2.0         
+## [22] scales_0.5.0        sfsmisc_1.1-2       DEoptimR_1.0-8     
+## [25] robustbase_0.93-1.1 commonmark_1.5      digest_0.6.15      
+## [28] rmarkdown_1.10      htmltools_0.3.6     pkgconfig_2.0.1    
+## [31] highr_0.7           rlang_0.2.1         readxl_1.1.0       
+## [34] ddalpha_1.3.4       rstudioapi_0.7      shape_1.4.4        
+## [37] bindr_0.1.1         jsonlite_1.5        ModelMetrics_1.1.0 
+## [40] magrittr_1.5        Matrix_1.2-14       Rcpp_0.12.18       
+## [43] munsell_0.5.0       fansi_0.2.3         abind_1.4-5        
+## [46] yaml_2.1.19         stringi_1.2.4       MASS_7.3-50        
+## [49] plyr_1.8.4          recipes_0.1.3       grid_3.4.4         
+## [52] parallel_3.4.4      pls_2.6-0           crayon_1.3.4       
+## [55] lattice_0.20-35     haven_1.1.2         splines_3.4.4      
+## [58] hms_0.4.2           knitr_1.20          pillar_1.3.0       
+## [61] reshape2_1.4.3      codetools_0.2-15    stats4_3.4.4       
+## [64] CVST_0.2-2          magic_1.5-8         glue_1.3.0         
+## [67] evaluate_0.11       modelr_0.1.2        testthat_2.0.0     
+## [70] cellranger_1.1.0    diagram_1.6.4       gtable_0.2.0       
+## [73] kernlab_0.9-26      assertthat_0.2.0    DRR_0.0.3          
+## [76] gower_0.1.2         prodlim_2018.04.18  broom_0.5.0        
+## [79] roxygen2_6.0.1      class_7.3-14        survival_2.42-6    
+## [82] geometry_0.3-6      timeDate_3043.102   RcppRoll_0.3.0     
+## [85] memoise_1.1.0       bindrcpp_0.2.2      lava_1.6.2         
+## [88] caret_6.0-80        ipred_0.9-6</code></pre>
 </div>
 
 
