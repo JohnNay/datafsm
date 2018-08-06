@@ -2,9 +2,5 @@ language: R
 
 cache: packages
 
-r_packages:
-  - devtools
-  - rmarkdown
-
 r_build_args: --no-resave-data --no-build-vignettes
-r_check_args: --as-cran --no-manual --timings
+r_check_args: --as-cran
