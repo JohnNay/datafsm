@@ -4,7 +4,7 @@
 * ubuntu 16.04, R 3.4.4
 * ubuntu 16.04, R-devel  (2018-06-20 r74924 -- "Unsuffered Consequences") with ASAN, gcc
 * ubuntu 14.04.5 R 3.5.0
-* ubuntu 14.04.5 R-devel 2018-08-06 r75070
+* ubuntu 14.04.5 R-devel 2018-08-06 r75070 with valgrind
 
 
 ## R CMD check results
