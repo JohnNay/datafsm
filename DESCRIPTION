@@ -6,7 +6,7 @@ Authors@R: c( person("Nay", "John J.",
       email = "john.j.nay@gmail.com", role = c("aut")), 
     person("Gilligan",  "Jonathan M.", 
       email = "jonathan.gilligan@vanderbilt.edu", role = c("cre", "aut")))
-Description: This package automatically generates finite state machine models 
+Description: Automatically generation of finite state machine models 
     of dynamic decision-making that both have strong predictive power and are 
     interpretable in human terms. We use an efficient model representation and 
     a genetic algorithm-based estimation process to generate simple 
