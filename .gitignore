@@ -1,5 +1,4 @@
 .DS_Store
-.Rbuildignore
 .Rhistory
 .Rproj.user
 fsm.Rproj
@@ -7,3 +6,7 @@ tmp
 datafsm.Rcheck
 .RData
 .Rprofile
+*.Rproj
+vignettes/*_cache/
+vignettes/*_files/
+vignettes/res*.Rds

@@ -4,17 +4,21 @@
 \alias{evolve_model_cv}
 \title{Estimate Optimal Number of States of a Finite-state Machine Model}
 \usage{
-evolve_model_cv(data, measure, k, actions, max_states, seed, popSize,
-  pcrossover, pmutation, maxiter, run, parallel, verbose, ntimes)
+evolve_model_cv(data, measure, k, actions, max_states, seed,
+        popSize, pcrossover, pmutation, maxiter, run,  parallel,
+        verbose, ntimes)
 }
 \arguments{
-\item{data}{data.frame that has columns named "period" and "outcome" (period 
-is the time period that the outcome action was taken), and the rest of the 
-columns are predictors, ranging from one to three predictors. All of the 
-(3-5 columns) should be named. The period and outcome columns should be 
-integer vectors and the columns with the predictor variable data should be 
-logical vectors (\code{TRUE, FALSE}). If the predictor variable data is not 
-logical, it will coerced to logical with \code{base::as.logical()}.}
+\item{data}{A \code{data.frame} that has columns named "period" and "outcome"
+(period is the time period that the outcome action was taken), and one to
+three additional columns, containing predictors.
+All of the 3-5 columns should be named.
+The period and outcome columns should be integer vectors and the columns
+with the predictor variable data should be logical vectors
+(\code{TRUE, FALSE}).
+If the predictor variable data is not  logical, it will coerced to logical
+with \cr
+\code{base::as.logical()}.}
 
 \item{measure}{Optional length one character vector that is either:
 "accuracy", "sens", "spec", or "ppv". This specifies what measure of
@@ -30,55 +34,55 @@ probability that the model will predict a negative?'' Positive predictive
 value answers, ``what is the percent of predicted positives that are
 actually positive?''}
 
-\item{k}{Optional numeric vector length one only relevant if cv==TRUE, 
+\item{k}{Optional numeric vector length one only relevant if cv==TRUE,
 specifying number of folds for cross-validation.}
 
-\item{actions}{Optional numeric vector with the number of actions. If not 
-provided, then actions will be set as the number of unique values in the 
+\item{actions}{Optional numeric vector with the number of actions. If not
+provided, then actions will be set as the number of unique values in the
 outcome vector.}
 
-\item{max_states}{Optional numeric vector length one only relevant if 
-\code{cv==TRUE}. It specifies how up to how many states that 
-cross-validation should search through. 
+\item{max_states}{Optional numeric vector length one only relevant if
+\code{cv==TRUE}. It specifies how up to how many states that
+cross-validation should search through.
 If not provided, will be set to \code{states + 1}.}
 
 \item{seed}{Optional numeric vector length one.}
 
-\item{popSize}{Optional numeric vector length one specifying the size of the 
-GA population. A larger number will increase the probability of finding a 
-very good solution but will also increase the computation time. This is 
+\item{popSize}{Optional numeric vector length one specifying the size of the
+GA population. A larger number will increase the probability of finding a
+very good solution but will also increase the computation time. This is
 passed to the GA::ga() function of the \strong{GA} package.}
 
 \item{pcrossover}{Optional numeric vector length one specifying probability of
 crossover for GA. This is passed to the GA::ga() function of the \strong{GA}
 package.}
 
-\item{pmutation}{Optional numeric vector length one specifying probability of 
-mutation for GA. This is passed to the GA::ga() function of the \strong{GA} 
+\item{pmutation}{Optional numeric vector length one specifying probability of
+mutation for GA. This is passed to the GA::ga() function of the \strong{GA}
 package.}
 
-\item{maxiter}{Optional numeric vector length one specifying max number of 
-iterations for stopping the GA evolution. A larger number will increase the 
-probability of finding a very good solution but will also increase the 
+\item{maxiter}{Optional numeric vector length one specifying max number of
+iterations for stopping the GA evolution. A larger number will increase the
+probability of finding a very good solution but will also increase the
 computation time. This is passed to the GA::ga() function of the \strong{GA}
-package. \code{maxiter} is scaled by how many parameters are in the model: 
+package. \code{maxiter} is scaled by how many parameters are in the model:\cr
 \code{maxiter <- maxiter + ((maxiter*(nBits^2)) / maxiter)}.}
 
-\item{run}{Optional numeric vector length one specifying max number of 
-consecutive iterations without improvement in best fitness score for 
-stopping the GA evolution. A larger number will increase the probability of 
-finding a very good solution but will also increase the computation time. 
+\item{run}{Optional numeric vector length one specifying max number of
+consecutive iterations without improvement in best fitness score for
+stopping the GA evolution. A larger number will increase the probability of
+finding a very good solution but will also increase the computation time.
 This is passed to the GA::ga() function of the \strong{GA} package.}
 
-\item{parallel}{Optional logical vector length one. For running the GA 
- evolution in parallel. Depending on the number of cores registered and the 
+\item{parallel}{Optional logical vector length one. For running the GA
+ evolution in parallel. Depending on the number of cores registered and the
 memory on your machine, this can make the process much faster, but only works
 for Unix-based machines that can fork the processes.}
 
-\item{verbose}{Optional logical vector length one specifying whether helpful 
+\item{verbose}{Optional logical vector length one specifying whether helpful
 messages should be displayed on the user's console or not.}
 
-\item{ntimes}{Optional integer vector length one specifying the number of 
+\item{ntimes}{Optional integer vector length one specifying the number of
 times to estimate model. Default is 1 time.}
 }
 \value{
@@ -86,16 +90,15 @@ Returns the number of states that maximizes the \code{measure}, e.g.
   accuracy.
 }
 \description{
-\code{evolve_model_cv} calls \code{evolve_model} with varied numbers of 
+\code{evolve_model_cv} calls \code{evolve_model} with varied numbers of
 states and compares their performance with cross-validation.
 }
 \references{
-Luca Scrucca (2013). GA: A Package for Genetic Algorithms in R. 
-  Journal of Statistical Software, 53(4), 1-37. URL 
+Luca Scrucca (2013). GA: A Package for Genetic Algorithms in R.
+  Journal of Statistical Software, 53(4), 1-37. URL
   http://www.jstatsoft.org/v53/i04/.
-  
+
   Hastie, T., R. Tibshirani, and J. Friedman. (2009). The Elements of
   Statistical Learning: Data Mining, Inference, and Prediction, Second
   Edition. 2nd ed. New York, NY: Springer.
 }
-

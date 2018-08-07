@@ -30,4 +30,3 @@ representation, transforms it to a decimal representation, then puts it in
 matrix form with the correct sized matrices, given the specified numbers of
 states, inputs, and actions.
 }
-

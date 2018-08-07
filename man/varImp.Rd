@@ -12,4 +12,3 @@ varImp(x)
 \description{
 Extracts slot of variable importances
 }
-

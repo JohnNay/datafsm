@@ -1,6 +1,25 @@
-# datafsm 0.1
+# datafsm 0.2.2
 
-First release of package.
+* Rewrote covariate testing in `fitnessCPP` to fix memory access errors.
+* Added new vignette, giving an example using real data from Fudenberg,
+  Rand, and Dreber.
+* Change progress reports to use `message()` and `warning()` instead of 
+  `print()` and `cat()`
+* Added new dataset with iterated prisoner's dilemma games from Nay and 
+  Vorobeychik (2016).
+
+# datafsm 0.2.1
+
+* Updated tests to work with forthcoming testthat version 2.0.0
+
+# datafsm 0.2.0
+
+* Updated to use new R native-routine registration and disable symbol search using Rcpp::compileAttributes().
+
+# datafsm 0.1.2
+
+* Fixed line dropping NZV vars (line 211 of evolve_model.R)
+* Changed all occurencies of 'maxfitness' to 'maxFitness' to comply with new GA version soon to be on CRAN.
 
 # datafsm 0.1.1
 
@@ -13,7 +32,8 @@ Second release of package.
 * BIGGEST CHANGE: Added evolve_model_ntimes() function to run evolve_model() ntimes and return either the best or all of them, depending on user specification. 
 * In evolve_model() instead of missing(), now use is.null() so evolve_model can be called inside other functions easily.
 
-# datafsm 0.1.2
 
-* Fixed line dropping NZV vars (line 211 of evolve_model.R)
-* Changed all occurencies of 'maxfitness' to 'maxFitness' to comply with new GA version soon to be on CRAN.
+# datafsm 0.1
+
+First release of package.
+

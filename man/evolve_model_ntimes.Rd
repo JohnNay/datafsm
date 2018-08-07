@@ -5,32 +5,38 @@
 \title{Use a Genetic Algorithm to Estimate a Finite-state Machine Model n-times}
 \usage{
 evolve_model_ntimes(data, test_data = NULL, drop_nzv = FALSE,
-  measure = c("accuracy", "sens", "spec", "ppv"), states = NULL,
-  cv = FALSE, max_states = NULL, k = 2, actions = NULL, seed = NULL,
-  popSize = 75, pcrossover = 0.8, pmutation = 0.1, maxiter = 50,
-  run = 25, parallel = FALSE, priors = NULL, verbose = TRUE,
-  return_best = TRUE, ntimes = 10, cores = NULL)
+        measure = c("accuracy", "sens", "spec", "ppv"), 
+        states = NULL, cv = FALSE, max_states = NULL, k = 2, 
+        actions = NULL, seed = NULL, popSize = 75, 
+        pcrossover = 0.8, pmutation = 0.1, maxiter = 50, 
+        run = 25, parallel = FALSE, priors = NULL, 
+        verbose = TRUE, return_best = TRUE, ntimes = 10, 
+        cores = NULL)
 }
 \arguments{
-\item{data}{data.frame that has columns named "period" and "outcome" (period 
-is the time period that the outcome action was taken), and the rest of the 
-columns are predictors, ranging from one to three predictors. All of the 
-(3-5 columns) should be named. The period and outcome columns should be 
-integer vectors and the columns with the predictor variable data should be 
-logical vectors (\code{TRUE, FALSE}). If the predictor variable data is not 
-logical, it will coerced to logical with \code{base::as.logical()}.}
+\item{data}{A \code{data.frame} that has columns named "period" and "outcome"
+(period is the time period that the outcome action was taken), and one to
+three additional columns, containing predictors.
+All of the 3-5 columns should be named.
+The period and outcome columns should be integer vectors and the columns
+with the predictor variable data should be logical vectors
+(\code{TRUE, FALSE}).
+If the predictor variable data is not  logical, it will coerced to logical
+with \cr
+\code{base::as.logical()}.}
 
-\item{test_data}{Optional data.frame that has "period" and "outcome" columns 
-and rest of columns are predictors, ranging from one to three predictors. 
-All of the (3-5 columns) should be named. Outcome variable is the decision 
-the decision-maker took for that period. This data.frame should be in the
-same format and have the same order of columns as the data.frame passed to
-the required \code{data} argument.}
+\item{test_data}{Optional \code{data.frame} that has "period" and "outcome"
+columns, with one to three additional columns containing predictors.
+All of the (3-5 columns) should be named. The outcome variable is the
+decision the decision-maker took for that period.
+This \code{data.frame} should be in the same format and have the same order
+of columns as the data.frame passed to the required \code{data} argument.}
 
-\item{drop_nzv}{Optional logical vector length one specifying whether 
-predictors variables with variance in provided data near zero should be 
+\item{drop_nzv}{Optional logical vector length one specifying whether
+predictors variables with variance in provided data near zero should be
 dropped before model building. Default is \code{FALSE}. See
-\code{caret::nearZeroVar()}, which calls: \code{caret::nzv()}.}
+\code{caret::nearZeroVar()}, which calls:\cr
+\code{caret::nzv()}.}
 
 \item{measure}{Optional length one character vector that is either:
 "accuracy", "sens", "spec", or "ppv". This specifies what measure of
@@ -46,74 +52,74 @@ probability that the model will predict a negative?'' Positive predictive
 value answers, ``what is the percent of predicted positives that are
 actually positive?''}
 
-\item{states}{Optional numeric vector with the number of states. 
+\item{states}{Optional numeric vector with the number of states.
 If not provided, will be set to \code{max(data$outcome)}.}
 
-\item{cv}{Optional logical vector length one for whether cross-validation 
-should be conducted on training data to select optimal number of states. 
-This can drastically increase computation time because if \code{TRUE}, it 
-will run evolve_model k*max_states times to estimate optimal value for 
-states. Ties are broken by choosing the smaller number of states. Default is
-\code{FALSE}.}
+\item{cv}{Optional logical vector length one for whether cross-validation
+should be conducted on training data to select optimal number of states.
+This can drastically increase computation time because if \code{TRUE}, it
+will run \code{evolve_model} \code{k*max_states} times to estimate optimal
+value for states. Ties are broken by choosing the smaller number of states.
+Default is \code{FALSE}.}
 
-\item{max_states}{Optional numeric vector length one only relevant if 
-\code{cv==TRUE}. It specifies how up to how many states that 
-cross-validation should search through. 
+\item{max_states}{Optional numeric vector length one only relevant if
+\code{cv==TRUE}. It specifies how up to how many states that
+cross-validation should search through.
 If not provided, will be set to \code{states + 1}.}
 
-\item{k}{Optional numeric vector length one only relevant if cv==TRUE, 
+\item{k}{Optional numeric vector length one only relevant if cv==TRUE,
 specifying number of folds for cross-validation.}
 
-\item{actions}{Optional numeric vector with the number of actions. If not 
-provided, then actions will be set as the number of unique values in the 
+\item{actions}{Optional numeric vector with the number of actions. If not
+provided, then actions will be set as the number of unique values in the
 outcome vector.}
 
 \item{seed}{Optional numeric vector length one.}
 
-\item{popSize}{Optional numeric vector length one specifying the size of the 
-GA population. A larger number will increase the probability of finding a 
-very good solution but will also increase the computation time. This is 
+\item{popSize}{Optional numeric vector length one specifying the size of the
+GA population. A larger number will increase the probability of finding a
+very good solution but will also increase the computation time. This is
 passed to the GA::ga() function of the \strong{GA} package.}
 
 \item{pcrossover}{Optional numeric vector length one specifying probability of
 crossover for GA. This is passed to the GA::ga() function of the \strong{GA}
 package.}
 
-\item{pmutation}{Optional numeric vector length one specifying probability of 
-mutation for GA. This is passed to the GA::ga() function of the \strong{GA} 
+\item{pmutation}{Optional numeric vector length one specifying probability of
+mutation for GA. This is passed to the GA::ga() function of the \strong{GA}
 package.}
 
-\item{maxiter}{Optional numeric vector length one specifying max number of 
-iterations for stopping the GA evolution. A larger number will increase the 
-probability of finding a very good solution but will also increase the 
+\item{maxiter}{Optional numeric vector length one specifying max number of
+iterations for stopping the GA evolution. A larger number will increase the
+probability of finding a very good solution but will also increase the
 computation time. This is passed to the GA::ga() function of the \strong{GA}
-package. \code{maxiter} is scaled by how many parameters are in the model: 
+package. \code{maxiter} is scaled by how many parameters are in the model:\cr
 \code{maxiter <- maxiter + ((maxiter*(nBits^2)) / maxiter)}.}
 
-\item{run}{Optional numeric vector length one specifying max number of 
-consecutive iterations without improvement in best fitness score for 
-stopping the GA evolution. A larger number will increase the probability of 
-finding a very good solution but will also increase the computation time. 
+\item{run}{Optional numeric vector length one specifying max number of
+consecutive iterations without improvement in best fitness score for
+stopping the GA evolution. A larger number will increase the probability of
+finding a very good solution but will also increase the computation time.
 This is passed to the GA::ga() function of the \strong{GA} package.}
 
-\item{parallel}{Optional logical vector length one. For running the GA 
- evolution in parallel. Depending on the number of cores registered and the 
+\item{parallel}{Optional logical vector length one. For running the GA
+ evolution in parallel. Depending on the number of cores registered and the
 memory on your machine, this can make the process much faster, but only works
 for Unix-based machines that can fork the processes.}
 
-\item{priors}{Optional numeric matrix of solutions strings to be included in 
-the initialization. User needs to use a decoder function to translate prior 
-decision models into bits and then provide them. If this is not specified, 
+\item{priors}{Optional numeric matrix of solutions strings to be included in
+the initialization. User needs to use a decoder function to translate prior
+decision models into bits and then provide them. If this is not specified,
 then random priors are automatically created.}
 
-\item{verbose}{Optional logical vector length one specifying whether helpful 
+\item{verbose}{Optional logical vector length one specifying whether helpful
 messages should be displayed on the user's console or not.}
 
-\item{return_best}{Optional logical vector length one specifying whether to 
+\item{return_best}{Optional logical vector length one specifying whether to
 return just the best model or all models. Only relevant if ntimes > 1.
 Default is TRUE.}
 
-\item{ntimes}{Optional integer vector length one specifying the number of 
+\item{ntimes}{Optional integer vector length one specifying the number of
 times to estimate model. Default is 1 time.}
 
 \item{cores}{integer vector length one specifying number of cores to use if
@@ -132,7 +138,7 @@ machine model, primarily for understanding and predicting decision-making.
 }
 \details{
 This function of the \strong{datafsm} package applies the \code{evolve_model} 
-function multiple times and then returns a list with either all the mdoels or 
+function multiple times and then returns a list with either all the models or 
 the best one.
 
 \code{evolve_model} uses a stochastic meta-heuristic optimization routine to 
@@ -149,4 +155,3 @@ cdata <- data.frame(period = rep(1:10, 1000),
 (res <- evolve_model_ntimes(cdata, return_best = FALSE, ntimes=2))
 
 }
-

@@ -14,7 +14,9 @@ predictors.}
 state.}
 
 \item{cols}{Numeric vector same length as number of columns of the
-state matrix (\code{state_mat}) with the action that each column of the
+state matrix\cr
+(\code{state_mat}) 
+with the action that each column of the
 state matrix corresponds to the decision model taking in the previous
 period. This is only relevant when the predictor variables of the FSM are
 lagged outcomes that include the previous actions taken by that decision
@@ -37,4 +39,3 @@ tft_action <- matrix(c(1, 2))
 find_wildcards(tft_state, tft_action,  c(1, 2, 1, 2))
 
 }
-

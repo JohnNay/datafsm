@@ -10,7 +10,9 @@
 #' @param action_vec Numeric vector indicating what action to take for each
 #'   state.
 #' @param cols Numeric vector same length as number of columns of the
-#'   state matrix (\code{state_mat}) with the action that each column of the
+#'   state matrix\cr
+#'   (\code{state_mat}) 
+#'   with the action that each column of the
 #'   state matrix corresponds to the decision model taking in the previous
 #'   period. This is only relevant when the predictor variables of the FSM are
 #'   lagged outcomes that include the previous actions taken by that decision
@@ -97,7 +99,8 @@ find_wildcards <- function(state_mat, action_vec, cols){
 #' @param outcome Numeric vector same length as the number of rows as data.
 #'
 #' @return Returns a list of with sparse and corrected state matrix.  If the
-#'   model is fine, then \code{sparse_state_mat} and \code{corrected_state_mat}
+#'   model is fine, then\cr
+#'   \code{sparse_state_mat} and \code{corrected_state_mat}
 #'   should be equal to \code{state_mat}.
 #'
 #' @export

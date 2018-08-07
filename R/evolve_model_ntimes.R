@@ -4,12 +4,21 @@
 #'machine model, primarily for understanding and predicting decision-making.
 #'
 #'This function of the \strong{datafsm} package applies the \code{evolve_model} 
-#'function multiple times and then returns a list with either all the mdoels or 
+#'function multiple times and then returns a list with either all the models or 
 #'the best one.
 #'
 #'\code{evolve_model} uses a stochastic meta-heuristic optimization routine to 
 #'estimate the parameters that define a FSM model. Because this is not 
 #'guaranteed to return the best result, we run it many times.
+#'
+#'@usage evolve_model_ntimes(data, test_data = NULL, drop_nzv = FALSE,
+#'         measure = c("accuracy", "sens", "spec", "ppv"), 
+#'         states = NULL, cv = FALSE, max_states = NULL, k = 2, 
+#'         actions = NULL, seed = NULL, popSize = 75, 
+#'         pcrossover = 0.8, pmutation = 0.1, maxiter = 50, 
+#'         run = 25, parallel = FALSE, priors = NULL, 
+#'         verbose = TRUE, return_best = TRUE, ntimes = 10, 
+#'         cores = NULL)
 #'
 #'@param cores integer vector length one specifying number of cores to use if
 #'  parallel is TRUE.
@@ -36,10 +45,11 @@
 ################################################################################
 evolve_model_ntimes <- function(data, test_data = NULL, drop_nzv = FALSE,
                                 measure = c("accuracy", "sens", "spec", "ppv"),
-                                states = NULL, cv = FALSE, max_states = NULL, k = 2,
-                                actions = NULL,
+                                states = NULL, cv = FALSE, max_states = NULL, 
+                                k = 2, actions = NULL,
                                 seed = NULL,
-                                popSize = 75, pcrossover = 0.8, pmutation = 0.1, maxiter = 50, run = 25,
+                                popSize = 75, pcrossover = 0.8, pmutation = 0.1, 
+                                maxiter = 50, run = 25,
                                 parallel = FALSE,
                                 priors = NULL,
                                 verbose = TRUE,

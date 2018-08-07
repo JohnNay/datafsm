@@ -1,6 +1,22 @@
 language: R
-sudo: required
+cache: packages
 
-r_packages:
-  - rmarkdown
+matrix:
+  include:
+    - name: release
+      r: release
+      r_check_args: --as-cran
+    - name: devel
+      r: devel
+      r_check_args: --as-cran --use-valgrind
+      env:
+        - VALGRIND_OPTS='--leak-check=full --track-origins=yes'
+      addons:
+        apt:
+          packages:
+            - valgrind
+      script:
+        - R CMD build --no-resave-data --no-build-vignettes .
+        - travis_wait R CMD check "${PKG_TARBALL}" --as-cran; CHECK_RET=$?
 
+r_build_args: --no-resave-data --no-build-vignettes

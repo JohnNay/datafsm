@@ -34,4 +34,3 @@ Returns a numeric vector length one.
 \details{
 This is the function of the \strong{datafsm} package used to measure the fsm model performance. It uses the caret package.
 }
-

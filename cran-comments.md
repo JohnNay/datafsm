@@ -1,16 +1,21 @@
 ## Test environments
-* local OS X install, R 3.2.2
-* ubuntu 12.04 (on travis-ci), R 3.2.2
-* win-builder (devel and release)
+* local build Windows 10, R 3.5.1
+* ubuntu 18.04, R 3.4.4
+* ubuntu 16.04, R 3.4.4
+* ubuntu 16.04, R-devel  (2018-06-20 r74924 -- "Unsuffered Consequences") with ASAN, gcc
+* ubuntu 14.04.5 R 3.5.0
+* ubuntu 14.04.5 R-devel 2018-08-06 r75070 with valgrind
+
 
 ## R CMD check results
-There were no ERRORs or WARNINGs.
+There were no ERRORs, no WARNINGs, and no NOTES.
 
-There was 1 NOTE:
-
-* New submission. 
-
-This is the first submission for this package.
+## ASAN gcc results
+There were no reported memory access errors
 
 ## Downstream dependencies
 None.
+
+## Notes
+
+The vignette FRD_vignette.Rmd takes a very long time to build.

@@ -1,21 +1,22 @@
 ---
+title: "Introduction to datafsm"
+author: "John J. Nay and Jonathan M. Gilligan"
+date: "Sept. 5, 2015"
 output:
-  md_document:
-    variant: markdown_github
+  rmarkdown::html_vignette:
+    fig_caption: yes
+vignette: >
+  %\VignetteIndexEntry{Introduction to datafsm}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+# Abstract
 
-[![Build Status](https://travis-ci.org/jonathan-g/datafsm.png?branch=master)](https://travis-ci.org/jonathan-g/datafsm)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/datafsm)](http://cran.r-project.org/package=datafsm)
+The **datafsm** package implements a method for automatically generating models of dynamic processes that both have strong predictive power and are interpretable in human terms. We use an efficient model representation and a genetic algorithm-based estimation process. This paper offers a brief overview of the software and demonstrates how to use it.
 
-```{r, echo = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "man/figures/README/"
-)
-```
+
+# Introduction
 
 This package implements our method for automatically generating models of dynamic decision-making that both have strong predictive power and are interpretable in human terms. We use an efficient model representation and a genetic algorithm-based estimation process to generate simple deterministic approximations that explain most of the structure of complex stochastic processes. The genetic algorithm is implemented with the **GA** package ([Scrucca 2013](http://www.jstatsoft.org/v53/i04/)). Our method, implemented in C++ and R, scales well to large data sets. We have applied the package to empirical data, and demonstrated the method's ability to recover known data-generating processes by simulating data with agent-based models and correctly deriving the underlying decision models for multiple agent models and degrees of stochasticity.
 
@@ -143,6 +144,15 @@ Use the `estimation_details` method on the output of the `evolve_model()` functi
 suppressMessages(library(GA))
 plot(estimation_details(res))
 ```
+
+
+# Documentation for `evolve_model`
+
+Check out the documentation for the main function of the package to learn about all the options:
+```{r get.help, eval=TRUE, include=TRUE, render.args = list(help = list(sections = list("usage", "arguments", "details", "references")))}
+?evolve_model
+```
+
 
 # Acknowledgements
 

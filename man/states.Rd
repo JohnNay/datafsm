@@ -12,4 +12,3 @@ states(x)
 \description{
 Extracts number of states
 }
-

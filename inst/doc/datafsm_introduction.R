@@ -9,8 +9,11 @@ library(datafsm)
 citation("datafsm")
 
 ## ----fake.data, eval=TRUE, include=TRUE----------------------------------
-seed <- 1900
-set.seed(seed)
+seed1 <- 1900
+seed2 <- 1900
+seed3 <- 1900
+# 468534172
+set.seed(seed1)
 cdata <- data.frame(outcome = NA,
                     period = rep(1:10, 2000),
                     my.decision1 = NA,
@@ -30,8 +33,10 @@ tit_for_tat <- function(last_round_self, last_round_opponent) {
     last_round_opponent
 }
 
-noisy_tit_for_tat <- function(last_round_self, last_round_opponent) {
-  if (runif(1,0,1) <= 0.1) {
+noise_level = 0.1
+
+noisy_tit_for_tat <- function(last_round_self, last_round_opponent, noise_level) {
+  if (runif(1,0,1) <= noise_level) {
     sample(0:1,1)
   } else {
     last_round_opponent
@@ -40,15 +45,16 @@ noisy_tit_for_tat <- function(last_round_self, last_round_opponent) {
 
 for (i in seq_along(cdata$period)) {
   if (cdata$period[i] == 1) {
-    my.decision <- sample(0:1,1, prob = c(0.9,0.1))
+    my.decision <- sample(0:1,1, prob = c(1 - noise_level, noise_level))
     other.decision <- sample(0:1,1)
     cdata[i, "outcome"] <- pd_outcome(my.decision, other.decision)
   } else{
     my.last <- my.decision
     other.last <- other.decision
     my.decision <- tit_for_tat(my.last, other.last)
-    other.decision <- noisy_tit_for_tat(other.last, my.last)
-    cdata[i,c("outcome", "my.decision1", "other.decision1")] <- c(pd_outcome(my.decision, other.decision), my.last, other.last)
+    other.decision <- noisy_tit_for_tat(other.last, my.last, noise_level)
+    cdata[i,c("outcome", "my.decision1", "other.decision1")] <- 
+      c(pd_outcome(my.decision, other.decision), my.last, other.last)
   }
 }
 
@@ -56,7 +62,8 @@ for (i in seq_along(cdata$period)) {
 knitr::kable(head(cdata, 11))
 
 ## ----evolve.model, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE, results='hide'----
-res <- evolve_model(cdata, seed = seed)
+set.seed(seed2)
+res <- evolve_model(cdata, seed = seed3)
 
 ## ----plot.fsm, eval=TRUE, include=TRUE, fig.width=5, fig.height=4, fig.cap="Result of `plot()` method call on `ga_fsm` object."----
 summary(res)
