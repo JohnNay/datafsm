@@ -70,7 +70,7 @@ references:
     container-title: Proceedings of the 2015 Winter Simulation Conference
     publisher: IEEE Press
     page: 2752--2763
-    DOI: "0.1109/WSC.2015.7408381"
+    DOI: "10.1109/WSC.2015.7408381"
     URL: "https://arxiv.org/abs/1603.08150"
 editor_options: 
   chunk_output_type: inline
