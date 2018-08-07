@@ -154,7 +154,7 @@ Check out the documentation for the main function of the package to learn about 
 ```
 
 
-# Acknowledgements
+# Acknowledgments
 
 This work is supported by U.S. National Science Foundation grants EAR-1416964 and EAR-1204685.
 
