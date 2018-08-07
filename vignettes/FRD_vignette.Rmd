@@ -67,7 +67,7 @@ references:
     issued:
       year: 2015
     title: "Data-Driven Dynamic Decision Models"
-    contianer-title: Proceedings of the 2015 Winter Simulation Conference
+    container-title: Proceedings of the 2015 Winter Simulation Conference
     publisher: IEEE Press
     page: 2752--2763
     DOI: "0.1109/WSC.2015.7408381"
@@ -168,7 +168,7 @@ predicts the agent will take in the current period. The state on the far left
 is the starting state.
 
 The variable importance is computed by switching each value of an estimated 
-model’s state matrix to another value in its feasible range, measuring the 
+model's state matrix to another value in its feasible range, measuring the 
 decrease in goodness of fit to the data, normalizing the values so the largest 
 is 100, then summing across each column to estimate the relative importance of 
 each predictor variable across all states.

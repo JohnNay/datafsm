@@ -4,7 +4,6 @@
 \name{datafsm}
 \alias{datafsm}
 \alias{datafsm-package}
-\alias{datafsm-package}
 \title{datafsm: A package for estimating FSM models.}
 \description{
 It relies on the \strong{GA} package:
