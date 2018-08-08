@@ -179,6 +179,7 @@ build_priors <- function(popSize, nBits, states, inputs, actions) {
 #'  http://www.jstatsoft.org/v53/i04/.
 #'
 #' @examples
+#' \dontrun{
 #' # Create data:
 #'cdata <- data.frame(period = rep(1:10, 1000),
 #'                    outcome = rep(1:2, 5000),
@@ -189,6 +190,7 @@ build_priors <- function(popSize, nBits, states, inputs, actions) {
 #' plot(res, action_label = c("C", "D"))
 #' library(GA)
 #' plot(estimation_details(res))
+#' }
 #'
 #' # In scripts, it can makes sense to set parallel to
 #' # 'as.logical(Sys.info()['sysname'] != 'Windows')'.
