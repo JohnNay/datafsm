@@ -2,9 +2,6 @@
 # Load and attach datafsm into your R session, making its functions available:
 library(datafsm)
 
-## ----load.printr, include=FALSE------------------------------------------
-#library(printr)
-
 ## ----cite.datafsm, eval=TRUE, include=TRUE-------------------------------
 citation("datafsm")
 

@@ -90,10 +90,11 @@ This document applies the `datafsm` software package [@nay2015] to the data from
 For the motivation, underlying design, and tests on simulated data see @nay2015. 
 For a simple example of how to use the package see the "[Introduction to datafsm](datafsm_introduction.html)" vignette.
 ```{r initialize}
-library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(purrr)
 library(pander)
 library(datafsm)
-
 set.seed(1533406114)
 ```
 Estimating a model is as simple as ensuring the input data, e.g. `prepped`, is 
@@ -114,7 +115,8 @@ This example will focus on the six games studied by
 data(NV_games, package = "datafsm")
 
 group_df <- list(g1 = 15, g2 = 16, g3 = 17, g4 = 14, g5 = 13, g6 = 12) %>%
-  as_data_frame() %>% gather(key = label, value = group) %>%
+  as_tibble() %>% pivot_longer(cols = everything(), names_to = "label", 
+                               values_to = "group") %>%
   mutate(group = as.integer(group))
 
 prepped <- NV_games %>% transmute(
@@ -200,8 +202,8 @@ table.
 
 ```{r model_comparison}
 c_minus_d <- res %>% map_dbl(~varImp(.x)[4] - varImp(.x)[1])
-df <- c_minus_d %>% as.list() %>% as_data_frame() %>% 
-  gather(key = group, value = c_minus_d) %>% 
+df <- c_minus_d %>% as.list() %>% as_tibble() %>% 
+  pivot_longer(cols = everything(), names_to = "group", values_to = "c_minus_d") %>% 
   full_join(patterns, by = "group") %>% 
   select(error, r, t, c_minus_d) %>%
   rename(Error = error, Reward = r, Temptation = t,
@@ -240,8 +242,8 @@ res2 <- lapply(as.list(group_indices), function(x){
 ```{r k_fold_results}
 names(res2) <- group_indices
 res2states <- map_dbl(res2, states) %>% as.integer() %>%
-  set_names(names(res2)) %>% as.list() %>% as_data_frame() %>%
-  gather(key = group, value = states)
+  set_names(names(res2)) %>% as.list() %>% as_tibble() %>%
+  pivot_longer(cols = everything(), names_to = "group", values_to = "states")
 df2 <- patterns %>% full_join(res2states, by = "group") %>% 
   arrange(group) %>% 
   select(Error = error, Reward = r, Temptation = t, States = states)
