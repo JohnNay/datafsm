@@ -1,6 +1,6 @@
 Package: datafsm
 Title: Estimating Finite State Machine Models from Data
-Version: 0.2.2.9001
+Version: 0.2.3
 Date: 2019-11-19
 Authors@R: c( person("Nay", "John J.", 
       email = "john.j.nay@gmail.com", role = c("aut")), 
@@ -41,5 +41,5 @@ Imports:
     GA,
     Rcpp
 VignetteBuilder: knitr
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.0
 Encoding: UTF-8
