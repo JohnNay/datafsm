@@ -1,12 +1,14 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^README\.R?md$
+^LICENCE$
 ^LICENSE\.R?md$
 ^\.travis\.yml$
 ^cran-comments\.md$
 ^vignettes/.*_cache/
 ^vignettes/.*_files/
 ^vignettes/res.*\.Rds$
+^vignettes/\.build\.timestamp$
 ^inst/doc/.*_cache/
 ^inst/doc/.*_files/
 ^inst/doc/res.*\.Rds$

@@ -2,10 +2,15 @@ Package: datafsm
 Title: Estimating Finite State Machine Models from Data
 Version: 0.2.3
 Date: 2019-11-19
-Authors@R: c( person("Nay", "John J.", 
-      email = "john.j.nay@gmail.com", role = c("aut")), 
-    person("Gilligan",  "Jonathan M.", 
-      email = "jonathan.gilligan@vanderbilt.edu", role = c("cre", "aut")))
+Authors@R: 
+    c(person(given = "Nay",
+             family = "John J.",
+             role = "aut",
+             email = "john.j.nay@gmail.com"),
+      person(given = "Gilligan",
+             family = "Jonathan M.",
+             role = c("cre", "aut"),
+             email = "jonathan.gilligan@gmail.com"))
 Description: Automatic generation of finite state machine models of dynamic 
     decision-making that both have strong predictive power and are 
     interpretable in human terms. We use an efficient model representation and 
@@ -19,7 +24,7 @@ Description: Automatic generation of finite state machine models of dynamic
 URL: https://github.com/jonathan-g/datafsm
 BugReports: https://github.com/jonathan-g/datafsm/issues
 Depends:
-    R (>= 3.6.0),
+    R (>= 3.5),
     methods,
     stats
 License: MIT + file LICENSE

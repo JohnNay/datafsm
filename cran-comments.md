@@ -1,19 +1,33 @@
 ## Test environments
+
 * local build Windows 10, R 3.6.1
 * ubuntu 18.04, R 3.
-* ubuntu 16.04, R 3.4.4
-* ubuntu 16.04, R-devel  (2018-06-20 r74924 -- "Unsuffered Consequences") with ASAN, gcc
-* ubuntu 14.04.5 R 3.5.0
-* ubuntu 14.04.5 R-devel 2018-08-06 r75070 with valgrind
-
+* ubuntu 16.04, R-release GCC on R-hub builder
+* ubuntu 16.04, R-devel GCC on R-hub builder
+* macOS 10.11 El Capitan, R-release on R-hub builder
+* debian, R-release GCC  on R-hub builder
+* debian, R-devel GCC  on R-hub builder
+* debian, R-patched GCC  on R-hub builder
+* winbuilder devel, release, oldrelease.
 
 ## R CMD check results
-There were no ERRORs, no WARNINGs, and no NOTES.
 
-## ASAN gcc results
-There were no reported memory access errors
+* Debian R-hub builder:
+
+    0 errors | 0 warnings | 1 note
+
+* All other builds:
+
+    0 errors | 0 warnings | 0 notes
+
+## NOTES
+
+**debian rhub** builds gave NOTEs for false-positives for possible spelling 
+errors on the words "interpretable" and "stochasticity". Both words are spelled
+correctly. No NOTEs from other builds.
 
 ## Downstream dependencies
+
 None.
 
 ## Additional comments

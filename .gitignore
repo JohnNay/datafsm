@@ -10,3 +10,4 @@ datafsm.Rcheck
 vignettes/*_cache/
 vignettes/*_files/
 vignettes/res*.Rds
+vignettes/.build.timestamp
