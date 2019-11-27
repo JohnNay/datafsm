@@ -12,13 +12,13 @@ structure of complex stochastic processes. The genetic algorithm is
 implemented with the **GA** package ([Scrucca
 2013](http://www.jstatsoft.org/v53/i04/)). Our method, implemented in
 C++ and R, scales well to large data sets. We have applied the package
-to empirical data, and demonstrated the method’s ability to recover
+to empirical data, and demonstrated the method's ability to recover
 known data-generating processes by simulating data with agent-based
 models and correctly deriving the underlying decision models for
 multiple agent models and degrees of stochasticity.
 
 A user of our package can estimate models by providing their data in a
-common “panel data” format. The package is designed to estimate time
+common "panel data" format. The package is designed to estimate time
 series classification models that use a small number of binary predictor
 variables and move back and forth between the values of the outcome
 variable over time. Larger sets of predictor variables can be reduced to
@@ -61,8 +61,8 @@ Fake Data Example
 To quickly show it works, we can create fake data. Here, we generate
 1000 repetitions of a ten-round game in which each player starts by
 making a random move, and in subsequent rounds, one player follows a
-“tit-for-tat” strategy while the other one follows a “noisy tit-for-tat”
-strategy that’s equivalent to tit-for-tat, except that with a 10%
+"tit-for-tat" strategy while the other one follows a "noisy tit-for-tat"
+strategy that's equivalent to tit-for-tat, except that with a 10%
 probability the player will make a random move.
 
 ``` r
@@ -118,15 +118,15 @@ for (i in seq_along(cdata$period)) {
 
 The only required argument of the main function of the package,
 `evolve_model`, is a `data.frame` object, which must have 3-5 columns.
-The first two columns must be named “period” and “outcome” (period is
+The first two columns must be named "period" and "outcome" (period is
 the time period that the outcome action was taken). The remaining one to
 three columns are predictors, and may have arbitrary names. Each row of
 the `data.frame` is an observational unit, an action taken at a
 particular time and any relevant variables for that time. All of the
 (3-5 columns) should be named. The period and outcome columns should be
-integer vectors — e.g. `c(1,2,1)` — and the columns with the predictor
-variable data should be logical vectors — e.g. `c(TRUE, FALSE, FALSE)` —
-or vectors that can be coerced to logical with `as.logical()`.
+integer vectors---e.g. `c(1,2,1)`---and the columns with the predictor
+variable data should be logical vectors---e.g. `c(TRUE, FALSE, FALSE)`---or 
+vectors that can be coerced to logical with `as.logical()`.
 
 Here are the first eleven rows of this fake data:
 
@@ -223,7 +223,7 @@ plot(res, action_label = ifelse(action_vec(res)==1, "C", "D"),
 object.](man/figures/README/plot.fsm-1.png)
 
 The diagram shows that `evolve_model` recovered a tit-for-tat model in
-which the player in question (“me”) mimics the last action of the
+which the player in question ("me") mimics the last action of the
 opponent.
 
 Use the `estimation_details` method on the output of the
