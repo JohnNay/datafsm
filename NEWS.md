@@ -1,7 +1,7 @@
 # datafsm 0.2.3
 
-* Replace dependency on tidyverse with dependencies on the specific packages:
-  dplyr, tidyr, and purrr.
+* Replace dependency on the `tidyverse` package with dependencies on the 
+  specific packages from `tidyverse`: `dplyr`, `tidyr`, and `purrr`.
 
 # datafsm 0.2.2
 
