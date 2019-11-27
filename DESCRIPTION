@@ -10,7 +10,7 @@ Authors@R:
       person(given = "Gilligan",
              family = "Jonathan M.",
              role = c("cre", "aut"),
-             email = "jonathan.gilligan@gmail.com"))
+             email = "jonathan.gilligan@vanderbilt.edu"))
 Description: Automatic generation of finite state machine models of dynamic 
     decision-making that both have strong predictive power and are 
     interpretable in human terms. We use an efficient model representation and 

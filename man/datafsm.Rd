@@ -39,7 +39,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Gilligan Jonathan M. \email{jonathan.gilligan@gmail.com}
+\strong{Maintainer}: Gilligan Jonathan M. \email{jonathan.gilligan@vanderbilt.edu}
 
 Authors:
 \itemize{
