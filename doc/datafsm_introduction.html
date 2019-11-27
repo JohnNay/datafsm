@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="John J. Nay and Jonathan M. Gilligan" />
+
+
+<title>Introduction to datafsm</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#header {
+text-align: center;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to datafsm</h1>
+<h4 class="author">John J. Nay and Jonathan M. Gilligan</h4>
+<h4 class="date">Sept. 5, 2015</h4>
+
+
+
+<div id="abstract" class="section level1">
+<h1>Abstract</h1>
+<p>The <strong>datafsm</strong> package implements a method for automatically generating models of dynamic processes that both have strong predictive power and are interpretable in human terms. We use an efficient model representation and a genetic algorithm-based estimation process. This paper offers a brief overview of the software and demonstrates how to use it.</p>
+</div>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>This package implements our method for automatically generating models of dynamic decision-making that both have strong predictive power and are interpretable in human terms. We use an efficient model representation and a genetic algorithm-based estimation process to generate simple deterministic approximations that explain most of the structure of complex stochastic processes. The genetic algorithm is implemented with the <strong>GA</strong> package (<a href="http://www.jstatsoft.org/v53/i04/">Scrucca 2013</a>). Our method, implemented in C++ and R, scales well to large data sets. We have applied the package to empirical data, and demonstrated the method’s ability to recover known data-generating processes by simulating data with agent-based models and correctly deriving the underlying decision models for multiple agent models and degrees of stochasticity.</p>
+<p>A user of our package can estimate models by providing their data in a common “panel data” format. The package is designed to estimate time series classification models that use a small number of binary predictor variables and move back and forth between the values of the outcome variable over time. Larger sets of predictor variables can be reduced to smaller sets with cross-validation. Although the predictor variables must be binary, a quantitative variable can be converted into binary by division of the observed values into high/low classes. Future releases of the package may include additional estimation methods to complement genetic algorithm optimization.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># Load and attach datafsm into your R session, making its functions available:</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(datafsm)</span></code></pre></div>
+<p>Please cite the package if you use it with the text generated by:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">citation</span>(<span class="st">&quot;datafsm&quot;</span>)</span></code></pre></div>
+<pre><code>## 
+## To cite datafsm in publications use:
+## 
+##   John J. Nay, Jonathan M. Gilligan (2015) &quot;Data-Driven Dynamic
+##   Decision Models,&quot; in L. Yilmaz et al. (eds.), Proc. 2015 Winter
+##   Simulation Conf.
+## 
+## A BibTeX entry for LaTeX users is
+## 
+##   @InProceedings{,
+##     title = {Data-Driven Dynamic Decision Models},
+##     author = {John J. Nay and Jonathan M. Gilligan},
+##     booktitle = {Proceedings of the 2015 Winter Simulation Conference},
+##     year = {2015},
+##     editor = {L. Yilmaz and W.K.V. Chan and I. Moon and T.M.K. Roeder and C. Macal and M. Rosetti},
+##   }</code></pre>
+</div>
+<div id="fake-data-example" class="section level1">
+<h1>Fake Data Example</h1>
+<p>To quickly show it works, we can create fake data. Here, we generate 1000 repetitions of a ten-round game in which each player starts by making a random move, and in subsequent rounds, one player follows a “tit-for-tat” strategy while the other one follows a “noisy tit-for-tat” strategy that’s equivalent to tit-for-tat, except that with a 10% probability the player will make a random move.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>seed1 &lt;-<span class="st"> </span><span class="dv">1900</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>seed2 &lt;-<span class="st"> </span><span class="dv">1900</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a>seed3 &lt;-<span class="st"> </span><span class="dv">1900</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="co"># 468534172</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="kw">set.seed</span>(seed1)</span>
+<span id="cb4-6"><a href="#cb4-6"></a>cdata &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">outcome =</span> <span class="ot">NA</span>,</span>
+<span id="cb4-7"><a href="#cb4-7"></a>                    <span class="dt">period =</span> <span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dv">2000</span>),</span>
+<span id="cb4-8"><a href="#cb4-8"></a>                    <span class="dt">my.decision1 =</span> <span class="ot">NA</span>,</span>
+<span id="cb4-9"><a href="#cb4-9"></a>                    <span class="dt">other.decision1 =</span> <span class="ot">NA</span>)</span>
+<span id="cb4-10"><a href="#cb4-10"></a><span class="co">#</span></span>
+<span id="cb4-11"><a href="#cb4-11"></a><span class="co"># Prisoner&#39;s dilemma</span></span>
+<span id="cb4-12"><a href="#cb4-12"></a><span class="co">#</span></span>
+<span id="cb4-13"><a href="#cb4-13"></a>pd_outcome &lt;-<span class="st"> </span><span class="cf">function</span>(player_<span class="dv">1</span>, player_<span class="dv">2</span>) {</span>
+<span id="cb4-14"><a href="#cb4-14"></a>  <span class="co">#</span></span>
+<span id="cb4-15"><a href="#cb4-15"></a>  <span class="co"># 1 = C</span></span>
+<span id="cb4-16"><a href="#cb4-16"></a>  <span class="co"># 2 = D</span></span>
+<span id="cb4-17"><a href="#cb4-17"></a>  <span class="co">#</span></span>
+<span id="cb4-18"><a href="#cb4-18"></a>  player_<span class="dv">1</span>  <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
+<span id="cb4-19"><a href="#cb4-19"></a>}</span>
+<span id="cb4-20"><a href="#cb4-20"></a></span>
+<span id="cb4-21"><a href="#cb4-21"></a>tit_for_tat &lt;-<span class="st"> </span><span class="cf">function</span>(last_round_self, last_round_opponent) {</span>
+<span id="cb4-22"><a href="#cb4-22"></a>    last_round_opponent</span>
+<span id="cb4-23"><a href="#cb4-23"></a>}</span>
+<span id="cb4-24"><a href="#cb4-24"></a></span>
+<span id="cb4-25"><a href="#cb4-25"></a>noise_level =<span class="st"> </span><span class="fl">0.1</span></span>
+<span id="cb4-26"><a href="#cb4-26"></a></span>
+<span id="cb4-27"><a href="#cb4-27"></a>noisy_tit_for_tat &lt;-<span class="st"> </span><span class="cf">function</span>(last_round_self, last_round_opponent, noise_level) {</span>
+<span id="cb4-28"><a href="#cb4-28"></a>  <span class="cf">if</span> (<span class="kw">runif</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>) <span class="op">&lt;=</span><span class="st"> </span>noise_level) {</span>
+<span id="cb4-29"><a href="#cb4-29"></a>    <span class="kw">sample</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">1</span>,<span class="dv">1</span>)</span>
+<span id="cb4-30"><a href="#cb4-30"></a>  } <span class="cf">else</span> {</span>
+<span id="cb4-31"><a href="#cb4-31"></a>    last_round_opponent</span>
+<span id="cb4-32"><a href="#cb4-32"></a>  }</span>
+<span id="cb4-33"><a href="#cb4-33"></a>}</span>
+<span id="cb4-34"><a href="#cb4-34"></a></span>
+<span id="cb4-35"><a href="#cb4-35"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_along</span>(cdata<span class="op">$</span>period)) {</span>
+<span id="cb4-36"><a href="#cb4-36"></a>  <span class="cf">if</span> (cdata<span class="op">$</span>period[i] <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) {</span>
+<span id="cb4-37"><a href="#cb4-37"></a>    my.decision &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">1</span>,<span class="dv">1</span>, <span class="dt">prob =</span> <span class="kw">c</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>noise_level, noise_level))</span>
+<span id="cb4-38"><a href="#cb4-38"></a>    other.decision &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">1</span>,<span class="dv">1</span>)</span>
+<span id="cb4-39"><a href="#cb4-39"></a>    cdata[i, <span class="st">&quot;outcome&quot;</span>] &lt;-<span class="st"> </span><span class="kw">pd_outcome</span>(my.decision, other.decision)</span>
+<span id="cb4-40"><a href="#cb4-40"></a>  } <span class="cf">else</span>{</span>
+<span id="cb4-41"><a href="#cb4-41"></a>    my.last &lt;-<span class="st"> </span>my.decision</span>
+<span id="cb4-42"><a href="#cb4-42"></a>    other.last &lt;-<span class="st"> </span>other.decision</span>
+<span id="cb4-43"><a href="#cb4-43"></a>    my.decision &lt;-<span class="st"> </span><span class="kw">tit_for_tat</span>(my.last, other.last)</span>
+<span id="cb4-44"><a href="#cb4-44"></a>    other.decision &lt;-<span class="st"> </span><span class="kw">noisy_tit_for_tat</span>(other.last, my.last, noise_level)</span>
+<span id="cb4-45"><a href="#cb4-45"></a>    cdata[i,<span class="kw">c</span>(<span class="st">&quot;outcome&quot;</span>, <span class="st">&quot;my.decision1&quot;</span>, <span class="st">&quot;other.decision1&quot;</span>)] &lt;-<span class="st"> </span></span>
+<span id="cb4-46"><a href="#cb4-46"></a><span class="st">      </span><span class="kw">c</span>(<span class="kw">pd_outcome</span>(my.decision, other.decision), my.last, other.last)</span>
+<span id="cb4-47"><a href="#cb4-47"></a>  }</span>
+<span id="cb4-48"><a href="#cb4-48"></a>}</span></code></pre></div>
+<p>The only required argument of the main function of the package, <code>evolve_model</code>, is a <code>data.frame</code> object, which must have 3-5 columns. The first two columns must be named <code>period</code> and <code>outcome</code> (<code>period</code> is the time period that the <code>outcome</code> action was taken). The remaining one to three columns are predictors, and may have arbitrary names. Each row of the <code>data.frame</code> is an observational unit, an action taken at a particular time and any relevant variables for that time. All of the (3-5 columns) should be named. The period and outcome columns should be integer vectors — e.g. <code>c(1,2,1)</code> — and the columns with the predictor variable data should be logical vectors — e.g.  <code>c(TRUE, FALSE, FALSE)</code> — or vectors that can be coerced to logical with <code>as.logical()</code>.</p>
+<p>Here are the first eleven rows of this fake data:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">outcome</th>
+<th align="right">period</th>
+<th align="right">my.decision1</th>
+<th align="right">other.decision1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">4</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">5</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">6</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">7</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">9</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">10</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+<p>We can estimate a model with that data. <code>evolve_model</code> uses a genetic algorithm to estimate a finite-state machine (FSM) model, primarily for understanding and predicting decision-making. This is the main function of the <code>datafsm</code> package. It relies on the <code>GA</code> package for genetic algorithm optimization. We chose to use a GA because GAs perform well in rugged search spaces to solve integer optimization problems, are a natural complement to our binary representation of FSMs, and are easily parallelized.</p>
+<p><code>evolve_model</code> takes data on predictors and data on the outcome and automatically creates a fitness function that takes training data, an action vector that <code>evolve_model</code> generates, and a state matrix <code>evolve_model</code> generates as input and returns numeric vector whose length is the number of rows in the training data. <code>evolve_model</code> then computes a fitness score for that potential solution FSM by comparing it to the provided <code>outcome</code> in the real training data. This is repeated for every FSM in the population and then the probability of selection for the next generation is proportional to the fitness scores. If the argument <code>cv</code> is set to <code>TRUE</code> the function will call itself recursively while varying the number of states inside a cross-validation loop in order to estimate the optimal number of states, then it will set the number of states to that optimal number and estimate the model on the full training set.</p>
+<p>If the argument <code>parallel</code> is set to <code>TRUE</code>, then these evaluations are distributed across the available processors of the computer using the <code>doParallel</code> functions; otherwise, the evaluations of fitness are conducted sequentially. Because this fitness function that <code>evolve_model</code> creates must loop through all the training data every time it is evaluated and we need to evaluate many possible solution FSMs, the fitness function is implemented in C++ to improve its performance.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">set.seed</span>(seed2)</span>
+<span id="cb5-2"><a href="#cb5-2"></a>res &lt;-<span class="st"> </span><span class="kw">evolve_model</span>(cdata, <span class="dt">seed =</span> seed3)</span></code></pre></div>
+<p><code>evolve_model</code> evolves the models on training data and then, if a test set is provided, uses the best solution to make predictions on test data. Finally, the function returns the GA object and the decoded version of the best string in the population. Formally, the function return an <code>S4</code> object with slots for:</p>
+<ul>
+<li><code>call</code> Language from the call of the function.</li>
+<li><code>actions</code> Numeric vector with the number of actions.</li>
+<li><code>states</code> Numeric vector with the number of states.</li>
+<li><code>GA</code> S4 object created by <code>ga()</code> from the <code>GA</code> package.</li>
+<li><code>state_mat</code> Numeric matrix with rows as states and columns as predictors.</li>
+<li><code>action_vec</code> Numeric vector indicating what action to take for each state.</li>
+<li><code>predictive</code> Numeric vector of length one with test data accuracy if test data was supplied; otherwise, a character vector with a message that the user should provide test data for better estimate of generalizable performance.</li>
+<li><code>varImp</code> Numeric vector with length equal to the number of columns in the state matrix, containing relative importance scores for each predictor.</li>
+<li><code>timing</code> Numeric vector length one containing the total elapsed time it took <code>evolve_model</code> to execute.</li>
+<li><code>diagnostics</code> Character vector length one, designed to be printed with <code>base::cat()</code>.</li>
+</ul>
+<p>Use the summary and plot methods on the output of the <code>evolve_model()</code> function:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">summary</span>(res)</span></code></pre></div>
+<pre><code>## Length  Class   Mode 
+##      1 ga_fsm     S4</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">plot</span>(res, <span class="dt">action_label =</span> <span class="kw">ifelse</span>(<span class="kw">action_vec</span>(res)<span class="op">==</span><span class="dv">1</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;D&quot;</span>), </span>
+<span id="cb8-2"><a href="#cb8-2"></a>     <span class="dt">transition_label =</span> <span class="kw">c</span>(<span class="st">&#39;cc&#39;</span>,<span class="st">&#39;dc&#39;</span>,<span class="st">&#39;cd&#39;</span>,<span class="st">&#39;dd&#39;</span>))</span></code></pre></div>
+<div class="figure">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAeAAAAGACAMAAABC/kH9AAAA5FBMVEUAAAAAADQAADoAAFwAAGYAMYEAOjoAOmYAOpAAV6QAZmYAZrYnAAAnesU6AAA6ADo6AGY6Ojo6ZpA6ZrY6kJA6kNtFAABFmuZhMQBhueZmAABmADpmOgBmOjpmZjpmkLZmkNtmtttmtv98VwB82OaQOgCQZgCQZjqQkGaQtpCQttuQ2/+UejSU2OatmlytmqStuYGt2KSt2MWt2Oa2ZgC2Zjq2kDq2tpC225C227a22/+2/9u2//++vr7bkDrbkGbbtmbbtpDb29vb2//b////tmb/25D/27b/29v//7b//9v///8SK6RiAAAACXBIWXMAAA7DAAAOwwHHb6hkAAANHklEQVR4nO2dC3vjxBmFp2naTQkYCgvdBlq6oSmF0C3spbTbjVmoHYj1//9PdbMsybrM5RvNzPF5nweStZSZo+/VjMaOraiMQKNCByB+oWBwKBgcCgaHgsGhYHAoGBwKBoeCwaFgcCgYHAoGh4LBoWBwKBgcCgaHgsGhYHAoGBwKBoeCwaFgcCgYHAoGh4LBoWBwKBgcCgaHgsGhYHAoGBwKBoeCwUlZ8EtV8/Hsrver8zfZL6+uq29GeLgqW/vt55tscr+kOCHBuxulJVipiw0FR8L96uxWd99S8BS54GKHtyuNMyYZIAQ/XJ39fXX+evcqH30fbgpRT78sv8t+/pNSZ0/LEfzfm3zr+b/LkXn/mVKPvs7ae2aN4Gytzt+UI3jfYJb9sFIfvc0f7vWUd//VZ+rR67y9R5EOeBDB5bxaTdmXzVTbfHfdE7yttj9t7VmwF1w0WgreN5grLykEd3q6X1VX7VXTRnSgCL7c/O/h6vx19kNl4eL17mU5DvPN69xI5xpc7r77V2fPorG94HyY3lb7HRq83Px8s//u0FMu+HLzVqmPNmsV6TUbRXBpZvf9n+thlv9zW3139uHXm94iq1pAFXsd9ix+vC+4abDqZds03d1Q/m9LwV5orsH5/8sLY1dwebEtVtkdwZWM/J8fDwveT9FNg9UO1aDu9ETBvmkL3qqzz3/a5vNxR9sv+VirfemO4G29yGoabI/gTk+14PKyTsE+aAte5yvZ3d86gvP/bg8D8qYeyp1r8LHgH1f1fu0Gm2twpycK9k13BB9N0bub+oWL/aL47KvWKvo6OxLceaGjabBaRf++NYK7UzQFe6MtuHiy+ug/+bctbbsv909Yqwvy+ffl9Pzj4XnwseDDS5X7BqvnwYcputlAwRiUU3T5dCt0EnMoWIeXuq95xwcF67B7tcqv338JHcMGCgaHgsGhYHAoGBwKBoeCwaFgcCgYHAoGh4LBoWBwKBgcCgaHgsGhYHAoGBwKBoeCwaFgcCgYHAoGh4LBoWBwKBgcCgaHgsGhYHAoGBwKBoeCwaFgcCgYHAoGh4LBoWBwKBgcCgaHgsGhYHAoGBwKBoeCwaFgcCgYHAoGh4LBoWBwKBgcCgaHgsGhYHAoGBwKBoeCwaFgcHAEp3gkC2ROsSzDqBQPxX/mFKsyDAUH6mExUjSsvIdOsChjlH8/MnQIQ/xnTq0iE9R/3Tl0DCOU99Bp1WMM1SN0Hi2WyZxGLSbZV+dQpvglH2fOPGWOuw7ztKrSLVDEilsqu1Z9OI62Clq0C3JcnDgd95RObRXpTra5RenWYqgy8SnuJfKfObYC6NOvw/CRRGa4F2c4najiuI7fAN0ixDSItaMIZo7n6I0wqUA0hg2CyGWO5eDNMDv+SAwbZhYKHcexG2J68DEYNs4gFDqCQzfG/NDDG7ZIIBM6+JGbY3PgoQ1b9S8SOj3Bdocd2LBd7ycp2NZUUMO2fQtkTk2wvaeAhh1Cu/ft3MKyOOQNdqgOp5b7WZmYYKcDDnWsQTOnJtjph8McrFuvrpnTEuyYNsjBOp5WrmdlUoKdDzbE0QYegmkJDt6ARZfOgsNO8UsisKRc/nBDP9FJSnAUTSzeo9tZScF+Cf5qY0KCk3ztPXjmlARH04hBdyKCU3x1xwIxwQ+f3k7vNLuDUXdhWzk5wYqCI0XuPUoUHCVSgpV6J/d3v1Lqurulfmhb7SDUm0wrKf4OzRiZpA+5w/XZ7cPVdXb/wZvOluqh4ku+g0hnYtWlYG22alPMwNuLzdGW6qHii9gUTcEGmCUdc7SuBK9rwbub8gOcl8WW6qF1OMF1twO9U/ARY462FyraEXzagg0XGmOOHq5Ucw1+/7a7pXwo4DX4VAWP3emgXvUOrIe3oyvlfHelHk+uovMvj51HsHXm4TU8ruD+zTdaBWutegfWw8Mr5bLJib6iyDwwf4AK3tfmRYtDuVrXzB71ZXRgS9nqeG9+MyvNzKcyRR8Xqluw1qq3oLcebq2U++2OdrZ45lboVubTEDxaqUO57Ebw0F0xji6VPjJXoTmCS2ZKtS/XftU7sB4eXiln3QMeuky6hZbIfALX4PlS7QfE8Iq0XggPrqKHl0BH+Mn8QifzwBoeS7BeqfYDQr/NEXWDW4xV64a2mymgBGv7rco131i3puNrrJGmdDwbZjYtOtSvCw1KNWl4TMuUxplck+eAUWbDqiMJNvM7YniihOO11Sr72CRvlHl+4ul3YLS33M96wLhW/WLNjcTJbQbXW6fMpoZxBFvUqlUsnblP7De0TV82mc0M47xt1qpWVbE0F7yin11Rdc8WmY0Mwwi281s/I9bsQj6ydWj9TpwSuvywMJalMhkO4odr67fIfLdE5ogEW9eqqJZeseLxa3BWogh2qJX2cPAg2DqzrmHHzDEJtq+VpmHxjwe7nJS68w6KYLdaaRUrMr96Z6Xz77gcf14Kx1ppFSuqCboKfTcX2v2XmI4/L4VrrTSKFdsA1jor3d+F4NqADM61mi+Wh79Y45p5/qyEudOde61mixXTUyTtzO6hT0ZwjAO4nHYmQou8D9C9CQEEBsNMsTzcQEkg8/RZmeRNSYaRqNVksbz4FRE8FVokpkQjzogJHimWjxugiWSeOiuFPmch0oojIoNhYjR4ucGdZ8FQf1ZHplajxfJzjHKCh0KLnZNogo+L5en+lDKzzti0A/aXz3wK9nX/UaHMg9MO3B+nnC3W8yf5mf6bf5gL9nd72bnMX1Tvs/2DjmCfoZMQ/Ey9V5TsV380rJXVpwiEMn9Rno/fvvs7Q8HSmWMQPHc5+/bdchw8fzIzhsta3bWb9RpaR/CLZ2ZnpXzmOARP1+CbWuw//zpXq0Ox/NrVCF0Lfv5kZgh3M3t4PUa8RXNmajVbo16xDN5k6S/0XnDzdUawt9AJCP7uk/dMBC90235dwd/8enreqa4rHtcK3lrWR1ZwHKENBXvM6a9pbWYWWdpTtIpRsNYUfdqCm0XWs5lnlb5r1QutJVhvkQUueK5Ylk+TgmY2e5p04oKrFzqePwldK6PM+xc65tYPFFzw3SfaL1UuJ3g6tOZLlYqC9YlKcCyZIxGcRrF6oZPIDCTY+2zXDy2Q+UQEC74na0nBcqF9xvTYtj5C71Bc0q/guyopOJJaHYWWEOx71olDsNQnGxYWLPDRFe8nZTSCRT7ns6hgoQ+fnYZgiY+PLjxDy3wk8oQEC3yYOjXB6rQEO98OYWnBArcl8J85FsEC9+hY3K/rWbnISRmNYDfDQQZwEpmjEuxyU7EQft0M15lPRrDjne6CCXa4/+ISmSMS7HbfxyB+HQyrhU7KyATb3po30AC2v9vsYpljEmxpuKnVwsdSv1XdzvA+82kJtjLcGguLfKShCdr63sLvUpNOXIItDKveWNCWbH0uHH3KxCG0ZQSTtP67MMK0WH2/TSMa/swVj7RrGFotuWiITbDhsmXQb7ulqeMzmdGnGxPLLE90gk2qpeZrpdS4Gp2BPvXz/d1i9BujYO1qHUqlc6/oA8ePje9sFFrmnJQlRsHZnY7iVqkMa6XmsArtN7M1UQquDU+US7VLZVsrR6NuoUW61CBOwU21BsulRPRqL7b1My8R2pRYBR+q1a3X/rE7gVLJ6i2YDn0nEdqUaAUX1TqUq4tQpTy87HU3GvouiN6oBWd1OcYL5VQqT69qes1sQcyCs8bxMKHDjTCZefHQkQueKFfoYBPEozcBwdlgvXx19fDp7chDA1smiUFuQQqCa5Yok5zgivCTTUKCl0BacHgoOOd+pdR1lm2VeqensX5oYEsqUHA+OK+us/sP3hRf1me3/S35QwNbkoGC82F6sdl/6U3E9UMDW5KBgrNsXQle1xp3N+WrE5eHh9YUnDQcweCU1+D3h660vAZjUK+i8y+Pe+O0fmhgSypQMDgUDA4Fg0PB4FAwOBQMDgWDQ8HgUDA4FAwOBYNDweBQMDgUDA4Fg0PB4FAwOBQMDgWDQ8HgUDA4FAwOBYNDweBQMDgUDA4Fg0PB4FAwOBQMDgWDQ8HgUDA4FAwOBYNDweBQMDgUDA4Fg0PB4FAwOBQMDgWDQ8HgUDA4FAwOBYNDweBQMDgUDA4Fg0PB4FAwOBQMDgWDQ8HgUDA4FAwOBYNDweBQMDgUDA4Fg0PB4FAwOBQMDgWDQ8HgUDA4FAwOBYNDweBQMDgUDA4Fg0PB4FAwOBQMDgWDQ8HgUDA4FAwOBYNDweBQMDgUDA4Fg0PB4FAwOBQMDgWDQ8HgUDA4FAwOBYNDweBQMDgUDA4Fg0PB4FAwOBQMDgWDQ8HgUDA4FAwOBYNDweBQMDgUDA4Fg0PB4FAwOBQMDgWDQ8HgUDA4FAwOBYNDweBQMDgUDA4Fg0PB4FAwOBQMDgWDQ8HgUDA4FAwOBYNDweBQMDgUDA4Fg0PB4FAwOBQMDgWDQ8HgUDA4FAwOBYNDweBQMDgUDA4Fg0PB4FAwOBQMDgWDQ8HgUDA4/wfkWrZyhHkKSwAAAABJRU5ErkJggg==" alt />
+<p class="caption">Result of <code>plot()</code> method call on <code>ga_fsm</code> object.</p>
+</div>
+<p>The diagram shows that <code>evolve_model</code> recovered a tit-for-tat model in which the player in question (“me”) mimics the last action of the opponent.</p>
+<p>Use the <code>estimation_details</code> method on the output of the <code>evolve_model()</code> function:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">suppressMessages</span>(<span class="kw">library</span>(GA))</span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="kw">plot</span>(<span class="kw">estimation_details</span>(res))</span></code></pre></div>
+<div class="figure">
+<img src="data:image/png;base64,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" alt />
+<p class="caption">Result of <code>plot()</code> method call on ga object, which is obtained by calling <code>estimation_details()</code> on <code>ga_fsm</code> object.</p>
+</div>
+</div>
+<div id="documentation-for-evolve_model" class="section level1">
+<h1>Documentation for <code>evolve_model</code></h1>
+<p>Check out the documentation for the main function of the package to learn about all the options:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>?evolve_model</span></code></pre></div>
+</div>
+<div id="acknowledgments" class="section level1">
+<h1>Acknowledgments</h1>
+<p>This work is supported by U.S. National Science Foundation grants EAR-1416964 and EAR-1204685.</p>
+</div>
+<div id="session-info" class="section level1">
+<h1>Session Info</h1>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">sessionInfo</span>()</span></code></pre></div>
+<pre><code>## R version 3.6.1 (2019-07-05)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 18363)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=English_United States.1252 
+## [2] LC_CTYPE=English_United States.1252   
+## [3] LC_MONETARY=English_United States.1252
+## [4] LC_NUMERIC=C                          
+## [5] LC_TIME=English_United States.1252    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] GA_3.2           iterators_1.0.12 foreach_1.4.7    datafsm_0.2.3   
+## 
+## loaded via a namespace (and not attached):
+##  [1] pkgload_1.0.2      splines_3.6.1      prodlim_2019.11.13 assertthat_0.2.1  
+##  [5] highr_0.8          stats4_3.6.1       yaml_2.2.0         remotes_2.1.0     
+##  [9] sessioninfo_1.1.1  ipred_0.9-9        diagram_1.6.4      pillar_1.4.2      
+## [13] backports_1.1.5    lattice_0.20-38    glue_1.3.1         digest_0.6.23     
+## [17] colorspace_1.4-1   recipes_0.1.7      htmltools_0.4.0    Matrix_1.2-17     
+## [21] plyr_1.8.4         timeDate_3043.102  pkgconfig_2.0.3    devtools_2.2.1    
+## [25] caret_6.0-84       purrr_0.3.3        scales_1.1.0       processx_3.4.1    
+## [29] gower_0.2.1        lava_1.6.6         tibble_2.1.3       generics_0.0.2    
+## [33] ggplot2_3.2.1      usethis_1.5.1      ellipsis_0.3.0     withr_2.1.2       
+## [37] nnet_7.3-12        lazyeval_0.2.2     cli_1.1.0          survival_3.1-7    
+## [41] magrittr_1.5       crayon_1.3.4       memoise_1.1.0      evaluate_0.14     
+## [45] ps_1.3.0           fs_1.3.1           doParallel_1.0.15  nlme_3.1-142      
+## [49] MASS_7.3-51.4      class_7.3-15       pkgbuild_1.0.6     tools_3.6.1       
+## [53] data.table_1.12.6  prettyunits_1.0.2  lifecycle_0.1.0    stringr_1.4.0     
+## [57] munsell_0.5.0      callr_3.3.2        compiler_3.6.1     rlang_0.4.2       
+## [61] grid_3.6.1         rstudioapi_0.10    rmarkdown_1.18     testthat_2.3.0    
+## [65] gtable_0.3.0       ModelMetrics_1.2.2 codetools_0.2-16   reshape2_1.4.3    
+## [69] R6_2.4.1           lubridate_1.7.4    knitr_1.26         dplyr_0.8.3       
+## [73] rprojroot_1.3-2    shape_1.4.4        desc_1.2.0         stringi_1.4.3     
+## [77] parallel_3.6.1     Rcpp_1.0.3         rpart_4.1-15       tidyselect_0.2.5  
+## [81] xfun_0.11</code></pre>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

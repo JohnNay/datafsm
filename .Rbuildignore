@@ -13,3 +13,5 @@
 ^inst/doc/.*_cache/
 ^inst/doc/.*_files/
 ^inst/doc/res.*\.Rds$
+^doc$
+^Meta$

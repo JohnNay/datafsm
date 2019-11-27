@@ -17,7 +17,10 @@ matrix:
           packages:
             - valgrind
       script:
-        - R CMD build --no-resave-data .
-        - travis_wait R CMD check "${PKG_TARBALL}" --as-cran; CHECK_RET=$?
+        - mkdir inst/doc
+        - cp -R doc/ inst/doc/
+        - cp -R Meta/ inst/doc/
+        - R CMD build --no-resave-data --no-build-vignettes .
+        - travis_wait R CMD check "${PKG_TARBALL}" --as-cran --no-build-vignettes; CHECK_RET=$?
 
 r_build_args: --no-resave-data
