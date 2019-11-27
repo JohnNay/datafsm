@@ -12,7 +12,6 @@ Authors@R:
              email = "jonathan.gilligan@vanderbilt.edu",
              comment = c(ORCID = "0000-0003-1375-6686"),
              role = c("cre", "aut")))
-
 Description: Automatic generation of finite state machine models of dynamic 
     decision-making that both have strong predictive power and are 
     interpretable in human terms. We use an efficient model representation and 

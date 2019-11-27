@@ -39,7 +39,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Gilligan Jonathan M. \email{jonathan.gilligan@vanderbilt.edu}
+\strong{Maintainer}: Gilligan Jonathan M. \email{jonathan.gilligan@vanderbilt.edu} (\href{https://orcid.org/0000-0003-1375-6686}{ORCID})
 
 Authors:
 \itemize{
