@@ -33,7 +33,7 @@ add_interact_num <- function(d){
 #'
 #' @references Luca Scrucca (2013). GA: A Package for Genetic Algorithms in R.
 #'   Journal of Statistical Software, 53(4), 1-37. URL
-#'   http://www.jstatsoft.org/v53/i04/.
+#'   \url{http://www.jstatsoft.org/v53/i04/}.
 #'
 #'   Hastie, T., R. Tibshirani, and J. Friedman. (2009). The Elements of
 #'   Statistical Learning: Data Mining, Inference, and Prediction, Second

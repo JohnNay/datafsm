@@ -25,7 +25,7 @@
   DF = Dal Bo & Frechette;
   DO = Duffy & Ochs;
   FO = Friedman & Oprea;
-  FR = Fudenberg, Rand, & Dreberl;
+  FR = Fudenberg, Rand, & Dreber;
   and KS = Kunreuther, Silvasi, Bradlow & Small}
   \item{my.decision1}{The player's move in the previous turn}
   \item{my.decision2}{The player's move two turns ago}

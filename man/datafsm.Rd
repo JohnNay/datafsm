@@ -7,9 +7,9 @@
 \title{datafsm: A package for estimating FSM models.}
 \description{
 It relies on the \strong{GA} package:
-Luca Scrucca (2013). GA: A Package for Genetic Algorithms in R. 
-Journal of Statistical Software, 53 (4), 1-37. 
-URL http://www.jstatsoft.org/v53/i04/.
+Luca Scrucca (2013). GA: A Package for Genetic Algorithms in R.
+Journal of Statistical Software, 53 (4), 1-37.
+URL \url{http://www.jstatsoft.org/v53/i04/}.
 }
 \section{datafsm functions}{
 
