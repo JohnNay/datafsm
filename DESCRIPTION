@@ -1,7 +1,7 @@
 Package: datafsm
 Title: Estimating Finite State Machine Models from Data
 Version: 0.2.3
-Date: 2019-11-19
+Date: 2019-11-27
 Authors@R: 
     c(person(given = "Nay",
              family = "John J.",
