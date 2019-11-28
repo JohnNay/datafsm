@@ -18,10 +18,8 @@ matrix:
             - valgrind
 
 r_build_args: --no-resave-data --no-build-vignettes
-script:
+
+before-script:
   - if ! test -d inst/doc; then mkdir inst/doc; fi
-  - rm -r inst/doc/*
   - cp -R doc/* inst/doc/
   - cp -R Meta/* inst/doc/
-  - R CMD build ${R_BUILD_ARGS} .
-  - travis_wait R CMD check "${PKG_TARBALL}" ${R_CHECK_ARGS}; CHECK_RET=$?
