@@ -19,7 +19,7 @@ matrix:
 
 r_build_args: --no-resave-data --no-build-vignettes
 
-before-script:
+before_script:
   - if ! test -d inst/doc; then mkdir inst/doc; fi
   - cp -R doc/* inst/doc/
   - cp -R Meta/* inst/doc/
