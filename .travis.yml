@@ -16,6 +16,9 @@ matrix:
         apt:
           packages:
             - valgrind
+      script:
+        - R CMD build --no-resave-data --no-build-vignettes .
+        - travis_wait R CMD check "${PKG_TARBALL}" --as-cran --no-build-vignettes --use-valgrind; CHECK_RET=$?
 
 r_build_args: --no-resave-data --no-build-vignettes
 
