@@ -13,7 +13,7 @@
 
 ## R CMD check results
 
-* Debian R-hub builder:
+* r-hub Debian R-devel build:
 
     0 errors | 0 warnings | 1 note
 
@@ -23,9 +23,9 @@
 
 ## NOTES
 
-* **debian rhub** builds gave NOTEs for false-positives for possible spelling 
-errors on the words "interpretable" and "stochasticity". Both words are spelled
-correctly. 
+* **debian rhub R-devel** build gave a NOTE with false-positives for possible 
+  spelling errors on the words "interpretable" and "stochasticity". Both words 
+  are spelled correctly. 
 
 * No NOTEs from other builds.
 
