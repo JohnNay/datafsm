@@ -2,8 +2,8 @@ image: rocker/verse
 
 test:
   script:
-    - Rscript -e 'deps <- remotes::dev_package_deps(dependencies = NA);remotes::install_deps(dependencies = TRUE);if (!all(deps$package %in% installed.packages())) { message("missing: ", paste(setdiff(deps$package, installed.packages()), collapse=", ")); q(status = 1, save = "no")}'
+    - R -e "deps <- remotes::dev_package_deps(dependencies = NA);remotes::install_deps(dependencies = TRUE);if (!all(deps$package %in% installed.packages())) { message('missing: ', paste(setdiff(deps$package, installed.packages()), collapse=', ')); q(status = 1, save = 'no')}"
     - R -e "sessionInfo()"
     - R CMD build .
     - PKG_FILE_NAME=$(ls -1t *.tar.gz | head -n 1)
-    - R CMD check "${PKG_FILE_NAME}" --no-manual --no-build-vignettes --as-cran
+    - R CMD check "${PKG_FILE_NAME}" --as-cran
