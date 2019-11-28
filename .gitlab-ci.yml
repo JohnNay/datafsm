@@ -3,7 +3,7 @@ image: rocker/verse
 test:
   script:
     - R -e "sessionInfo()"
-    - "R -e \"deps <- remotes::dev_package_deps(dependencies = NA);remotes::install_deps(dependencies = TRUE); ip <- rownames(installed.packages()); if (!all(deps$package %in% ip)) { message('missing: ', paste(setdiff(deps$package, ip), collapse=', ')); q(status = 1, save = 'no')}\""
+    - "R -e \"deps <- remotes::dev_package_deps(dependencies = NA)$package; remotes::install_deps(dependencies = TRUE); ip <- row.names(installed.packages()); if (!all(deps %in% ip)) { message('missing: ', paste(setdiff(deps, ip), collapse=', ')); q(status = 1, save = 'no')}\""
     - R CMD build .
     - PKG_FILE_NAME=$(ls -1t *.tar.gz | head -n 1)
     - R CMD check "${PKG_FILE_NAME}" --as-cran
