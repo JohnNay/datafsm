@@ -43,8 +43,7 @@
 
 \S4method{states}{ga_fsm}(x)
 
-\S4method{predict}{ga_fsm}(object, data, type = "prob",
-  na.action = stats::na.omit, ...)
+\S4method{predict}{ga_fsm}(object, data, type = "prob", na.action = stats::na.omit, ...)
 }
 \arguments{
 \item{x}{S4 ga_fsm object.

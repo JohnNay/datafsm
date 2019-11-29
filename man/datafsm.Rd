@@ -4,13 +4,12 @@
 \name{datafsm}
 \alias{datafsm}
 \alias{datafsm-package}
-\alias{datafsm-package}
 \title{datafsm: A package for estimating FSM models.}
 \description{
 It relies on the \strong{GA} package:
-Luca Scrucca (2013). GA: A Package for Genetic Algorithms in R. 
-Journal of Statistical Software, 53 (4), 1-37. 
-URL http://www.jstatsoft.org/v53/i04/.
+Luca Scrucca (2013). GA: A Package for Genetic Algorithms in R.
+Journal of Statistical Software, 53 (4), 1-37.
+URL \url{http://www.jstatsoft.org/v53/i04/}.
 }
 \section{datafsm functions}{
 
@@ -40,7 +39,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Gilligan Jonathan M. \email{jonathan.gilligan@vanderbilt.edu}
+\strong{Maintainer}: Gilligan Jonathan M. \email{jonathan.gilligan@vanderbilt.edu} (\href{https://orcid.org/0000-0003-1375-6686}{ORCID})
 
 Authors:
 \itemize{

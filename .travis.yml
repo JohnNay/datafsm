@@ -1,14 +1,15 @@
-language: R
+language: r
+sudo: false
 cache: packages
 
 matrix:
   include:
     - name: release
       r: release
-      r_check_args: --as-cran
+      r_check_args: --as-cran --no-build-vignettes
     - name: devel
       r: devel
-      r_check_args: --as-cran --use-valgrind
+      r_check_args: --as-cran --no-build-vignettes --use-valgrind
       env:
         - VALGRIND_OPTS='--leak-check=full --track-origins=yes'
       addons:
@@ -17,6 +18,11 @@ matrix:
             - valgrind
       script:
         - R CMD build --no-resave-data --no-build-vignettes .
-        - travis_wait R CMD check "${PKG_TARBALL}" --as-cran; CHECK_RET=$?
+        - travis_wait R CMD check "${PKG_TARBALL}" --as-cran --no-build-vignettes --use-valgrind; CHECK_RET=$?
 
 r_build_args: --no-resave-data --no-build-vignettes
+
+before_script:
+  - if ! test -d inst/doc; then mkdir inst/doc; fi
+  - cp -R doc/* inst/doc/
+  - cp -R Meta/* inst/doc/

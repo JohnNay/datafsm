@@ -1,13 +1,19 @@
 Package: datafsm
 Title: Estimating Finite State Machine Models from Data
-Version: 0.2.2
-Date: 2018-08-03
-Authors@R: c( person("Nay", "John J.", 
-      email = "john.j.nay@gmail.com", role = c("aut")), 
-    person("Gilligan",  "Jonathan M.", 
-      email = "jonathan.gilligan@vanderbilt.edu", role = c("cre", "aut")))
-Description: This package automatically generates finite state machine models 
-    of dynamic decision-making that both have strong predictive power and are 
+Version: 0.2.3
+Date: 2019-11-27
+Authors@R: 
+    c(person(given = "Nay",
+             family = "John J.",
+             role = "aut",
+             email = "john.j.nay@gmail.com"),
+      person(given = "Gilligan",
+             family = "Jonathan M.",
+             email = "jonathan.gilligan@vanderbilt.edu",
+             comment = c(ORCID = "0000-0003-1375-6686"),
+             role = c("cre", "aut")))
+Description: Automatic generation of finite state machine models of dynamic 
+    decision-making that both have strong predictive power and are 
     interpretable in human terms. We use an efficient model representation and 
     a genetic algorithm-based estimation process to generate simple 
     deterministic approximations that explain most of the structure of complex 
@@ -19,7 +25,7 @@ Description: This package automatically generates finite state machine models
 URL: https://github.com/jonathan-g/datafsm
 BugReports: https://github.com/jonathan-g/datafsm/issues
 Depends:
-    R (>= 3.1.1),
+    R (>= 3.5),
     methods,
     stats
 License: MIT + file LICENSE
@@ -33,10 +39,14 @@ Suggests:
     knitr,
     rmarkdown,
     pander,
-    tidyverse
+    dplyr,
+    tidyr (>= 1.0),
+    purrr
 Imports:
     caret,
     GA,
     Rcpp
 VignetteBuilder: knitr
-RoxygenNote: 6.0.1
+RoxygenNote: 7.0.1
+Encoding: UTF-8
+Language: en-US

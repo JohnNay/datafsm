@@ -8,24 +8,24 @@
 \describe{
   \item{period}{Which turn of the given game}
   \item{my.decision}{The player's move in this turn}
-  \item{risk}{Boolean variable: 1 indicates stochastic payoffs, 0 
+  \item{risk}{Boolean variable: 1 indicates stochastic payoffs, 0
               deterministic payoffs}
   \item{delta}{Probability the game ends after each round}
-  \item{r1}{Normalized difference in payoff between both players cooperating 
+  \item{r1}{Normalized difference in payoff between both players cooperating
             and both defecting}
-  \item{r2}{Normalized difference in payoff between both players cooperating 
-            and the payoff for being a sucker (cooperating when the opponent 
+  \item{r2}{Normalized difference in payoff between both players cooperating
+            and the payoff for being a sucker (cooperating when the opponent
             defects)}
-  \item{error}{Probability that the player's intended move is switched to 
+  \item{error}{Probability that the player's intended move is switched to
                the opposite move}
   \item{data}{Which dataset did this game come from:
-  AM = Andreoni & Miller; 
-  BR = Bereby-Meyer & Roth; 
+  AM = Andreoni & Miller;
+  BR = Bereby-Meyer & Roth;
   DB = Dal Bo;
-  DF = Dal Bo & Frechette; 
+  DF = Dal Bo & Frechette;
   DO = Duffy & Ochs;
-  FO = Friedman & Oprea; 
-  FR = Fudenberg, Rand, & Dreberl;
+  FO = Friedman & Oprea;
+  FR = Fudenberg, Rand, & Dreber;
   and KS = Kunreuther, Silvasi, Bradlow & Small}
   \item{my.decision1}{The player's move in the previous turn}
   \item{my.decision2}{The player's move two turns ago}
@@ -65,7 +65,7 @@
   \item{other.payoff9}{The opponent's payoff nine turns ago}
   \item{r}{Reward: payoff when both players cooperate}
   \item{t}{Temptation: payoff when player defects and opponent cooperates}
-  \item{s}{Sucker: Payoff when player cooperates and oppoent defects}
+  \item{s}{Sucker: Payoff when player cooperates and opponent defects}
   \item{p}{Punishment: payoff when both players defect}
   \item{infin}{Boolean: 1 indicates infinite game with probability delta of ending at each round; 0 indicates pre-determined number of rounds}
   \item{contin}{Boolean: 1 indicates the game is played in continuous time; 0 indicates discrete rounds}
@@ -78,9 +78,9 @@
 NV_games
 }
 \description{
-A dataset containing 168,386 total rounds of play in 30 different 
-variations on the iterated prisoner's dilemma games. 
-The data comes from J.J. Nay and Y. Vorobeychik, "Predicting Human 
+A dataset containing 168,386 total rounds of play in 30 different
+variations on the iterated prisoner's dilemma games.
+The data comes from J.J. Nay and Y. Vorobeychik, "Predicting Human
 Cooperation," PLOS ONE 11(5), e0155656 (2016).
 }
 \keyword{datasets}

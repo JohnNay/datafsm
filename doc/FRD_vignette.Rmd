@@ -7,8 +7,8 @@ output:
     fig_caption: yes
 vignette: >
   %\VignetteIndexEntry{Example with real data}
-  %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown_notangle}
+  \usepackage[utf8]{inputenc}
 references:
   - id: nay2016
     type: article-journal
@@ -67,10 +67,10 @@ references:
     issued:
       year: 2015
     title: "Data-Driven Dynamic Decision Models"
-    contianer-title: Proceedings of the 2015 Winter Simulation Conference
+    container-title: Proceedings of the 2015 Winter Simulation Conference
     publisher: IEEE Press
     page: 2752--2763
-    DOI: "0.1109/WSC.2015.7408381"
+    DOI: "10.1109/WSC.2015.7408381"
     URL: "https://arxiv.org/abs/1603.08150"
 editor_options: 
   chunk_output_type: inline
@@ -79,7 +79,7 @@ editor_options:
 ```{r setup, include=FALSE}
 is_check <- ("CheckExEnv" %in% search()) || any(c("_R_CHECK_TIMINGS_",
              "_R_CHECK_LICENSE_") %in% names(Sys.getenv()))
-do_cache <- TRUE
+do_cache <- FALSE
 knitr::opts_chunk$set(eval = !is_check, echo = TRUE, cache = do_cache, 
                       warning=FALSE, message=FALSE, error=FALSE,
                       fig.width = 6, fig.height = 4.25,
@@ -90,10 +90,11 @@ This document applies the `datafsm` software package [@nay2015] to the data from
 For the motivation, underlying design, and tests on simulated data see @nay2015. 
 For a simple example of how to use the package see the "[Introduction to datafsm](datafsm_introduction.html)" vignette.
 ```{r initialize}
-library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(purrr)
 library(pander)
 library(datafsm)
-
 set.seed(1533406114)
 ```
 Estimating a model is as simple as ensuring the input data, e.g. `prepped`, is 
@@ -110,11 +111,12 @@ which represents 168,386 rounds of play in 30 different variations on the
 iterated prisoner's dilemma game.
 This example will focus on the six games studied by 
 @fudenberg2012.
-```{r prepare_data, dependson = "initialize"}
+```{r prepare_data}
 data(NV_games, package = "datafsm")
 
 group_df <- list(g1 = 15, g2 = 16, g3 = 17, g4 = 14, g5 = 13, g6 = 12) %>%
-  as_data_frame() %>% gather(key = label, value = group) %>%
+  as_tibble() %>% pivot_longer(cols = everything(), names_to = "label", 
+                               values_to = "group") %>%
   mutate(group = as.integer(group))
 
 prepped <- NV_games %>% transmute(
@@ -142,19 +144,14 @@ patterns <- NV_games %>% select(group, error, r, t) %>%
   arrange(group)
 
 ```
-```{r analyze_data, message=FALSE, dependson = "prepare_data", cache.extra = file.mtime("res.Rds")}
-if (file.exists("res.Rds")) {
-  res <- readRDS("res.Rds")
-} else {
-  res <- lapply(as.list(group_indices), function(x){ 
-    message("\nAnalyzing group ", x, "\n")
-    prepped %>% filter(group == x) %>% select(-group) %>%
-      evolve_model(parallel = TRUE, 
-                   seed = group_seeds[[as.character(x)]],
-                   verbose = FALSE)
-  })
-  saveRDS(res, "res.Rds")
-}
+```{r analyze_data, message=FALSE}
+res <- lapply(as.list(group_indices), function(x){ 
+  message("\nAnalyzing group ", x, "\n")
+  prepped %>% filter(group == x) %>% select(-group) %>%
+    evolve_model(parallel = TRUE, 
+                 seed = group_seeds[[as.character(x)]],
+                 verbose = FALSE)
+})
 ```
 The resulting object has methods for inspecting (`print`, `show`, `summary`, 
 `estimation_details`, `best_performance`, `varImp`, `states`), 
@@ -168,12 +165,12 @@ predicts the agent will take in the current period. The state on the far left
 is the starting state.
 
 The variable importance is computed by switching each value of an estimated 
-model’s state matrix to another value in its feasible range, measuring the 
+model's state matrix to another value in its feasible range, measuring the 
 decrease in goodness of fit to the data, normalizing the values so the largest 
 is 100, then summing across each column to estimate the relative importance of 
 each predictor variable across all states.
 
-```{r plot_results, dependson = "analyze_data"}
+```{r plot_results}
 names(res) <- group_indices
 tl = c("dd", "cd", "dc", "cc")
 for(name in names(res)){
@@ -203,10 +200,10 @@ models from games with payoffs less amenable to cooperation: the `dd` outcome
 is more important in the latter. We can summarize this main pattern with a 
 table.
 
-```{r model_comparison, dependson="analyze_data"}
+```{r model_comparison}
 c_minus_d <- res %>% map_dbl(~varImp(.x)[4] - varImp(.x)[1])
-df <- c_minus_d %>% as.list() %>% as_data_frame() %>% 
-  gather(key = group, value = c_minus_d) %>% 
+df <- c_minus_d %>% as.list() %>% as_tibble() %>% 
+  pivot_longer(cols = everything(), names_to = "group", values_to = "c_minus_d") %>% 
   full_join(patterns, by = "group") %>% 
   select(error, r, t, c_minus_d) %>%
   rename(Error = error, Reward = r, Temptation = t,
@@ -222,37 +219,31 @@ values of the number of states to determine the number of states with best
 out-of-sample performance for the given dataset (and the given split into 
 _k_-folds, which it should be relatively insensitive to).
 
-```{r k_fold, message=FALSE, dependson="prepare_data", cache.extra = file.mtime("res2.Rds")}
+```{r k_fold, message=FALSE}
 k_fold_seeds <- sample.int(.Machine$integer.max, length(group_indices)) %>%
   set_names(as.character(group_indices))
-if (file.exists("res2.Rds")) {
-  res2 = readRDS("res2.Rds")
-} else {
-  res2 <- lapply(as.list(group_indices), function(x){ 
-    message("\nPerforming k-fold cross-validation for group ", x, "\n")
-    # Note: When parallel is set TRUE, evolve_model processes the first few 
-    # groups successfully, but then GA::ga crashes with "mcfork() unable to 
-    # create pipe" when evolving the model for the third or fourth group 
-    # (the exact time it crashes varies from run to run on the same machine).
-    # There is no similar problem when evolving models with parallel = TRUE 
-    # in the analyze_data chunk.
-    cv_res <- prepped %>% filter(group == x) %>% select(-group) %>%
-      evolve_model(parallel = FALSE, 
-                   cv = TRUE, max_states = 6, k = 5, 
-                   seed = k_fold_seeds[[as.character(x)]],
-                   verbose = FALSE)
-    message("\nFinished k-fold cross-validation for group ", x, "\n")
-    cv_res
-  })
-  
-  saveRDS(res2, "res2.Rds")
-}
+res2 <- lapply(as.list(group_indices), function(x){ 
+  message("\nPerforming k-fold cross-validation for group ", x, "\n")
+  # Note: When parallel is set TRUE, evolve_model processes the first few 
+  # groups successfully, but then GA::ga crashes with "mcfork() unable to 
+  # create pipe" when evolving the model for the third or fourth group 
+  # (the exact time it crashes varies from run to run on the same machine).
+  # There is no similar problem when evolving models with parallel = TRUE 
+  # in the analyze_data chunk.
+  cv_res <- prepped %>% filter(group == x) %>% select(-group) %>%
+    evolve_model(parallel = FALSE, 
+                 cv = TRUE, max_states = 6, k = 5, 
+                 seed = k_fold_seeds[[as.character(x)]],
+                 verbose = FALSE)
+  message("\nFinished k-fold cross-validation for group ", x, "\n")
+  cv_res
+})
 ```
-```{r k_fold_results, dependson="k_fold"}
+```{r k_fold_results}
 names(res2) <- group_indices
 res2states <- map_dbl(res2, states) %>% as.integer() %>%
-  set_names(names(res2)) %>% as.list() %>% as_data_frame() %>%
-  gather(key = group, value = states)
+  set_names(names(res2)) %>% as.list() %>% as_tibble() %>%
+  pivot_longer(cols = everything(), names_to = "group", values_to = "states")
 df2 <- patterns %>% full_join(res2states, by = "group") %>% 
   arrange(group) %>% 
   select(Error = error, Reward = r, Temptation = t, States = states)

@@ -168,6 +168,7 @@ in the population. See \linkS4class{ga_fsm} for the details of the slots
 (objects) that this type of object will have.
 }
 \examples{
+\dontrun{
 # Create data:
 cdata <- data.frame(period = rep(1:10, 1000),
                    outcome = rep(1:2, 5000),
@@ -178,6 +179,7 @@ summary(res)
 plot(res, action_label = c("C", "D"))
 library(GA)
 plot(estimation_details(res))
+}
 
 # In scripts, it can makes sense to set parallel to
 # 'as.logical(Sys.info()['sysname'] != 'Windows')'.
@@ -186,5 +188,5 @@ plot(estimation_details(res))
 \references{
 Luca Scrucca (2013). GA: A Package for Genetic Algorithms in R.
  Journal of Statistical Software, 53(4), 1-37. URL
- http://www.jstatsoft.org/v53/i04/.
+ \url{http://www.jstatsoft.org/v53/i04/}.
 }

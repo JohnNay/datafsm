@@ -1,14 +1,11 @@
-## ----load.data.fsm-------------------------------------------------------
+## ----load.data.fsm------------------------------------------------------------
 # Load and attach datafsm into your R session, making its functions available:
 library(datafsm)
 
-## ----load.printr, include=FALSE------------------------------------------
-#library(printr)
-
-## ----cite.datafsm, eval=TRUE, include=TRUE-------------------------------
+## ----cite.datafsm, eval=TRUE, include=TRUE------------------------------------
 citation("datafsm")
 
-## ----fake.data, eval=TRUE, include=TRUE----------------------------------
+## ----fake.data, eval=TRUE, include=TRUE---------------------------------------
 seed1 <- 1900
 seed2 <- 1900
 seed3 <- 1900
@@ -58,7 +55,7 @@ for (i in seq_along(cdata$period)) {
   }
 }
 
-## ----cdata.table, eval=TRUE, echo=FALSE, results='asis'------------------
+## ----cdata.table, eval=TRUE, echo=FALSE, results='asis'-----------------------
 knitr::kable(head(cdata, 11))
 
 ## ----evolve.model, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE, results='hide'----
@@ -77,6 +74,6 @@ plot(estimation_details(res))
 ## ----get.help, eval=TRUE, include=TRUE, render.args = list(help = list(sections = list("usage", "arguments", "details", "references")))----
 ?evolve_model
 
-## ----session.info, eval=TRUE, include=TRUE-------------------------------
+## ----session.info, eval=TRUE, include=TRUE------------------------------------
 sessionInfo()
 
