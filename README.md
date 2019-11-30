@@ -1,7 +1,7 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![Build
 Status](https://travis-ci.org/jonathan-g/datafsm.png?branch=master)](https://travis-ci.org/jonathan-g/datafsm)
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/datafsm)](http://cran.r-project.org/package=datafsm)
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version-last-release/datafsm)](http://cran.r-project.org/package=datafsm)
 
 This package implements our method for automatically generating models
 of dynamic decision-making that both have strong predictive power and
