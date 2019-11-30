@@ -3,12 +3,10 @@ Title: Estimating Finite State Machine Models from Data
 Version: 0.2.3
 Date: 2019-11-27
 Authors@R: 
-    c(person(given = "Nay",
-             family = "John J.",
-             role = "aut",
-             email = "john.j.nay@gmail.com"),
-      person(given = "Gilligan",
-             family = "Jonathan M.",
+    c(person(given = "John", middle = "J.", family = "Nay", 
+             email = "john.j.nay@gmail.com",
+             role = "aut"),
+      person(given = "Jonathan", middle = "M.", family = "Gilligan",
              email = "jonathan.gilligan@vanderbilt.edu",
              comment = c(ORCID = "0000-0003-1375-6686"),
              role = c("cre", "aut")))
