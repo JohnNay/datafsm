@@ -60,14 +60,14 @@ Fake Data Example
 =================
 
 To quickly show it works, we can create fake data. Here, we generate
-4000 repetitions of a 20-round game in which each player starts by
+1000 repetitions of a 10-round game in which each player starts by
 making a random move, and in subsequent rounds, each player follows a
 “noisy tit-for-tat” strategy that’s equivalent to tit-for-tat, except
 that with a 5% probability the player will make a random move.
 
 ``` r
-rounds <- 20
-reps <- 4000
+rounds <- 10
+reps <- 1000
 noise_level <- 0.05
 ```
 
@@ -145,7 +145,7 @@ Here are the first eleven rows of this fake data:
 |        2|       8|             0|                1|
 |        1|       9|             1|                0|
 |        2|      10|             0|                1|
-|        1|      11|             1|                0|
+|        1|       1|            NA|               NA|
 
 We can estimate a model with that data. `evolve_model` uses a genetic
 algorithm to estimate a finite-state machine (FSM) model, primarily for

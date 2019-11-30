@@ -37,8 +37,8 @@ citation("datafsm")
 
 # Fake Data Example
 ```{r simulation_parameters, include=FALSE, eval=TRUE}
-rounds <- 20
-reps <- 4000
+rounds <- 10
+reps <- 1000
 noise_level <- 0.05
 ```
 To quickly show it works, we can create fake data. Here, we generate `r reps` 
