@@ -1,15 +1,15 @@
 ## Test environments
 
 * local build Windows 10, R 4.1.0
-* local build ubuntu 20.04 LTS, R 4.1.0
+* local build ubuntu 20.04.2 LTS, R 4.1.0
 * GitHub Actions builds:
   * ubuntu 20.04 LTS, R-release
   * ubuntu 20.04 LTS, R-devel
   * macOS-latest, R-release
   * windows-latest, R-release
 * R-hub builder:
-    * ubuntu 20.04 1 LTS, R-release GCC
-    * ubuntu 20.04 1 LTS, R-devel GCC
+    * ubuntu 20.04.1 LTS, R-release GCC
+    * ubuntu 20.04.1 LTS, R-devel GCC
     * macOS 10.13.6 High Sierra, R-release CRAN's setup
     * fedora, R-devel GCC
     * fedora, R-devel clang, gfortran
