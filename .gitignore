@@ -16,3 +16,5 @@ vignettes/*.md
 vignettes/*.tex
 /inst/doc/
 
+/doc/
+/Meta/
