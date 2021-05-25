@@ -70,6 +70,12 @@ jobs:
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
 
+      - name: Identify Environment
+        run:
+          sessionInfo()
+        shell:
+          Rscript {0}
+
       - name: Check under Windows
         if: runner.os == 'Windows'
         env:
