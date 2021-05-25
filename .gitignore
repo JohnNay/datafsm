@@ -11,6 +11,8 @@ vignettes/*_cache/
 vignettes/*_files/
 vignettes/res*.Rds
 vignettes/.build.timestamp
-inst/doc/
-/doc/
-/Meta/
+vignettes/*.html
+vignettes/*.md
+vignettes/*.tex
+/inst/doc/
+
