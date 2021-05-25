@@ -3,10 +3,10 @@
 * local build Windows 10, R 4.1.0
 * local build ubuntu 20.04.2 LTS, R 4.1.0
 * GitHub Actions builds:
-  * ubuntu 20.04 LTS, R-release
-  * ubuntu 20.04 LTS, R-devel
-  * macOS-latest, R-release
-  * windows-latest, R-release
+  * ubuntu-20.04: 20.04.2 LTS, R-release
+  * ubuntu-20.04: 20.04.2 LTS, R-devel
+  * macOS-latest: Catalina 10.15.7, R-release
+  * windows-latest: Server 2019 10.0.17763, R-release
 * R-hub builder:
     * ubuntu 20.04.1 LTS, R-release GCC
     * ubuntu 20.04.1 LTS, R-devel GCC
