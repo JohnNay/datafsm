@@ -1,10 +1,9 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version-last-release/datafsm)](http://cran.r-project.org/package=datafsm)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version-last-release/datafsm)](http://cran.r-project.org/package=datafsm)
 [![DOI](https://zenodo.org/badge/94561899.svg)](https://zenodo.org/badge/latestdoi/94561899)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-[![Build Status](https://travis-ci.org/jonathan-g/datafsm.png?branch=master)](https://travis-ci.org/jonathan-g/datafsm)
+[![License:
+MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 This package implements our method for automatically generating models
 of dynamic decision-making that both have strong predictive power and
@@ -58,8 +57,7 @@ citation("datafsm")
 #>   }
 ```
 
-Fake Data Example
-=================
+# Fake Data Example
 
 To quickly show it works, we can create fake data. Here, we generate
 1000 repetitions of a 10-round game in which each player starts by
@@ -135,19 +133,19 @@ or vectors that can be coerced to logical with `as.logical()`.
 
 Here are the first eleven rows of this fake data:
 
-|  outcome|  period|  my.decision1|  other.decision1|
+| outcome | period | my.decision1 | other.decision1 |
 |--------:|-------:|-------------:|----------------:|
-|        1|       1|            NA|               NA|
-|        1|       2|             0|                0|
-|        1|       3|             0|                0|
-|        2|       4|             0|                0|
-|        1|       5|             1|                0|
-|        2|       6|             0|                1|
-|        1|       7|             1|                0|
-|        2|       8|             0|                1|
-|        1|       9|             1|                0|
-|        2|      10|             0|                1|
-|        1|       1|            NA|               NA|
+|       1 |      1 |           NA |              NA |
+|       1 |      2 |            0 |               0 |
+|       1 |      3 |            0 |               0 |
+|       2 |      4 |            0 |               0 |
+|       1 |      5 |            1 |               0 |
+|       2 |      6 |            0 |               1 |
+|       1 |      7 |            1 |               0 |
+|       2 |      8 |            0 |               1 |
+|       1 |      9 |            1 |               0 |
+|       2 |     10 |            0 |               1 |
+|       1 |      1 |           NA |              NA |
 
 We can estimate a model with that data. `evolve_model` uses a genetic
 algorithm to estimate a finite-state machine (FSM) model, primarily for
@@ -243,20 +241,18 @@ plot(estimation_details(res))
 calling `estimation_details()` on `ga_fsm`
 object.](man/figures/README/plot.evolution-1.png)
 
-Acknowledgements
-================
+# Acknowledgements
 
 This work is supported by U.S. National Science Foundation grants
 EAR-1416964 and EAR-1204685.
 
-Session Info
-============
+# Session Info
 
 ``` r
 sessionInfo()
-#> R version 3.6.1 (2019-07-05)
+#> R version 4.1.0 (2021-05-18)
 #> Platform: x86_64-w64-mingw32/x64 (64-bit)
-#> Running under: Windows 10 x64 (build 18363)
+#> Running under: Windows 10 x64 (build 19042)
 #> 
 #> Matrix products: default
 #> 
@@ -271,23 +267,30 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] GA_3.2           iterators_1.0.12 foreach_1.4.7    datafsm_0.2.3   
+#> [1] GA_3.2.1         iterators_1.0.13 foreach_1.5.1    datafsm_0.2.4   
 #> 
 #> loaded via a namespace (and not attached):
-#>  [1] shape_1.4.4        diagram_1.6.4      tidyselect_0.2.5   xfun_0.11         
-#>  [5] reshape2_1.4.3     purrr_0.3.3        splines_3.6.1      lattice_0.20-38   
-#>  [9] colorspace_1.4-1   generics_0.0.2     stats4_3.6.1       htmltools_0.4.0   
-#> [13] yaml_2.2.0         survival_3.1-7     prodlim_2019.11.13 rlang_0.4.2       
-#> [17] ModelMetrics_1.2.2 pillar_1.4.2       withr_2.1.2        glue_1.3.1        
-#> [21] lifecycle_0.1.0    plyr_1.8.4         lava_1.6.6         stringr_1.4.0     
-#> [25] timeDate_3043.102  munsell_0.5.0      gtable_0.3.0       recipes_0.1.7     
-#> [29] codetools_0.2-16   evaluate_0.14      knitr_1.26         doParallel_1.0.15 
-#> [33] caret_6.0-84       parallel_3.6.1     class_7.3-15       highr_0.8         
-#> [37] Rcpp_1.0.3         scales_1.1.0       ipred_0.9-9        ggplot2_3.2.1     
-#> [41] digest_0.6.23      stringi_1.4.3      dplyr_0.8.3        grid_3.6.1        
-#> [45] cli_1.1.0          tools_3.6.1        magrittr_1.5       lazyeval_0.2.2    
-#> [49] tibble_2.1.3       crayon_1.3.4       pkgconfig_2.0.3    MASS_7.3-51.4     
-#> [53] Matrix_1.2-17      data.table_1.12.6  lubridate_1.7.4    gower_0.2.1       
-#> [57] assertthat_0.2.1   rmarkdown_1.18     R6_2.4.1           rpart_4.1-15      
-#> [61] nnet_7.3-12        nlme_3.1-142       compiler_3.6.1
+#>  [1] Rcpp_1.0.6           lubridate_1.7.10     lattice_0.20-44     
+#>  [4] class_7.3-19         assertthat_0.2.1     digest_0.6.27       
+#>  [7] ipred_0.9-11         utf8_1.2.1           R6_2.5.0            
+#> [10] plyr_1.8.6           stats4_4.1.0         evaluate_0.14       
+#> [13] ggplot2_3.3.3        highr_0.9            pillar_1.6.1        
+#> [16] rlang_0.4.11         caret_6.0-88         data.table_1.14.0   
+#> [19] rpart_4.1-15         Matrix_1.3-3         rmarkdown_2.8       
+#> [22] splines_4.1.0        gower_0.2.2          stringr_1.4.0       
+#> [25] munsell_0.5.0        diagram_1.6.5        compiler_4.1.0      
+#> [28] xfun_0.23            pkgconfig_2.0.3      shape_1.4.6         
+#> [31] htmltools_0.5.1.1    nnet_7.3-16          tidyselect_1.1.1    
+#> [34] tibble_3.1.2         prodlim_2019.11.13   codetools_0.2-18    
+#> [37] fansi_0.4.2          crayon_1.4.1         dplyr_1.0.6         
+#> [40] withr_2.4.2          MASS_7.3-54          recipes_0.1.16      
+#> [43] ModelMetrics_1.2.2.2 grid_4.1.0           nlme_3.1-152        
+#> [46] gtable_0.3.0         lifecycle_1.0.0      DBI_1.1.1           
+#> [49] magrittr_2.0.1       pROC_1.17.0.1        scales_1.1.1        
+#> [52] cli_2.5.0            stringi_1.6.2        reshape2_1.4.4      
+#> [55] doParallel_1.0.16    timeDate_3043.102    ellipsis_0.3.2      
+#> [58] generics_0.1.0       vctrs_0.3.8          lava_1.6.9          
+#> [61] tools_4.1.0          glue_1.4.2           purrr_0.3.4         
+#> [64] parallel_4.1.0       survival_3.2-11      yaml_2.2.1          
+#> [67] colorspace_2.0-1     knitr_1.33
 ```
