@@ -74,7 +74,7 @@ A data frame with 168,386 rows and 51 variables:
 }
 }
 \source{
-\url{https://doi.org/10.1371/journal.pone.0155656}
+\doi{10.1371/journal.pone.0155656}
 }
 \usage{
 NV_games

@@ -1,6 +1,6 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version-last-release/datafsm)](http://cran.r-project.org/package=datafsm)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version-last-release/datafsm)](https://cran.r-project.org/package=datafsm)
 [![DOI](https://zenodo.org/badge/94561899.svg)](https://zenodo.org/badge/latestdoi/94561899)
 [![License:
 MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -12,7 +12,7 @@ representation and a genetic algorithm-based estimation process to
 generate simple deterministic approximations that explain most of the
 structure of complex stochastic processes. The genetic algorithm is
 implemented with the **GA** package ([Scrucca
-2013](http://www.jstatsoft.org/v53/i04/)). Our method, implemented in
+2013](https://www.jstatsoft.org/v53/i04/)). Our method, implemented in
 C++ and R, scales well to large data sets. We have applied the package
 to empirical data, and demonstrated the method’s ability to recover
 known data-generating processes by simulating data with agent-based
@@ -273,24 +273,25 @@ sessionInfo()
 #>  [1] Rcpp_1.0.6           lubridate_1.7.10     lattice_0.20-44     
 #>  [4] class_7.3-19         assertthat_0.2.1     digest_0.6.27       
 #>  [7] ipred_0.9-11         utf8_1.2.1           R6_2.5.0            
-#> [10] plyr_1.8.6           stats4_4.1.0         evaluate_0.14       
-#> [13] ggplot2_3.3.3        highr_0.9            pillar_1.6.1        
-#> [16] rlang_0.4.11         caret_6.0-88         data.table_1.14.0   
-#> [19] rpart_4.1-15         Matrix_1.3-3         rmarkdown_2.8       
-#> [22] splines_4.1.0        gower_0.2.2          stringr_1.4.0       
-#> [25] munsell_0.5.0        diagram_1.6.5        compiler_4.1.0      
-#> [28] xfun_0.23            pkgconfig_2.0.3      shape_1.4.6         
-#> [31] htmltools_0.5.1.1    nnet_7.3-16          tidyselect_1.1.1    
-#> [34] tibble_3.1.2         prodlim_2019.11.13   codetools_0.2-18    
-#> [37] fansi_0.4.2          crayon_1.4.1         dplyr_1.0.6         
-#> [40] withr_2.4.2          MASS_7.3-54          recipes_0.1.16      
-#> [43] ModelMetrics_1.2.2.2 grid_4.1.0           nlme_3.1-152        
-#> [46] gtable_0.3.0         lifecycle_1.0.0      DBI_1.1.1           
-#> [49] magrittr_2.0.1       pROC_1.17.0.1        scales_1.1.1        
-#> [52] cli_2.5.0            stringi_1.6.2        reshape2_1.4.4      
-#> [55] doParallel_1.0.16    timeDate_3043.102    ellipsis_0.3.2      
-#> [58] generics_0.1.0       vctrs_0.3.8          lava_1.6.9          
-#> [61] tools_4.1.0          glue_1.4.2           purrr_0.3.4         
-#> [64] parallel_4.1.0       survival_3.2-11      yaml_2.2.1          
-#> [67] colorspace_2.0-1     knitr_1.33
+#> [10] plyr_1.8.6           sys_3.4              stats4_4.1.0        
+#> [13] evaluate_0.14        ggplot2_3.3.3        highr_0.9           
+#> [16] pillar_1.6.1         rlang_0.4.11         caret_6.0-88        
+#> [19] data.table_1.14.0    rpart_4.1-15         Matrix_1.3-3        
+#> [22] rmarkdown_2.8        splines_4.1.0        gower_0.2.2         
+#> [25] stringr_1.4.0        munsell_0.5.0        diagram_1.6.5       
+#> [28] compiler_4.1.0       xfun_0.23            pkgconfig_2.0.3     
+#> [31] askpass_1.1          shape_1.4.6          htmltools_0.5.1.1   
+#> [34] nnet_7.3-16          openssl_1.4.4        tidyselect_1.1.1    
+#> [37] tibble_3.1.2         prodlim_2019.11.13   codetools_0.2-18    
+#> [40] fansi_0.4.2          crayon_1.4.1         dplyr_1.0.6         
+#> [43] withr_2.4.2          ModelMetrics_1.2.2.2 MASS_7.3-54         
+#> [46] recipes_0.1.16       grid_4.1.0           nlme_3.1-152        
+#> [49] gtable_0.3.0         lifecycle_1.0.0      DBI_1.1.1           
+#> [52] magrittr_2.0.1       pROC_1.17.0.1        credentials_1.3.0   
+#> [55] scales_1.1.1         cli_2.5.0            stringi_1.6.2       
+#> [58] reshape2_1.4.4       doParallel_1.0.16    timeDate_3043.102   
+#> [61] ellipsis_0.3.2       generics_0.1.0       vctrs_0.3.8         
+#> [64] lava_1.6.9           tools_4.1.0          glue_1.4.2          
+#> [67] purrr_0.3.4          parallel_4.1.0       survival_3.2-11     
+#> [70] yaml_2.2.1           colorspace_2.0-1     knitr_1.33
 ```

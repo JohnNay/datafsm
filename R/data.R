@@ -72,5 +72,5 @@
 #'   \item{contin}{Boolean: 1 indicates the game is played in continuous time; 0 indicates discrete rounds}
 #'   \item{group}{Which group (version of the game) is being played?}
 #' }
-#' @source \url{https://doi.org/10.1371/journal.pone.0155656}
+#' @source \doi{10.1371/journal.pone.0155656}
 "NV_games"
