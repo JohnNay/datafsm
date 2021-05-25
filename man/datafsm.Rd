@@ -39,11 +39,11 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Gilligan Jonathan M. \email{jonathan.gilligan@vanderbilt.edu} (\href{https://orcid.org/0000-0003-1375-6686}{ORCID})
+\strong{Maintainer}: Jonathan M. Gilligan \email{jonathan.gilligan@vanderbilt.edu} (\href{https://orcid.org/0000-0003-1375-6686}{ORCID})
 
 Authors:
 \itemize{
-  \item Nay John J. \email{john.j.nay@gmail.com}
+  \item John J. Nay \email{john.j.nay@gmail.com}
 }
 
 }

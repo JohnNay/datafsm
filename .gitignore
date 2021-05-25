@@ -12,3 +12,5 @@ vignettes/*_files/
 vignettes/res*.Rds
 vignettes/.build.timestamp
 inst/doc/
+/doc/
+/Meta/

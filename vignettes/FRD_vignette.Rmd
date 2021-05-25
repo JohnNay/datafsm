@@ -86,7 +86,8 @@ knitr::opts_chunk$set(eval = !is_check, echo = TRUE, cache = do_cache,
                       fig.align = "center")
 
 ```
-This document applies the `datafsm` software package [@nay2015] to the data from @fudenberg2012. 
+This document applies the `datafsm` software package [@nay2015] to the data 
+from @fudenberg2012. 
 For the motivation, underlying design, and tests on simulated data see @nay2015. 
 For a simple example of how to use the package see the "[Introduction to datafsm](datafsm_introduction.html)" vignette.
 ```{r initialize}
@@ -203,7 +204,8 @@ table.
 ```{r model_comparison}
 c_minus_d <- res %>% map_dbl(~varImp(.x)[4] - varImp(.x)[1])
 df <- c_minus_d %>% as.list() %>% as_tibble() %>% 
-  pivot_longer(cols = everything(), names_to = "group", values_to = "c_minus_d") %>% 
+  pivot_longer(cols = everything(), names_to = "group", 
+               values_to = "c_minus_d") %>% 
   full_join(patterns, by = "group") %>% 
   select(error, r, t, c_minus_d) %>%
   rename(Error = error, Reward = r, Temptation = t,
