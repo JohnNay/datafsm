@@ -20,7 +20,7 @@ Description: Automatic generation of finite state machine models of dynamic
     simulating data with agent-based models and correctly deriving the 
     underlying decision models for multiple agent models and degrees of
     stochasticity.
-URL: https://github.com/jonathan-g/datafsm
+URL: https://jonathan-g.github.io/datafsm, https://github.com/jonathan-g/datafsm
 BugReports: https://github.com/jonathan-g/datafsm/issues
 Depends:
     R (>= 3.5),

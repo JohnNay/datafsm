@@ -21,3 +21,6 @@
 ^\.github$
 ^.*\.o$
 ^.*\.dll$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
