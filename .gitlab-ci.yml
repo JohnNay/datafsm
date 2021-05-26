@@ -5,7 +5,7 @@ stages:
   - document
 
 test:
-  state: test
+  stage: test
   variables:
     _R_CHECK_CRAN_INCOMING_REMOTE_: 'false'
   script:
