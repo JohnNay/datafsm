@@ -12,6 +12,10 @@ reference:
   - evolve_model
   - evolve_model_cv
   - evolve_model_ntimes
+- title: FSM methods
+  desc: >
+    Class methods for ga_fsm object
+- contents:
   - ga_fsm-class
 - title: Model Diagnostics
   desc: >
@@ -27,12 +31,6 @@ reference:
     Data sets included in the package
 - contents:
   - NV_games
-- title: FSM methods
-  desc: >
-    Class methods for ga_fsm object
-- contents:
-  - ga_fsm-class
-  - ends_with("-method")
 - title: Details
   desc: >
     Functions for dealing with the details of data wrangling,
