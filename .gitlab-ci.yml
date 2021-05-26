@@ -1,6 +1,11 @@
-image: rocker/verse:4.0.5
+image: jgilligan/jg-verse:4.1.0
+
+stages:
+  - test
+  - document
 
 test:
+  state: test
   variables:
     _R_CHECK_CRAN_INCOMING_REMOTE_: 'false'
   script:
@@ -9,3 +14,17 @@ test:
     - R CMD build .
     - PKG_FILE_NAME=$(ls -1t *.tar.gz | head -n 1)
     - R CMD check "${PKG_FILE_NAME}" --as-cran --no-manual
+
+pages:
+  stage: document
+  dependencies:
+    - test
+  script:
+    - Rscript -e 'pkgdown::build_site(preview = FALSE, new_process = TRUE, devel = FALSE, install = TRUE, override = list(destination = "public"))'
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days
+  only:
+    - main
+    - master
