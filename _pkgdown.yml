@@ -3,7 +3,6 @@ repo:
   branch: main
   url:
     home: https://github.com/jonathan-g/datafsm/
-    source: https://github.com/jonathan-g/datafsm/blob/main/
     issue: https://github.com/jonathan-g/datafsm/issues/
     user: https://github.com/jonathan-g/
 reference:
