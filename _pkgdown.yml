@@ -1,10 +1,6 @@
 url: https://jonathan-g.github.io/datafsm
 repo:
   branch: main
-  url:
-    home: https://github.com/jonathan-g/datafsm/
-    issue: https://github.com/jonathan-g/datafsm/issues/
-    user: https://github.com/jonathan-g/
 reference:
 - title: Overview
   desc: >
