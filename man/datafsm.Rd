@@ -33,6 +33,7 @@ model:
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://jonathan-g.github.io/datafsm/}
   \item \url{https://github.com/jonathan-g/datafsm}
   \item Report bugs at \url{https://github.com/jonathan-g/datafsm/issues}
 }
