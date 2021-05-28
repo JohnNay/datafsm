@@ -42,7 +42,8 @@ Suggests:
     purrr (>= 0.3)
 Imports:
     caret (>= 6.0),
-    GA (>= 3.2)
+    GA (>= 3.2),
+    Rcpp (>= 1.0)
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1
 Encoding: UTF-8
