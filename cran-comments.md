@@ -11,12 +11,16 @@
   * ubuntu 20.04.1 LTS, R-release GCC
   * ubuntu 20.04.1 LTS, R-devel GCC
   * macOS 10.13.6 High Sierra, R-release CRAN's setup
+  * macOS 10.13.6 High Sierrs, R-release
   * fedora, R-devel GCC
   * fedora, R-devel clang, gfortran
   * debian, R-release GCC
   * debian, R-devel GCC
-  * debian, R-devel clang, ISO-8859-15 locale
+  * debian, R-devel clang
   * debian, R-patched GCC
+  * windows, server 2008 R2 SP1, R-release
+  * windows, server 2008 R2 SP1, R-oldrel
+  * windows, server 2008 R2 SP1, R-patched
 * win-builder builds:
   * R-release
   * R-devel
@@ -116,11 +120,10 @@ None.
 
 ## Additional comments
 
-* The vignette FRD_vignette.Rmd takes a very long time to build.
-* This submission is an update to version 0.2.4
+* This submission updates the package to version 0.2.4
 
   I fixed errors in the package tests that were caught by the new
-  `CHECK_MATRIX_DATA` tests in the new r-devel under Debian.
+  `CHECK_MATRIX_DATA` tests in r-devel under Debian.
   
   I changed the calls to `person()` in the `Authors@R` section of `DESCRIPTION` 
   because the parameter `middle` is now deprecated.
