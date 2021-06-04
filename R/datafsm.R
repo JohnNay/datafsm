@@ -3,7 +3,7 @@
 #'It relies on the \strong{GA} package:
 #'Luca Scrucca (2013). GA: A Package for Genetic Algorithms in R.
 #'Journal of Statistical Software, 53 (4), 1-37.
-#'URL \url{http://www.jstatsoft.org/v53/i04/}.
+#'URL \url{https://www.jstatsoft.org/v53/i04/}.
 #'
 #' @section datafsm functions:
 #' \code{datafsm}'s main function for estimating a fsm decision

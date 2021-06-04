@@ -9,7 +9,7 @@
 It relies on the \strong{GA} package:
 Luca Scrucca (2013). GA: A Package for Genetic Algorithms in R.
 Journal of Statistical Software, 53 (4), 1-37.
-URL \url{http://www.jstatsoft.org/v53/i04/}.
+URL \url{https://www.jstatsoft.org/v53/i04/}.
 }
 \section{datafsm functions}{
 
@@ -33,17 +33,18 @@ model:
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://jonathan-g.github.io/datafsm/}
   \item \url{https://github.com/jonathan-g/datafsm}
   \item Report bugs at \url{https://github.com/jonathan-g/datafsm/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: Gilligan Jonathan M. \email{jonathan.gilligan@vanderbilt.edu} (\href{https://orcid.org/0000-0003-1375-6686}{ORCID})
+\strong{Maintainer}: Jonathan M. Gilligan \email{jonathan.gilligan@vanderbilt.edu} (\href{https://orcid.org/0000-0003-1375-6686}{ORCID})
 
 Authors:
 \itemize{
-  \item Nay John J. \email{john.j.nay@gmail.com}
+  \item John J. Nay \email{john.j.nay@gmail.com}
 }
 
 }

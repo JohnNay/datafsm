@@ -4,7 +4,8 @@
 \name{NV_games}
 \alias{NV_games}
 \title{Empirical prisoner's dilemma games from Nay and Vorobeychik}
-\format{A data frame with 168,386 rows and 51 variables:
+\format{
+A data frame with 168,386 rows and 51 variables:
 \describe{
   \item{period}{Which turn of the given game}
   \item{my.decision}{The player's move in this turn}
@@ -70,9 +71,10 @@
   \item{infin}{Boolean: 1 indicates infinite game with probability delta of ending at each round; 0 indicates pre-determined number of rounds}
   \item{contin}{Boolean: 1 indicates the game is played in continuous time; 0 indicates discrete rounds}
   \item{group}{Which group (version of the game) is being played?}
-}}
+}
+}
 \source{
-\url{https://doi.org/10.1371/journal.pone.0155656}
+\doi{10.1371/journal.pone.0155656}
 }
 \usage{
 NV_games

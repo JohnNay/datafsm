@@ -28,7 +28,7 @@ interpretable in human terms. We use an efficient model representation and a
 genetic algorithm-based estimation process to generate simple deterministic 
 approximations that explain most of the structure of complex stochastic 
 processes. The genetic algorithm is implemented with the **GA** package 
-([Scrucca 2013](http://www.jstatsoft.org/v53/i04/)). Our method, implemented in 
+([Scrucca 2013](https://www.jstatsoft.org/v53/i04/)). Our method, implemented in 
 C++ and R, scales well to large data sets. We have applied the package to 
 empirical data, and demonstrated the method's ability to recover known 
 data-generating processes by simulating data with agent-based models and 
@@ -58,23 +58,30 @@ citation("datafsm")
 
 # Fake Data Example
 
-To quickly show it works, we can create fake data. Here, we generate 1000 
-repetitions of a ten-round game in which each player starts by making a random
-move, and in subsequent rounds, one player follows a "tit-for-tat"
-strategy while the other one follows a "noisy tit-for-tat" strategy that's
-equivalent to tit-for-tat, except that with a 10% probability the player will
-make a random move.
+```{r simulation_parameters, include=FALSE, eval=TRUE}
+rounds <- 10
+reps <- 1000
+noise_level <- 0.05
+```
+To quickly show it works, we can create fake data. Here, we generate `r reps` 
+repetitions of a `r rounds`-round game in which each player starts by making a 
+random move, and in subsequent rounds, each player follows a "noisy tit-for-tat" 
+strategy that's equivalent to tit-for-tat, except that with a 
+`r scales::percent(noise_level, accuracy = 1)` probability the player will make 
+a random move.
 
+```{r simulation_parameters, echo=TRUE, eval=FALSE}
+```
 ```{r fake.data, eval=TRUE, include=TRUE}
-seed1 <- 1900
-seed2 <- 1900
-seed3 <- 1900
-# 468534172
+seed1 <- 1372456261
+seed2 <-  597693057
+seed3 <-  805078823
 set.seed(seed1)
 cdata <- data.frame(outcome = NA,
-                    period = rep(1:10, 2000),
+                    period = rep(seq(rounds), reps),
                     my.decision1 = NA,
                     other.decision1 = NA)
+
 #
 # Prisoner's dilemma
 #
@@ -90,8 +97,6 @@ tit_for_tat <- function(last_round_self, last_round_opponent) {
     last_round_opponent
 }
 
-noise_level = 0.1
-
 noisy_tit_for_tat <- function(last_round_self, last_round_opponent, noise_level) {
   if (runif(1,0,1) <= noise_level) {
     sample(0:1,1)
@@ -103,12 +108,12 @@ noisy_tit_for_tat <- function(last_round_self, last_round_opponent, noise_level)
 for (i in seq_along(cdata$period)) {
   if (cdata$period[i] == 1) {
     my.decision <- sample(0:1,1, prob = c(1 - noise_level, noise_level))
-    other.decision <- sample(0:1,1)
+    other.decision <- sample(0:1,1, prob = c(1 - noise_level, noise_level))
     cdata[i, "outcome"] <- pd_outcome(my.decision, other.decision)
   } else{
     my.last <- my.decision
     other.last <- other.decision
-    my.decision <- tit_for_tat(my.last, other.last)
+    my.decision <- noisy_tit_for_tat(my.last, other.last, noise_level)
     other.decision <- noisy_tit_for_tat(other.last, my.last, noise_level)
     cdata[i,c("outcome", "my.decision1", "other.decision1")] <- 
       c(pd_outcome(my.decision, other.decision), my.last, other.last)
@@ -215,7 +220,7 @@ plot(estimation_details(res))
 
 Check out the documentation for the main function of the package to learn about 
 all the options:
-```{r get.help, eval=TRUE, include=TRUE, render.args = list(help = list(sections = list("usage", "arguments", "details", "references")))}
+```r
 ?evolve_model
 ```
 

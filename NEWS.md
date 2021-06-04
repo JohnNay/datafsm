@@ -1,3 +1,11 @@
+# datafsm 0.2.4 
+
+* Fix error in testing where I created a matrix from a vector of length 8
+  specifying 2 columns and 2 rows.
+* Fix obsolete URL `http://www.jstatsoft.org` to `https://www.jstatsoft.org`.
+* Use new `\doi` tag for sources in Rd documentation where the URL pointed to
+  `https://doi.org/`.
+
 # datafsm 0.2.3
 
 * Replace dependency on the `tidyverse` package with dependencies on the 

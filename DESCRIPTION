@@ -1,14 +1,12 @@
 Package: datafsm
 Title: Estimating Finite State Machine Models from Data
-Version: 0.2.3
-Date: 2019-11-27
+Version: 0.2.4
+Date: 2021-05-28
 Authors@R: 
-    c(person(given = "Nay",
-             family = "John J.",
-             role = "aut",
-             email = "john.j.nay@gmail.com"),
-      person(given = "Gilligan",
-             family = "Jonathan M.",
+    c(person(given = c("John", "J."), family = "Nay", 
+             email = "john.j.nay@gmail.com",
+             role = "aut"),
+      person(given = c("Jonathan", "M."), family = "Gilligan",
              email = "jonathan.gilligan@vanderbilt.edu",
              comment = c(ORCID = "0000-0003-1375-6686"),
              role = c("cre", "aut")))
@@ -22,31 +20,31 @@ Description: Automatic generation of finite state machine models of dynamic
     simulating data with agent-based models and correctly deriving the 
     underlying decision models for multiple agent models and degrees of
     stochasticity.
-URL: https://github.com/jonathan-g/datafsm
+URL: https://jonathan-g.github.io/datafsm/, https://github.com/jonathan-g/datafsm
 BugReports: https://github.com/jonathan-g/datafsm/issues
 Depends:
-    R (>= 3.5),
-    methods,
-    stats
+    R (>= 4.0),
+    methods (>= 4.0),
+    stats (>= 4.0)
 License: MIT + file LICENSE
 LazyData: true
-LinkingTo: Rcpp
+LinkingTo: Rcpp (>= 1.0)
 Suggests:
-    doParallel,
-    foreach,
-    testthat (>= 1.0.2),
-    diagram,
-    knitr,
-    rmarkdown,
-    pander,
-    dplyr,
+    doParallel (>= 1.0),
+    foreach (>= 1.5),
+    testthat (>= 3.0),
+    diagram (>= 1.6),
+    knitr (>= 1.33),
+    rmarkdown (>= 2.8),
+    pander (>= 0.6),
+    dplyr (>= 1.0),
     tidyr (>= 1.0),
-    purrr
+    purrr (>= 0.3)
 Imports:
-    caret,
-    GA,
-    Rcpp
+    caret (>= 6.0),
+    GA (>= 3.2),
+    Rcpp (>= 1.0)
 VignetteBuilder: knitr
-RoxygenNote: 7.0.1
+RoxygenNote: 7.1.1
 Encoding: UTF-8
 Language: en-US

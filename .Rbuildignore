@@ -10,8 +10,17 @@
 ^vignettes/.*_files/
 ^vignettes/res.*\.Rds$
 ^vignettes/\.build\.timestamp$
+^vignettes/.*\.Rmd\.orig$
+^vignettes/precompile\.R$
 ^inst/doc/.*_cache/
 ^inst/doc/.*_files/
 ^inst/doc/res.*\.Rds$
 ^doc$
 ^Meta$
+^CRAN-RELEASE$
+^\.github$
+^.*\.o$
+^.*\.dll$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

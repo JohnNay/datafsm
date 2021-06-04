@@ -1,9 +1,30 @@
-image: rocker/verse
+image: jgilligan/jg-verse:4.1.0
+
+stages:
+  - test
+  - document
 
 test:
+  stage: test
+  variables:
+    _R_CHECK_CRAN_INCOMING_REMOTE_: 'false'
   script:
     - R -e "sessionInfo()"
     - "Rscript -e \"deps <- remotes::dev_package_deps(dependencies = NA); needs <- deps[,'package']; remotes::install_deps(dependencies = TRUE); ip <- as.data.frame(installed.packages()); got <- ip[,'Package']; message('deps = ', paste(class(deps), collapse = ', '), '; ip = ', paste(class(ip), collapse = ', '), '; needs = ', paste(class(needs), collapse = ', '), '; got = ', paste(class(got), collapse = ', ')); if (! all(needs %in% got)) { message('missing: ', paste(setdiff(needs, got), collapse = ', ')); quit(save = 'n', status = 1)};\""
     - R CMD build .
     - PKG_FILE_NAME=$(ls -1t *.tar.gz | head -n 1)
-    - R CMD check "${PKG_FILE_NAME}" --as-cran
+    - R CMD check "${PKG_FILE_NAME}" --as-cran --no-manual
+
+pages:
+  stage: document
+  dependencies:
+    - test
+  script:
+    - Rscript -e 'pkgdown::build_site(preview = FALSE, new_process = TRUE, devel = FALSE, install = TRUE, override = list(destination = "public"))'
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days
+  only:
+    - main
+    - master
